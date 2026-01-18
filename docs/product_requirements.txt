@@ -1,0 +1,124 @@
+PERSONAL FINANCE APP REQUIREMENTS (MERN)
+
+1. CORE GOALS
+- Track income and expenses
+- Manage multiple accounts (bank, cash, cards)
+- Set budgets and monitor spending
+- View basic analytics (charts and summaries)
+
+2. USER STORIES
+
+2.1 Authentication
+- Users can register with email + password
+- Users can log in and log out
+- Users must be authenticated to access the app
+- Passwords must be hashed
+- Use JWT for session management
+
+2.2 Accounts
+- Users can create multiple accounts
+  Example: “Cash”, “Bank A”, “Credit Card”
+- Users can edit or delete accounts
+- Each account tracks a balance
+- Balance updates automatically when transactions are added
+
+2.3 Transactions
+- Users can add transactions
+  - Amount
+  - Date
+  - Category (Food, Transport, Rent, etc.)
+  - Type (Income / Expense)
+  - Description (optional)
+  - Account (required)
+- Users can edit or delete transactions
+- Users can filter transactions by:
+  - Date range
+  - Category
+  - Account
+  - Type (income/expense)
+
+2.4 Budgets
+- Users can set monthly budgets per category
+- Users can view budget usage
+- Budget status:
+  - Under budget
+  - Near limit
+  - Over budget
+
+2.5 Dashboard
+- Shows summary:
+  - Total balance across all accounts
+  - Total income this month
+  - Total expenses this month
+  - Net savings this month
+- Shows charts:
+  - Spending by category
+  - Monthly spending trend
+
+3. TECHNICAL REQUIREMENTS
+
+3.1 Backend (Node + Express)
+- Use MongoDB + Mongoose
+- Create REST API with the following routes:
+
+Auth
+- POST /api/auth/register
+- POST /api/auth/login
+
+Accounts
+- GET /api/accounts
+- POST /api/accounts
+- PUT /api/accounts/:id
+- DELETE /api/accounts/:id
+
+Transactions
+- GET /api/transactions
+- POST /api/transactions
+- PUT /api/transactions/:id
+- DELETE /api/transactions/:id
+
+Budgets
+- GET /api/budgets
+- POST /api/budgets
+- PUT /api/budgets/:id
+- DELETE /api/budgets/:id
+
+3.2 Frontend (React)
+- Use React Router for navigation
+- Use Axios or fetch for API calls
+- Implement protected routes for authenticated users
+
+3.3 Data Validation
+- Use Joi or express-validator
+- Validate all inputs (amount, date, category, etc.)
+
+3.4 Security
+- Hash passwords (bcrypt)
+- Use JWT for authentication
+- Protect routes with middleware
+- Input sanitization
+
+4. EXTRA FEATURES (OPTIONAL)
+- Recurring transactions
+- CSV export/import
+- Receipt upload (file storage)
+- Monthly reports
+- Dark mode
+- Multi-currency support
+
+5. MINIMUM UI PAGES
+- Login / Register
+- Dashboard
+- Accounts page
+- Transactions page
+- Budgets page
+- Profile / Settings
+
+6. ACCEPTANCE CRITERIA
+- Users can register and log in
+- Users can manage accounts
+- Users can add/edit/delete transactions
+- Balances update automatically
+- Users can set budgets and see budget status
+- Dashboard displays accurate summaries
+- The app is secure and handles errors properly
