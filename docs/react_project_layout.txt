@@ -66,3 +66,21 @@ src/
   styles/
     globals.css
   index.tsx
+
+
+Example feature structure:
+--features/transactions/
+    pages/
+      TransactionsPage.tsx
+    components/
+      TransactionList.tsx
+    api/
+      transactionsApi.ts
+    store/
+      transactionsSlice.ts
+--features/dashboard/
+    pages/
+      DashboardPage.tsx
+    components/
+      SummaryCard.tsx
+      BalanceCard.tsx
