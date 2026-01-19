@@ -1,13 +1,13 @@
 import './App.css';
 import { Route , Routes } from 'react-router-dom';
 import AppLayout from '../shared/layouts/AppLayout';
-import Dashboard from '../features/dashboard/dashboard';
+import DashboardHomePage from '../features/dashboard/pages/DashboardHomePage';
 
 function App() {
 	return (	
 		<Routes>
 			<Route element={< AppLayout /> }>
-				<Route path="/" element={< Dashboard />} />
+				<Route path="/" element={< DashboardHomePage />} />
 			</Route>
 		</Routes>
 	)
