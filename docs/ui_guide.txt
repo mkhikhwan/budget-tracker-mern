@@ -1,0 +1,24 @@
+=== DARK MODE UI PALETTE (GREY & BLUE) ===
+
+-- BACKGROUNDS --
+• Main Canvas: #121212 (Deep neutral grey; reduces eye strain)
+• Surface/Cards: #1E1E26 (Blue-tinted grey; creates elevation/depth)
+• Sidebar/Header: #18181F (Mid-tone for navigation structural contrast)
+
+-- INTERACTIVE & ACCENTS --
+• Primary Accent: #0078FF (Electric blue for buttons & active states)
+• Hover State: #3391FF (Lighter blue for interactive feedback)
+• Border/Divider: #33333D (Subtle grey for sectioning and card outlines)
+
+-- TYPOGRAPHY --
+• Heading/Primary: #E0E0E0 (Cool off-white; high legibility)
+• Body/Secondary: #A0A0AB (Muted grey-blue for less critical info)
+• Disabled Text: #62626C (Low-contrast grey)
+
+-- STATUS INDICATORS --
+• Success: #00C853 (Vibrant green for "online" or "complete")
+• Warning: #FFAB00 (Amber for alerts or pending states)
+• Error: #FF5252 (Muted red for failures or critical stops)
+
+-- SYSTEM SHADOWS --
+• Soft Glow: rgba(0, 120, 255, 0.15) (Subtle blue glow for active cards)
