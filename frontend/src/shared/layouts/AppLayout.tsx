@@ -1,12 +1,15 @@
 import NavBar from "../components/NavBar";
 import { Outlet } from "react-router-dom";
+import styles from "./AppLayout.module.css";
 
 function AppLayout(){
+    let isOpenNavBar:Boolean = true;
+
     return (
-        <div className="app">
+        <div className={styles.app}>
             <NavBar></NavBar>
 
-            <main className="content">
+            <main className={`${styles.content} ${isOpenNavBar ? styles.dim : ""}`}>
                 <Outlet/>
             </main>
         </div>
