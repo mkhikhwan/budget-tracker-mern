@@ -18,6 +18,11 @@ function NavBar(){
                         <i className="fa-solid fa-chart-line"></i> Dashboard
                     </Link>
                 </li>
+                <div className={styles.navFooter}>
+                    <button className={styles.logout}>
+                        Logout
+                    </button>
+                </div>
             </ul>
         </nav>
     )

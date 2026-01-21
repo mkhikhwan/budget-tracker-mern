@@ -15,7 +15,12 @@
     align-items: center;
     padding: 32px 0px;
     border-bottom: 2px solid #fff;
-
+    user-select: none;
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+.logo:hover{
+    letter-spacing: 5px;
 }
 
 .logo i{
@@ -28,17 +33,23 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
 }
 
 .navItem{
+    width: 100%;
     font-size: 16px;
     font-weight: 400;
     transform-origin: left;
     transition: opacity 0.2s ease;
     padding: 12px 20px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    cursor: pointer;
 }
 .navItem:hover{
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 .navItem:hover .item{
     transform: scale(1.03);
@@ -54,6 +65,33 @@
 
 .navItem i{
     margin-right: 8px;
+}
+
+.logout{
+    background-color: rgba(0, 0, 0, 0);
+    color:white;
+    display:block;
+    color: #fff;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 28px;
+    width: 80%;
+    font-weight: 600;
+    border: 2px solid #FFAB00;
+    transition: all 0.1s ease;
+    margin-top: 24px;
+}
+
+.logout:hover{
+    background-color: #FFAB00;
+    transform: scale(1.05);
+}
+
+.navFooter{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 @media screen and (max-width: 768px){
