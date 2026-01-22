@@ -5,22 +5,49 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.logoRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navToggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    position: relative;
+    left: 62px;
+
+    background-color: #1E1E26;
+    
+}
+
+.navToggle i {
+    font-size: 1.2rem;
+}
+
 .logo{
     font-family: 'Poppins', sans-serif;
     font-size: 20px;
     font-weight: 600;
-    letter-spacing: 4px;
+    letter-spacing: 3px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 32px 0px;
-    border-bottom: 2px solid #fff;
+    height: 84px;
     user-select: none;
     cursor: pointer;
     transition: all 0.5s ease;
 }
 .logo:hover{
-    letter-spacing: 5px;
+    letter-spacing: 4px;
 }
 
 .logo i{
@@ -94,11 +121,25 @@
     justify-content: center;
 }
 
+.open{
+    transform: translateX(0px);
+}
+
 @media screen and (max-width: 768px){
     .navbar{
         position: fixed;
         width: 280px;
         height: 100%;
         background-color: #1E1E26;
+        transform: translateX(-280px);
+        transition: transform 0.4s ease-in-out;
+    }
+
+    .open{
+        transform: translateX(0px);
+    }
+
+    .navToggle{
+        display: flex;
     }
 }

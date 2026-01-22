@@ -1,12 +1,26 @@
+import { useState } from "react";
 import styles from "./NavBar.module.css";
 import { Link } from "react-router-dom";
 
 function NavBar(){
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleSidebar = () => {
+        setIsOpen(prev => !prev)
+    };
+
     return (
-        <nav className={styles.navbar}>
-            <div className={styles.logo}>
-                <i className="fa-solid fa-money-bill-1-wave"></i> BUDGETNOW
+        <nav className={`${styles.navbar} ${isOpen ? styles.open : ''}`}>
+            <div className={styles.logoRow}>
+                <div className={styles.logo}>
+                    <i className="fa-solid fa-money-bill-1-wave"></i> BUDGETNOW
+                </div>
+
+                <div className={styles.navToggle} onClick={toggleSidebar}>
+                    <i className={`fa-solid ${isOpen ? "fa-angle-left" : "fa-angle-right"}`}></i>
+                </div>
             </div>
+
             <ul className={styles.navList}>
                 <li className={styles.navItem}>
                     <Link className={styles.item} to="/">

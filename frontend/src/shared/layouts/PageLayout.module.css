@@ -8,7 +8,7 @@
 
 .header{
     display: flex;
-    font-size: 32px;
+    font-size: 1.5rem;
     font-weight: 500;
     align-items: center;
     justify-content: left;
@@ -32,6 +32,10 @@
 }
 
 @media (max-width: 640px){
+    .header{
+        justify-content: center;
+    }
+
     .pageContainer{
         display: flex;
         flex-direction: column;
