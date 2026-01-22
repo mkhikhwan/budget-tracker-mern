@@ -1,0 +1,23 @@
+.header{
+    display: flex;
+    font-size: 32px;
+    font-weight: 500;
+    align-items: center;
+    justify-content: left;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    font-family: 'Poppins' ,sans-serif;
+}
+
+.mainContent{
+    display: flex;
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow-y: scroll;
+}
+
+.mainContent::-webkit-scrollbar {
+    display: none;
+}
