@@ -8,7 +8,7 @@ interface ContainerProps{
 
 function PageLayout({ header, children }:ContainerProps){
     return(
-        <div>
+        <div className={styles.pageContainer}>
             <div className={styles.header}>
                 { header }
             </div>

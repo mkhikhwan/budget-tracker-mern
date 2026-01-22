@@ -1,0 +1,71 @@
+.card{
+    background-color: #1E1E26;
+    border: 2px solid #323243;
+    flex: 1;
+    min-height: 80px;
+    border-radius: 12px;
+    padding: 8px;
+}
+.card .cardTitle{
+    font-family: 'Poppins' ,sans-serif;
+    font-size: 1rem;
+}
+.card .cardData{
+    font-family: 'Poppins' ,sans-serif;
+    font-size: 1.5rem;
+}
+
+.container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    height: auto;
+    gap:16px;
+    padding: 0;
+    width: 100%;
+}
+
+.graphContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: span 3;
+    flex-wrap: wrap;
+    height: auto;
+    gap:16px;
+}
+.graphContainer > *{
+    flex: 1;
+    height: 240px;
+}
+
+.transactionHistory{
+    display: block;
+}
+
+@media (max-width:640px){
+    .container{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap:0;
+    }
+
+    .balance{
+        grid-column: 1 / -1;
+        margin-bottom: 16px;
+    }
+    .expense{
+        grid-column: 1 / 2;
+        margin-right: 8px;
+    }
+    .income{
+        grid-column: 2 / 3;
+        margin-left: 8px;
+    }
+
+    .graphContainer > *{
+        flex: 0 0 100%;
+    }
+    .expensesCatagory{
+        margin-top: 16px;
+    }
+}

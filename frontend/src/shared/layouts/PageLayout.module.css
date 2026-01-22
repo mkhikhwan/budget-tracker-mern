@@ -1,3 +1,11 @@
+.pageContainer{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 24px;
+}
+
 .header{
     display: flex;
     font-size: 32px;
@@ -12,12 +20,23 @@
 }
 
 .mainContent{
-    display: flex;
+    display: block;
     padding-left: 16px;
     padding-right: 16px;
     overflow-y: scroll;
+    height: 100%;
 }
 
 .mainContent::-webkit-scrollbar {
     display: none;
+}
+
+@media (max-width: 640px){
+    .pageContainer{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        padding: 8px;
+    }
 }
