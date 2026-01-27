@@ -1,39 +1,31 @@
 import PageLayout from "../../../shared/layouts/PageLayout";
-import styles from "./DashboardHomePage.module.css"
+import styles from "./DashboardHomePage.module.css";
+import MonthlyExpensesComponent from "../components/MonthlyExpensesComponent";
+import CardComponent from "../components/CardComponent";
+import ExpensesPerCategory from "../components/ExpensesPerCategory";
 
 function DashboardHomePage(){
     return (
         <PageLayout header="DashBoard">
             <div className={styles.container}>
-                <div className={`${styles.card} ${styles.balance}`}>
-                    <div className={styles.cardTitle}>
-                        Balance
-                    </div>
-                    <div className={styles.cardData}>
-                        $200.00
-                    </div>
-                </div> 
-                <div className={`${styles.card} ${styles.expense}`}>
-                    <div className={styles.cardTitle}>
-                        Expense
-                    </div>
-                    <div className={styles.cardData}>
-                        $400.00
-                    </div>
-                </div> 
-                <div className={`${styles.card} ${styles.income}`}>
-                    <div className={styles.cardTitle}>
-                        Income
-                    </div>
-                    <div className={styles.cardData}>
-                        $600.00
-                    </div>
-                </div>
+                <CardComponent title="Balance" className={styles.balance}>
+                    $200.00
+                </CardComponent>
+                <CardComponent title="Expense" className={styles.expense}>
+                    $400.00
+                </CardComponent>
+                <CardComponent title="Income" className={styles.income}>
+                    $600.00
+                </CardComponent>
 
 
                 <div className={styles.graphContainer}>
-                    <div className={`${styles.card} ${styles.expensesCatagory}`}>Expenses per catagory</div>
-                    <div className={`${styles.card} ${styles.monthlyGraph}`}>Monthly spending</div>
+                    <CardComponent title="Expenses per category" className={styles.expensesCategory}>
+                        <ExpensesPerCategory />
+                    </CardComponent>
+                    <CardComponent title="Monthly Expenses" className={styles.monthlyGraph}>
+                        <MonthlyExpensesComponent />
+                    </CardComponent>
                 </div>
             </div>
             <div className={styles.transactionHistory}>

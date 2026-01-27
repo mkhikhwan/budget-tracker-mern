@@ -2,12 +2,13 @@ import styles from "./CardComponent.module.css"
 
 interface Props{
     title: string,
-    children: React.ReactNode
+    children: React.ReactNode,
+    className: string
 }
 
-function CardComponent({ title, children }:Props){
+function CardComponent({ title, children, className }:Props){
     return (
-        <div className={`${styles.card}`}>
+        <div className={`${styles.card} ${className}`}>
             <div className={styles.cardTitle}>
                 { title }
             </div>
