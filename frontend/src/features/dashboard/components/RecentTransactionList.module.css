@@ -1,0 +1,39 @@
+.table{
+    width: 100%;
+    font-size: 1rem;
+    background-color: #121212;
+}
+
+.thead{
+    border-bottom: 2px solid #33333D;
+    background-color: #18181F;
+}
+
+.th, .td {
+    font-size: 1rem;
+    text-align: left;
+    padding: 4px;
+}
+
+.quickAction{
+    display: flex;
+    align-content: center;
+    justify-content: left;
+    gap: 24px;
+}
+
+@media screen and (max-width:768px){
+    .quickAction{
+        display: none;
+    }
+
+    .th, .td {
+        font-size: 1rem;
+        text-align: left;
+        padding: 8px 0px;
+    }
+
+    .nameHeader, .nameData{
+        display: none;
+    }
+}

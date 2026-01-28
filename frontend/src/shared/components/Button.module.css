@@ -1,0 +1,31 @@
+.button{
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: white;
+    cursor:pointer;
+    
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button i{
+    margin-right: 8px;
+}
+
+.primary{
+    background-color: #0078FF;
+}
+
+.primary:hover {
+    background-color: #006ae6;
+}
+
+.danger{
+    background-color: #FF5252;
+}
+
+.danger:hover {
+    background-color: #ff3d3d;
+}

@@ -3,6 +3,7 @@ import styles from "./DashboardHomePage.module.css";
 import MonthlyExpensesComponent from "../components/MonthlyExpensesComponent";
 import CardComponent from "../components/CardComponent";
 import ExpensesPerCategory from "../components/ExpensesPerCategory";
+import RecentTransactionList from "../components/RecentTransactionList";
 
 function DashboardHomePage(){
     return (
@@ -27,10 +28,13 @@ function DashboardHomePage(){
                         <MonthlyExpensesComponent />
                     </CardComponent>
                 </div>
+                
+                <CardComponent title="Recent Transactions" className={styles.recentTransactionList} >
+                    <RecentTransactionList />
+                </CardComponent>
             </div>
-            <div className={styles.transactionHistory}>
-                Last update
-            </div>
+            
+
         </PageLayout>
     )
 }
