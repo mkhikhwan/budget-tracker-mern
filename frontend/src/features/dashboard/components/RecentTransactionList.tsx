@@ -3,12 +3,14 @@ import Button from "../../../shared/components/Button";
 
 const transactions: Transaction[] = [
     {
+        id: 1,
         name: "Groceries",
         category: "Food",
         amount: -120.5,
         date: "1 Jan 2026"
     },
     {
+        id: 2,
         name: "Internet Bill",
         category: "Utilities",
         amount: -80.0,
@@ -17,6 +19,7 @@ const transactions: Transaction[] = [
 ]
 
 interface Transaction {
+    id: number
     name: string
     category: string
     amount: number
@@ -41,7 +44,7 @@ function RecentTransactionList(){
             <tbody>
                 {
                     data.map((transaction)=>{
-                        return <tr>
+                        return <tr key={transaction.id}>
                             <td className={`${styles.td} ${styles.name}`}>{ transaction.name }</td>
                             <td className={`${styles.td} ${styles.category}`}>{ transaction.category }</td>
                             <td className={`${styles.td} `}>{ transaction.amount }</td>

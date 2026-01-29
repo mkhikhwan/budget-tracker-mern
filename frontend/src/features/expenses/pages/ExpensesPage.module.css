@@ -1,0 +1,17 @@
+.table{
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.td, .th{
+    padding: 8px 16px;
+    text-align: left;
+}
+
+.th{
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
