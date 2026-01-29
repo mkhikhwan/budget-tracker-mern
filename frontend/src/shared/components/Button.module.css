@@ -1,10 +1,10 @@
 .button{
-    padding: 8px 16px;
+    padding: 4px 8px;
     border-radius: 8px;
     color: white;
     cursor:pointer;
     
-    font-size: 16px;
+    font-size: 12px;
     display: flex;
     align-items: center;
     justify-content: center;

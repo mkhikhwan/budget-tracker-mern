@@ -23,12 +23,9 @@ interface Transaction {
     date: string
 }
 
-interface Props{
-    data: Transaction[]
-}
-
-function RecentTransactionList({ data }:Props){
-    data = transactions;
+function RecentTransactionList(){
+    // TODO: API call
+    const data: Transaction[] = transactions;
 
     return (
         <table className={styles.table}>
@@ -38,18 +35,18 @@ function RecentTransactionList({ data }:Props){
                     <th className={`${styles.th} ${styles.categoryHeader}`}>Category</th>
                     <th className={`${styles.th} ${styles.amountHeader}`}>Amount</th>
                     <th className={`${styles.th} ${styles.dateHeader}`}>Date</th>
-                    <th className={`${styles.th} ${styles.actionHeader}`}>Action</th>
+                    <th className={`${styles.th} ${styles.actionsHeader}`}>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {
                     data.map((transaction)=>{
                         return <tr>
-                            <td className={`${styles.td} ${styles.nameData}`}>{ transaction.name }</td>
-                            <td className={`${styles.td} ${styles.categoryData}`}>{ transaction.category }</td>
+                            <td className={`${styles.td} ${styles.name}`}>{ transaction.name }</td>
+                            <td className={`${styles.td} ${styles.category}`}>{ transaction.category }</td>
                             <td className={`${styles.td} `}>{ transaction.amount }</td>
                             <td className={`${styles.td} `}>{ transaction.date}</td>
-                            <td className={`${styles.td} ${styles.quickAction}`}>
+                            <td className={`${styles.td} ${styles.action}`}>
                                 <Button type="primary">
                                     <i className="fa-solid fa-pen-to-square"></i> Edit
                                 </Button>
