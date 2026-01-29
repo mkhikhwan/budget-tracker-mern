@@ -1,6 +1,6 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
-const data = [
+const dummyData = [
     { category: "Rent", amount: 1200 },
     { category: "Food", amount: 450 },
     { category: "Transport", amount: 180 },
@@ -9,7 +9,15 @@ const data = [
     { category: "Misc", amount: 100 },
 ];
 
+interface ExpenseCategory{
+    category: string,
+    amount: number
+}
+
 function ExpensesPerCategory(){
+    // TODO: Api call
+    const data: ExpenseCategory[] = dummyData;
+
     return (
         <ResponsiveContainer>
             <BarChart data={data} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>

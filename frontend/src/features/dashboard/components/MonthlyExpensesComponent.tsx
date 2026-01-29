@@ -1,6 +1,6 @@
-import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
-const data = [
+const dummyData = [
     {
         month: 'January',
         amount: 1200,
@@ -27,7 +27,14 @@ const data = [
     },
 ];
 
+interface MonthlyExpense{
+    month: string
+    amount: number
+}
+
 function MonthlyExpensesComponent(){
+    const data: MonthlyExpense[] = dummyData;
+
     return (
         <ResponsiveContainer>
             <LineChart
