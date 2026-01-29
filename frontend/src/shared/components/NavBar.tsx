@@ -32,6 +32,11 @@ function NavBar(){
                         <i className="fa-solid fa-chart-line"></i> Dashboard
                     </Link>
                 </li>
+                <li className={styles.navItem}>
+                    <Link className={styles.item} to="/expenses">
+                        <i className="fa-solid fa-receipt"></i> Expenses
+                    </Link>
+                </li>
                 <div className={styles.navFooter}>
                     <button className={styles.logout}>
                         Logout
