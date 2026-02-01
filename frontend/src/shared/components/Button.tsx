@@ -11,14 +11,15 @@ type ButtonType = keyof typeof buttonStyle;
 
 interface Props{
     type: ButtonType,
-    children: React.ReactNode
+    children: React.ReactNode,
+    style?: React.CSSProperties
 }
 
-function Button({ type, children }:Props){
+function Button({ type, children, style }:Props){
     const buttonSelected = buttonStyle[type];
 
     return (
-        <button className={`${styles.button} ${buttonSelected}`}>
+        <button className={`${styles.button} ${buttonSelected}`} style={ style }>
             { children }
         </button>
     )

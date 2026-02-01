@@ -1,5 +1,6 @@
 import PageLayout from "../../../shared/layouts/PageLayout";
 import styles from "./ExpensesPage.module.css"
+import Button from "../../../shared/components/Button";
 
 const dummyData: Expense[] = [
     {
@@ -85,42 +86,53 @@ interface Expense{
 function ExpensesPage(){
     // TODO: Api call
     const data: Expense[] = dummyData;
+    const formatAmount = (value:number)=>{
+        return value.toFixed(2);
+    };
 
     return (
         <PageLayout header="Expenses">
-            <div>
-                Expenses Buttons
-            </div>
-            <div>
-                <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th className={`${styles.th} ${styles.checkHeader}`}>
-                                <input type="checkbox"/>
-                            </th>
-                            <th className={`${styles.th}`}>Name</th>
-                            <th className={`${styles.th}`}>Category</th>
-                            <th className={`${styles.th}`}>Date</th>
-                            <th className={`${styles.th}`}>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            data.map((expense)=>{
-                                return <tr key={expense.id}>
-                                    <td className={`${styles.td} `}>
-                                        <input type="checkbox"/>
-                                    </td>
-                                    <td className={`${styles.td} `}>{expense.name}</td>
-                                    <td className={`${styles.td} `}>{expense.category}</td>
-                                    <td className={`${styles.td} `}>{expense.date}</td>
-                                    <td className={`${styles.td} `}>{expense.amount}</td>
-                                </tr>
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
+            <section className={styles.section}>
+                <div className={styles.controlRow}>
+                    <input type="text" className={styles.search} placeholder="Search Expenses"/>
+                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                        <Button type="primary">
+                            <div style={{padding:'4px', paddingLeft:'16px', paddingRight:'16px'}}>
+                                <i className="fa-solid fa-filter" style={{ marginRight: '8px' }}></i>
+                                Filter
+                            </div>
+                        </Button>
+                    </div>
+                </div>
+                <div className={styles.expensesContainer}>
+                    {
+                        data.map((expense)=>{
+                            console.log(typeof expense.amount)
+                            return <div className={styles.expenseRow} key={expense.id}>
+                                <div className={styles.expenseRowLeft}>
+                                    <div className={styles.name}>
+                                        {expense.name} (<span>{expense.category}</span>)
+                                    </div>
+                                    <div className={styles.date}>
+                                        {expense.date}
+                                    </div>
+                                </div>
+                                <div className={styles.expenseRowRight}>
+                                    <div className={styles.amount}>
+                                        {formatAmount(expense.amount)}
+                                    </div>
+                                </div>
+                            </div>
+                        })
+                    }
+                </div>
+                <div>
+                    <Button type="primary" style={{width:'100%', fontSize:'1.1rem', fontWeight:'600', padding:'8px 0px', margin:'8px 0px'}}>
+                        <i className="fa-solid fa-plus" style={{ marginRight: '8px' }}></i>
+                        Add Expense
+                    </Button>
+                </div>
+            </section>
         </PageLayout>
     )
 }
