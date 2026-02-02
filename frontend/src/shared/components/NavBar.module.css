@@ -3,7 +3,7 @@
     height: 100%;
     background-color: #1E1E26;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 99;
+    z-index: 100;
 }
 
 .logoRow {
@@ -182,6 +182,7 @@
 @media screen and (max-width: 768px){
     .darkOverlay{
         display: block;
+        z-index: 99;
     }
 
 
