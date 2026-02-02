@@ -69,18 +69,7 @@
     font-size: 16px;
     font-weight: 400;
     transform-origin: left;
-    transition: opacity 0.2s ease;
-    padding: 12px 20px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    cursor: pointer;
-}
-.navItem:hover{
-    background-color: rgba(255, 255, 255, 0.1);
-}
-.navItem:hover .item{
-    transform: scale(1.03);
+    cursor: none;
 }
 
 .item{
@@ -88,7 +77,14 @@
     display:block;
     color: #fff;
     text-decoration: none;
-    padding: 12px;
+    padding: 24px;
+    width: 100%;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+}
+.item:hover{
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.03);
 }
 
 .navItem i{
@@ -126,22 +122,62 @@
     transform: translateX(0px);
 }
 
-    .darkOverlay{
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background-color: rgba(0, 0, 0,0.75);
-        opacity: 0;
-        transition: opacity 0.4s ease;
+.darkOverlay{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0,0.75);
+    opacity: 0;
+    transition: opacity 0.4s ease;
 
-        pointer-events: none;
-    }
-    .toggleOverlay{
-        opacity: 1;
-    }
+    pointer-events: none;
+}
+.toggleOverlay{
+    opacity: 1;
+}
+
+.subNavList{
+    margin-left: 28px;
+    border-left: 2px solid #fff;
+    display: none;
+}
+.subNavList.active{
+    display: block;
+}
+
+.subNavItem{
+    width: 100%;
+    cursor: none;
+    list-style: none;
+}
+.subItem{
+    transition: transform 0.2s ease;
+    display:block;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px;
+    width: 100%;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    padding-left: 20px;
+}
+.subItem:hover{
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.03);
+}
+
+.subNavList.active{
+    display: block;
+}
+
+.item.active, .subItem.active{
+    /* USED FOR ITEM AND SUBITEM */
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.03);
+}
 
 @media screen and (max-width: 768px){
     .darkOverlay{

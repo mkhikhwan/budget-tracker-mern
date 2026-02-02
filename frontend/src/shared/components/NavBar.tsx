@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./NavBar.module.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function NavBar(){
     const [isOpen, setIsOpen] = useState(false);
@@ -8,6 +9,9 @@ function NavBar(){
     const toggleSidebar = () => {
         setIsOpen(prev => !prev)
     };
+
+    const location = useLocation();
+    const isExpenseActive = location.pathname.startsWith("/expenses")
 
     return (
         <>
@@ -25,19 +29,34 @@ function NavBar(){
 
                 <ul className={styles.navList}>
                     <li className={styles.navItem}>
-                        <Link className={styles.item} to="/">
+                        <NavLink to="/" className={({ isActive }) => {
+                            return `${styles.item} ${isActive ? `${styles.active}` : '' }`
+                        }}>
                             <i className="fa-solid fa-home"></i> Home
-                        </Link>
+                        </NavLink>
                     </li>
                     <li className={styles.navItem}>
-                        <Link className={styles.item} to="/dashboard">
+                        <NavLink to="/dashboard" className={({ isActive }) => {
+                            return `${styles.item} ${isActive ? `${styles.active}` : '' }`
+                        }}>
                             <i className="fa-solid fa-chart-line"></i> Dashboard
-                        </Link>
+                        </NavLink>
                     </li>
                     <li className={styles.navItem}>
-                        <Link className={styles.item} to="/expenses">
+                        <NavLink to="/expenses" className={({ isActive }) => {
+                            return `${styles.item} ${isActive ? `${styles.active}` : '' }`
+                        }} end>
                             <i className="fa-solid fa-receipt"></i> Expenses
-                        </Link>
+                        </NavLink>
+                        <ul className={`${styles.subNavList} ${isExpenseActive ? styles.active : ''}`}>
+                            <li className={styles.subNavItem}>
+                                <NavLink to="/expenses/add" className={({ isActive }) => {
+                                    return `${styles.subItem} ${isActive ? `${styles.active}` : '' }`
+                                }}>
+                                    Add Expense
+                                </NavLink>
+                            </li>
+                        </ul>
                     </li>
                     <div className={styles.navFooter}>
                         <button className={styles.logout}>
