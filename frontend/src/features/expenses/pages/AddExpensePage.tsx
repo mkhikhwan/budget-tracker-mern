@@ -1,5 +1,6 @@
 import PageLayout from "../../../shared/layouts/PageLayout"
 import Button from "../../../shared/components/Button"
+import ImagePicker from "../../../shared/components/form/ImagePicker"
 
 function AddExpensePage(){
     return (
@@ -30,7 +31,7 @@ function AddExpensePage(){
                 </div>
                 <div className="form-row">
                     <label className="form-label">Images (Optional):</label>
-
+                    <ImagePicker />
                 </div>
                 <div className="form-row">
                     <Button type="primary" style={{fontSize:'1.25rem', fontWeight:'600', padding:'8px'}}>
