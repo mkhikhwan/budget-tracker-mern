@@ -1,10 +1,12 @@
 import PageLayout from "../../../shared/layouts/PageLayout"
 import Button from "../../../shared/components/Button"
+import styles from "./AddTransactionPage.module.css"
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import ImagePicker, { type Image } from "../../../shared/components/form/ImagePicker"
 
 function AddTransactionPage(){
+    const [type, setType] = useState("expense");
     const [name, setName] = useState("");
     const [category, setCategory] = useState("1");
     const [description, setDescription] = useState("");
@@ -16,6 +18,7 @@ function AddTransactionPage(){
         e.preventDefault();
 
         const payload = {
+            type,
             name,
             category,
             description,
@@ -26,36 +29,71 @@ function AddTransactionPage(){
         console.log(payload);
     };
 
+    const title = type === "expense" ? "Expense" : "Income";
+    const expenseCategory = [
+        { value: 'food', label: 'Food' },
+        { value: 'utilities', label: 'Utilities' },
+        { value: 'others', label: 'Others' }
+    ];
+    const incomeCategory = [
+        { value: 'salary', label: 'Salary' },
+        { value: 'others', label: 'Others' }
+    ];
+
+    const categoryOption = useMemo(()=>{
+        return type === 'expense' ? expenseCategory : incomeCategory; 
+    },[type]);
+
     return (
         <PageLayout header="Add Transaction">
             <form className="form">
                 <div className="form-row">
-                    <label className="form-label">Expense Name:</label>
+                    <div className={styles.transactionTypeContainer}>
+                        <div className={`${styles.buttonBackground } ${type === "expense" ? styles.expense : styles.income}`}>
+                            
+                        </div>
+                        <div className={`${styles.transactionType} ${styles.expense}`}
+                            onClick={()=>setType("expense")}
+                        >
+                            Expense
+                        </div>
+                        <div className={`${styles.transactionType} ${styles.income}`}
+                            onClick={()=>setType("income")}
+                        >
+                            Income
+                        </div>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <label className="form-label">{title} Name:</label>
                     <input className="input" type="text" 
                         onChange={(e)=> setName(e.target.value)} 
-                        placeholder="Afternoon lunch..."
+                        placeholder={type === "expense" ? "Lunch..." : "Salary..."}
                         value={name}
                     />
                 </div>
                 <div className="form-row">
-                    <label className="form-label">Category:</label>
+                    <label className="form-label">{title} Category:</label>
                     <select className="input" onChange={(e)=> setCategory(e.target.value)} value={category}>
-                        <option value="1">Food</option>
-                        <option value="2">Utilities</option>
+                        {
+                            categoryOption.map((option)=>{
+                                return <option value={option.value} key={option.value}>{option.label}</option>
+                            })
+                        }
                     </select>
                 </div>
                 <div className="form-row">
                     <label className="form-label">Description (optional):</label>
                     <textarea className="input select" placeholder="Optional details..." rows={3}
                         onChange={(e)=> setDescription(e.target.value)}
-                    >{description}</textarea>
+                        value={description}
+                    ></textarea>
                 </div>
                 <div className="form-row">
                     <label className="form-label">Date:</label>
                     <input 
                         className="input"
                         type="date" 
-                        defaultValue={new Date().toISOString().split('T')[0]}
                         onChange={(e)=> setDate(e.target.value)}
                         value={date}
                     />
@@ -70,7 +108,7 @@ function AddTransactionPage(){
                         onClick={handleSubmission}
                     >
                         <i className="fa-solid fa-floppy-disk" style={{ marginRight: '8px' }}></i>
-                        Save Expense
+                        Save {title}
                     </Button>
                 </div>
             </form>
