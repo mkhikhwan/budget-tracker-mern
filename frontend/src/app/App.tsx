@@ -10,7 +10,7 @@ function App() {
 		<Routes>
 			<Route element={< AppLayout /> }>
 				<Route path="/" element={< DashboardHomePage />} />
-				<Route path="/dashboard" element={< DashboardHomePage />} />
+				<Route path="/dashboardcl" element={< DashboardHomePage />} />
 				<Route path="/expenses" element={< ExpensesPage />} />
 				<Route path="/expenses/add" element={< AddExpensePage />} />
 			</Route>

@@ -1,0 +1,23 @@
+backend/
+ ├─ src/
+ │   ├─ controllers/       # Request handlers
+ │   │   └─ userController.ts
+ │   ├─ routes/            # API routes
+ │   │   └─ userRoutes.ts
+ │   ├─ models/            # Database models or types
+ │   │   └─ userModel.ts
+ │   ├─ middleware/        # Express middleware (auth, error handling, logging)
+ │   │   └─ authMiddleware.ts
+ │   ├─ services/          # Business logic separate from controllers
+ │   │   └─ userService.ts
+ │   ├─ utils/             # Helper functions
+ │   │   └─ logger.ts
+ │   ├─ config/            # Environment variables, DB config
+ │   │   └─ db.ts
+ │   ├─ types/             # Shared TypeScript types/interfaces
+ │   │   └─ express.d.ts
+ │   ├─ app.ts             # Express app setup
+ │   └─ server.ts          # Starts the server
+ ├─ tsconfig.json
+ ├─ package.json
+ └─ .env                   # Environment variables
