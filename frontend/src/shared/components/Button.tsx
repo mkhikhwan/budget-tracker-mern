@@ -12,14 +12,15 @@ type ButtonType = keyof typeof buttonStyle;
 interface Props{
     type: ButtonType,
     children: React.ReactNode,
-    style?: React.CSSProperties
+    style?: React.CSSProperties,
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-function Button({ type, children, style }:Props){
+function Button({ type, children, style, onClick }:Props){
     const buttonSelected = buttonStyle[type];
 
     return (
-        <button className={`${styles.button} ${buttonSelected}`} style={ style }>
+        <button className={`${styles.button} ${buttonSelected}`} style={ style } onClick={onClick}>
             { children }
         </button>
     )

@@ -1,40 +1,69 @@
 import PageLayout from "../../../shared/layouts/PageLayout"
 import Button from "../../../shared/components/Button"
-import ImagePicker from "../../../shared/components/form/ImagePicker"
+
+import { useState } from "react";
+import ImagePicker, { type Image } from "../../../shared/components/form/ImagePicker"
 
 function AddExpensePage(){
+    const [name, setName] = useState("");
+    const [category, setCategory] = useState("");
+    const [description, setDescription] = useState("");
+    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    
+    const [images, setImages] = useState<Image[]>([]);
+
+    const handleSubmission = (e:React.FormEvent)=>{
+        e.preventDefault();
+
+        const payload = {
+            name,
+            category,
+            description,
+            date,
+            images
+        }
+
+        console.log(payload);
+    };
+
     return (
         <PageLayout header="Add Expense">
             <form className="form">
                 <div className="form-row">
                     <label className="form-label">Expense Name:</label>
-                    <input className="input" type="text" placeholder="Afternoon lunch..."/>
+                    <input className="input" type="text" onChange={(e)=> setName(e.target.value)} placeholder="Afternoon lunch..."/>
                 </div>
                 <div className="form-row">
                     <label className="form-label">Category:</label>
-                    <select className="input">
-                        <option value="">Food</option>
-                        <option value="">Utilities</option>
+                    <select className="input" onChange={(e)=> setCategory(e.target.value)}>
+                        <option value="food">Food</option>
+                        <option value="utilities">Utilities</option>
                     </select>
                 </div>
                 <div className="form-row">
                     <label className="form-label">Description (optional):</label>
-                    <textarea className="input select" placeholder="Optional details..." rows={3}></textarea>
+                    <textarea className="input select" placeholder="Optional details..." rows={3}
+                        onChange={(e)=> setDescription(e.target.value)}
+                    ></textarea>
                 </div>
                 <div className="form-row">
                     <label className="form-label">Date:</label>
                     <input 
                         className="input"
                         type="date" 
-                        defaultValue={new Date().toISOString().split('T')[0]} 
+                        defaultValue={new Date().toISOString().split('T')[0]}
+                        onChange={(e)=> setDate(e.target.value)}
                     />
                 </div>
                 <div className="form-row">
                     <label className="form-label">Images (Optional):</label>
-                    <ImagePicker />
+                    <ImagePicker images={images} setImages={setImages}/>
                 </div>
                 <div className="form-row">
-                    <Button type="primary" style={{fontSize:'1.25rem', fontWeight:'600', padding:'8px'}}>
+                    <Button type="primary" 
+                        style={{fontSize:'1.25rem', fontWeight:'600', padding:'8px'}}
+                        onClick={handleSubmission}
+                    >
                         <i className="fa-solid fa-floppy-disk" style={{ marginRight: '8px' }}></i>
                         Save Expense
                     </Button>

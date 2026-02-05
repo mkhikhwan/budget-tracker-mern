@@ -15,7 +15,14 @@
     aspect-ratio: 1 / 1;
     width: 150px;
     border-radius: 8px;
+
+    cursor: pointer;
 }
+
+.img:hover{
+    opacity: 0.9;
+}
+
 
 .imgContainer{
     margin: 12px;
@@ -27,7 +34,7 @@
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: white;
+    background-color: #fff;
     color: #000;
     border-radius: 50%;
     margin: 0;
@@ -37,6 +44,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    cursor: pointer;
+    z-index: 1;
+}
+.deleteButton:hover{
+    transform: scale(1.02);
+    background-color: rgb(220, 220, 220);
 }
 
 .deleteButton i{
@@ -52,6 +66,11 @@
 
     border: 4px dashed #4b4b56;
     border-radius: 8px;
+
+    cursor: pointer;
+}
+.addButton:hover{
+    background-color: #4b4b56;
 }
 
 .addButton i{
