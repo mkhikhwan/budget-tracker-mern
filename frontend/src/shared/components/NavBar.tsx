@@ -11,7 +11,7 @@ function NavBar(){
     };
 
     const location = useLocation();
-    const isExpenseActive = location.pathname.startsWith("/expenses")
+    const isTransactionActive = location.pathname.startsWith("/transactions")
 
     return (
         <>
@@ -43,17 +43,17 @@ function NavBar(){
                         </NavLink>
                     </li>
                     <li className={styles.navItem}>
-                        <NavLink to="/expenses" className={({ isActive }) => {
+                        <NavLink to="/transactions" className={({ isActive }) => {
                             return `${styles.item} ${isActive ? `${styles.active}` : '' }`
                         }} end>
-                            <i className="fa-solid fa-receipt"></i> Expenses
+                            <i className="fa-solid fa-receipt"></i> Transactions
                         </NavLink>
-                        <ul className={`${styles.subNavList} ${isExpenseActive ? styles.active : ''}`}>
+                        <ul className={`${styles.subNavList} ${isTransactionActive ? styles.active : ''}`}>
                             <li className={styles.subNavItem}>
-                                <NavLink to="/expenses/add" className={({ isActive }) => {
+                                <NavLink to="/transactions/add" className={({ isActive }) => {
                                     return `${styles.subItem} ${isActive ? `${styles.active}` : '' }`
                                 }}>
-                                    Add Expense
+                                    Add Transaction
                                 </NavLink>
                             </li>
                         </ul>

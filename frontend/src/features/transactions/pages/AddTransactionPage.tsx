@@ -4,7 +4,7 @@ import Button from "../../../shared/components/Button"
 import { useState } from "react";
 import ImagePicker, { type Image } from "../../../shared/components/form/ImagePicker"
 
-function AddExpensePage(){
+function AddTransactionPage(){
     const [name, setName] = useState("");
     const [category, setCategory] = useState("1");
     const [description, setDescription] = useState("");
@@ -27,7 +27,7 @@ function AddExpensePage(){
     };
 
     return (
-        <PageLayout header="Add Expense">
+        <PageLayout header="Add Transaction">
             <form className="form">
                 <div className="form-row">
                     <label className="form-label">Expense Name:</label>
@@ -78,4 +78,4 @@ function AddExpensePage(){
     )
 }
 
-export default AddExpensePage
+export default AddTransactionPage

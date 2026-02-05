@@ -2,17 +2,17 @@ import './App.css';
 import { Route , Routes } from 'react-router-dom';
 import AppLayout from '../shared/layouts/AppLayout';
 import DashboardHomePage from '../features/dashboard/pages/DashboardHomePage';
-import ExpensesPage from '../features/expenses/pages/ExpensesPage';
-import AddExpensePage from '../features/expenses/pages/AddExpensePage';
+import TransactionPage from '../features/transactions/pages/TransactionPage';
+import AddTransactionPage from '../features/transactions/pages/AddTransactionPage';
 
 function App() {
 	return (	
 		<Routes>
 			<Route element={< AppLayout /> }>
 				<Route path="/" element={< DashboardHomePage />} />
-				<Route path="/dashboardcl" element={< DashboardHomePage />} />
-				<Route path="/expenses" element={< ExpensesPage />} />
-				<Route path="/expenses/add" element={< AddExpensePage />} />
+				<Route path="/dashboard" element={< DashboardHomePage />} />
+				<Route path="/transactions" element={< TransactionPage />} />
+				<Route path="/transactions/add" element={< AddTransactionPage />} />
 			</Route>
 		</Routes>
 	)

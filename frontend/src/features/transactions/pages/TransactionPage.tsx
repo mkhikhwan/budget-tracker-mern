@@ -1,5 +1,5 @@
 import PageLayout from "../../../shared/layouts/PageLayout";
-import styles from "./ExpensesPage.module.css"
+import styles from "./TransactionPage.module.css"
 import Button from "../../../shared/components/Button";
 
 const dummyData: Expense[] = [
@@ -83,7 +83,7 @@ interface Expense{
     amount: number
 }
 
-function ExpensesPage(){
+function TransactionPage(){
     // TODO: Api call
     const data: Expense[] = dummyData;
     const formatAmount = (value:number)=>{
@@ -91,7 +91,7 @@ function ExpensesPage(){
     };
 
     return (
-        <PageLayout header="Expenses">
+        <PageLayout header="Transactions">
             <section className={styles.section}>
                 <div className={styles.controlRow}>
                     <input type="text" className={styles.search} placeholder="Search Expenses"/>
@@ -137,4 +137,4 @@ function ExpensesPage(){
     )
 }
 
-export default ExpensesPage;
+export default TransactionPage;
