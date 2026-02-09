@@ -1,0 +1,11 @@
+POST http://localhost:5000/api/transaction/add
+Content-Type: application/json
+
+{
+    "type": "income",
+    "name": "Salary",
+    "category": "work",
+    "description": "Monthly paycheck",
+    "date": "2026-02-09T12:00:00.000Z",
+    "images": []
+}
