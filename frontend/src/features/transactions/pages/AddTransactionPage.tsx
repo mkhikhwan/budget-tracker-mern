@@ -4,20 +4,22 @@ import styles from "./AddTransactionPage.module.css"
 
 import { useState, useMemo } from "react";
 import ImagePicker, { type Image } from "../../../shared/components/form/ImagePicker"
+import type { addTransactionDto } from "../transactions.api";
+import * as TransactionApi from "../transactions.api";
 
 function AddTransactionPage(){
-    const [type, setType] = useState("expense");
-    const [name, setName] = useState("");
-    const [category, setCategory] = useState("1");
-    const [description, setDescription] = useState("");
-    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    const [type, setType] = useState<"expense" | "income">("expense");
+    const [name, setName] = useState<string>("");
+    const [category, setCategory] = useState<string>("food");
+    const [description, setDescription] = useState<string>("");
+    const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
     
     const [images, setImages] = useState<Image[]>([]);
 
-    const handleSubmission = (e:React.FormEvent)=>{
+    const handleSubmission = async (e:React.FormEvent)=>{
         e.preventDefault();
 
-        const payload = {
+        const payload:addTransactionDto = {
             type,
             name,
             category,
@@ -26,7 +28,14 @@ function AddTransactionPage(){
             images
         }
 
-        console.log(payload);
+        try{
+            const res = await TransactionApi.addTransaction(payload);
+            if(res){
+                alert("Transaction added successfully.");
+            }
+        }catch(err: unknown){
+            alert(`Failed to add transaction: ${err instanceof Error ? err.message : String(err)}`);
+        }
     };
 
     const title = type === "expense" ? "Expense" : "Income";
