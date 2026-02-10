@@ -4,12 +4,13 @@ import { Image } from "./Image";
 
 export interface Transaction{
     _id?: ObjectId
-    type: string
-    name: string
-    category: string
-    description: string
+    type: "expense" | "income";
+    name: string;
+    amount: number;
+    category: string;
+    description: string;
     date: string
-    images: Image[]
+    images : Image[]
 }
 
 const COLLECTION = "transactions"

@@ -4,12 +4,12 @@ import styles from "./AddTransactionPage.module.css"
 
 import { useState, useMemo } from "react";
 import ImagePicker, { type Image } from "../../../shared/components/form/ImagePicker"
-import type { addTransactionDto } from "../transactions.api";
-import * as TransactionApi from "../transactions.api";
+import * as TransactionApi from "../Transactions.api"
 
 function AddTransactionPage(){
     const [type, setType] = useState<"expense" | "income">("expense");
     const [name, setName] = useState<string>("");
+    const [amount, setAmount] = useState<number>(0);
     const [category, setCategory] = useState<string>("food");
     const [description, setDescription] = useState<string>("");
     const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -19,9 +19,10 @@ function AddTransactionPage(){
     const handleSubmission = async (e:React.FormEvent)=>{
         e.preventDefault();
 
-        const payload:addTransactionDto = {
+        const payload = {
             type,
             name,
+            amount,
             category,
             description,
             date,
@@ -53,6 +54,30 @@ function AddTransactionPage(){
         return type === 'expense' ? expenseCategory : incomeCategory; 
     },[type]);
 
+    // Validation
+    const handleKeyDownAmount = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.key >= "0" && e.key <= "9"){
+            e.preventDefault();
+            setAmount(prev => (prev * 10) + Number(e.key));
+            return;
+        }
+
+        if(e.key === "Backspace"){
+            e.preventDefault();
+            setAmount(prev => Math.floor(prev/10));
+            return;
+        }
+
+        if(e.key === "Delete"){
+            e.preventDefault();
+            setAmount(0);
+        }
+    }
+
+    const formatCurrency = (value: number):string => {
+        return (value/100).toFixed(2);
+    }
+
     return (
         <PageLayout header="Add Transaction">
             <form className="form">
@@ -79,6 +104,13 @@ function AddTransactionPage(){
                         onChange={(e)=> setName(e.target.value)} 
                         placeholder={type === "expense" ? "Lunch..." : "Salary..."}
                         value={name}
+                    />
+                </div>
+                <div className="form-row">
+                    <label className="form-label">{title} Amount:</label>
+                    <input className="input" type="text"
+                        onKeyDown={(e)=>handleKeyDownAmount(e)}
+                        value={formatCurrency(amount)}
                     />
                 </div>
                 <div className="form-row">
