@@ -37,3 +37,15 @@ export const createTransaction = async ({type, name, amount, category, descripti
         throw new Error(err instanceof Error ? err.message : String(err));
     }
 };
+
+export const getAllTransaction = async () => {
+    try{
+        const result = await TransactionModel.collection()
+            .find({}, { projection: { description: 0 }})
+            .toArray();
+
+        return { transactions : result }
+    }catch (err) {
+        throw new Error(err instanceof Error ? err.message : String(err));
+    }
+}

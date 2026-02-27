@@ -26,3 +26,13 @@ export const createTransaction = async (req: Request, res:Response) => {
         res.status(500).json({message: "Failed to create transaction"})
     }
 };
+
+export const getAllTransaction = async (req: Request, res:Response) => {
+    try{
+        const result = await TransactionService.getAllTransaction();
+
+        res.status(200).json(result);
+    }catch(err: unknown){
+        res.status(500).json({message: "Failed to get all transactions"})
+    }
+}
