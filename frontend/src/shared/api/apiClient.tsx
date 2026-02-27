@@ -4,9 +4,12 @@ export async function apiClient<T>(
     path: string,
     options: RequestInit = {}
 ): Promise<T>{
+    const isFormData = options.body instanceof FormData;
+
     const res = await fetch(`${BASE_URL}${path}`, {
         headers: {
-            "Content-Type": "application/json",
+            ...(isFormData ? {} : { "Content-Type": "application/json" }),
+            ...options.headers
         },
         ...options,
     });
