@@ -6,7 +6,6 @@ import TransactionRoutes from "./routes/TransactionRoutes"
 const app = express();
 
 app.use(cors());
-app.use(express.json());
 app.use((req, _res, next) => (console.log(req.method, req.originalUrl, req.headers), next()));
 
 app.get("/", (req, res) => {

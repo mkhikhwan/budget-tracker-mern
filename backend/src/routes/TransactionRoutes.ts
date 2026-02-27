@@ -1,8 +1,13 @@
 import { Router } from "express";
 import * as TransactionController from "../controllers/TransactionController"
+import multer from "multer";
 
 const router = Router();
+const upload = multer({
+    dest: 'uploads/',
+    limits: { fileSize: 10 * 1024 * 1024 }
+});
 
-router.post("/add", TransactionController.createTransaction);
+router.post("/add", upload.array("images"), TransactionController.createTransaction);
 
 export default router;

@@ -1,10 +1,15 @@
-import { Db, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { getDb } from "../config/db";
 
-export interface Image{
-    _id?: ObjectId,
-    url: string
-};
+export interface Image {
+    _id?: ObjectId;
+    transactionId: ObjectId;
+    filename: string;
+    path: string;
+    mimetype: string;
+    size: number;
+    uploadedAt: string;
+}
 
 const COLLECTION = "images"
 
@@ -13,5 +18,3 @@ export const ImageModel = {
         return getDb().collection<Image>(COLLECTION);
     }
 };
-
-

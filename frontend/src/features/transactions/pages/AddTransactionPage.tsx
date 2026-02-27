@@ -19,18 +19,21 @@ function AddTransactionPage(){
     const handleSubmission = async (e:React.FormEvent)=>{
         e.preventDefault();
 
-        const payload = {
-            type,
-            name,
-            amount,
-            category,
-            description,
-            date,
-            images
-        }
+        const formData = new FormData();
+        formData.append("type", type);
+        formData.append("name", name);
+        formData.append("amount", amount.toString());
+        formData.append("category", category);
+        formData.append("description", description);
+        formData.append("date", date);
+        images.forEach((image) => {
+            if(image.file){
+                formData.append("images", image.file);
+            }
+        });
 
         try{
-            const res = await TransactionApi.addTransaction(payload);
+            const res = await TransactionApi.addTransaction(formData);
             if(res){
                 alert("Transaction added successfully.");
             }
@@ -80,7 +83,7 @@ function AddTransactionPage(){
 
     return (
         <PageLayout header="Add Transaction">
-            <form className="form">
+            <form className="form" method="POST" encType="multipart/form-data">
                 <div className="form-row">
                     <div className={styles.transactionTypeContainer}>
                         <div className={`${styles.buttonBackground } ${type === "expense" ? styles.expense : styles.income}`}>

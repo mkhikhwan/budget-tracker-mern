@@ -10,7 +10,7 @@ export interface Transaction{
     category: string;
     description: string;
     date: string
-    images : Image[]
+    images? : Express.Multer.File[]
 }
 
 const COLLECTION = "transactions"
