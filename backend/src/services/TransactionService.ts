@@ -5,9 +5,9 @@ import { Image, ImageModel } from "../models/Image";
 export const createTransaction = async ({type, name, amount, category, description, date, images}:Transaction)=>{
     try{
         const transaction: Transaction = {
-            type,
-            name,
-            amount,
+            type: type,
+            name: name,
+            amount: Number(amount),
             category,
             description,
             date
@@ -44,7 +44,7 @@ export const getAllTransaction = async () => {
             .find({}, { projection: { description: 0 }})
             .toArray();
 
-        return { transactions : result }
+        return result
     }catch (err) {
         throw new Error(err instanceof Error ? err.message : String(err));
     }
