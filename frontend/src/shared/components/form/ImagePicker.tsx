@@ -10,9 +10,10 @@ export interface Image{
 interface Props{
     images: Image[],
     setImages: React.Dispatch<React.SetStateAction<Image[]>>
+    readonly?: boolean 
 }
 
-function ImagePicker({ images, setImages}:Props){
+function ImagePicker({ images, setImages, readonly }:Props){
     useEffect(()=>{
         // TODO: Api call here
         console.log("ImagePicker is running!");
@@ -65,10 +66,14 @@ function ImagePicker({ images, setImages}:Props){
                     </div>
                 })
             }
-            <div className={styles.addButton} onClick={()=> handleAdd()}>
-                <input ref={fileInput} type="file" style={{display:'none'}} onChange={handleUpload} multiple/>
-                <i className="fa-solid fa-plus"></i>
-            </div>
+            {
+                !readonly && (
+                    <div className={styles.addButton} onClick={()=> handleAdd()}>
+                        <input ref={fileInput} type="file" style={{display:'none'}} onChange={handleUpload} multiple/>
+                        <i className="fa-solid fa-plus"></i>
+                    </div>
+                )
+            }
         </div>
     )
 }
