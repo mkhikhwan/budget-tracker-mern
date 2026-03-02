@@ -1,11 +1,17 @@
 import { apiClient } from "../../shared/api/apiClient";
 
 export interface Transaction{
-    _id?: number
+    _id?: string
     name: string
+    type: string
     category: string
     date: string
     amount: number
+}
+
+export interface TransactionDetails extends Transaction{
+    description: string;
+    images?: any;
 }
 
 export function addTransaction(payload:FormData){

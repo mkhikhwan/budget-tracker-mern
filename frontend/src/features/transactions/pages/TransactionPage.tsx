@@ -3,9 +3,11 @@ import styles from "./TransactionPage.module.css"
 import Button from "../../../shared/components/Button";
 import { useEffect, useState } from "react";
 import * as TransactionAPI from "../Transactions.api"
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function TransactionPage(){
+    const navigate = useNavigate();
+
     const formatAmount = (value:number)=>{
         return (value / 100).toFixed(2);
     };
@@ -24,6 +26,14 @@ function TransactionPage(){
         fetch();
     },[]);
 
+    const handleOnClickViewTransaction = ()=>{
+        navigate("/transactions/view", {
+            state: {
+                id: "15abc"
+            }
+        });
+    };
+
     return (
         <PageLayout header="Transactions">
             <section className={styles.section}>
@@ -41,7 +51,7 @@ function TransactionPage(){
                 <div className={styles.expensesContainer}>
                     {
                         transactions.map((expense)=>{
-                            return <div className={styles.expenseRow} key={expense._id}>
+                            return <div className={styles.expenseRow} key={expense._id} onClick={handleOnClickViewTransaction}>
                                 <div className={styles.expenseRowLeft}>
                                     <div className={styles.name}>
                                         {expense.name} (<span>{expense.category}</span>)

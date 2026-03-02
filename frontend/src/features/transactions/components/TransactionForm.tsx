@@ -1,12 +1,13 @@
 import Button from "../../../shared/components/Button"
 import styles from "./TransactionForm.module.css"
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import ImagePicker, { type Image } from "../../../shared/components/form/ImagePicker"
+import { type TransactionDetails } from "../Transactions.api";
 
 interface Props{
-    initialData?: any;
-    handleSubmit: (formData: FormData) => void;
+    initialData?: TransactionDetails;
+    handleSubmit?: (formData: FormData) => void;
     readonly?: boolean;
 }
 
@@ -36,7 +37,7 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
             }
         });
 
-        handleSubmit(formData);
+        if(handleSubmit) handleSubmit(formData);
     };
 
     const title = type === "expense" ? "Expense" : "Income";
@@ -78,9 +79,20 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
         return (value/100).toFixed(2);
     }
 
+    useEffect(()=>{
+        if(initialData){
+            setType(initialData.type === 'expense' ? 'expense' : 'income');
+            setName(initialData.name);
+            setAmount(initialData.amount);
+            setCategory(initialData.category);
+            setDescription(initialData.description || "");
+            setDate(initialData.date);
+        }
+    },[initialData]);
+
     return (
         <form className="form" method="POST" encType="multipart/form-data">
-            <div className="form-row">
+            {!readonly && <div className="form-row">
                 <div className={styles.transactionTypeContainer}>
                     <div className={`${styles.buttonBackground } ${type === "expense" ? styles.expense : styles.income}`}>
                         
@@ -96,7 +108,7 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
                         Income
                     </div>
                 </div>
-            </div>
+            </div>}
             <div className="form-row">
                 <label className="form-label">{title} Name:</label>
                 <input className="input" type="text" 

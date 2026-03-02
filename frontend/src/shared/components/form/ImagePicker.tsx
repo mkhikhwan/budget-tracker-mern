@@ -54,6 +54,8 @@ function ImagePicker({ images, setImages, readonly }:Props){
         setImages([...images, ...newFiles]);
     };
 
+    const noImagesSelected = images.length === 0 && !readonly;
+
     return (
         <div className={styles.container}>
             {
@@ -65,6 +67,9 @@ function ImagePicker({ images, setImages, readonly }:Props){
                         <img src={img.url} className={styles.img} onClick={()=> handleView(img.id)}/>
                     </div>
                 })
+            }
+            {
+                !noImagesSelected && <div>No images</div>
             }
             {
                 !readonly && (

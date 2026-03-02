@@ -9,7 +9,7 @@ function LoadingPage() {
             height: "100vh",
             flexDirection: "column"
         }}>
-            <Loading width={32} height={32} fill="#707094" />
+            <Loading width={32} height={32} fill="#E0E0E0" />
         </div>
     );
 }
