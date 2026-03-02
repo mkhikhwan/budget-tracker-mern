@@ -49,3 +49,25 @@ export const getAllTransaction = async () => {
         throw new Error(err instanceof Error ? err.message : String(err));
     }
 }
+
+export const getTransaction = async (id: string) => {
+    try{
+        const transactionResult = await TransactionModel.collection()
+            .findOne({ _id: new ObjectId(id) });
+
+        if(!transactionResult) return
+
+        const imageResult = await ImageModel.collection()
+            .find({ transactionId: new ObjectId(id)})
+            .toArray();
+
+        const transaction = {
+            ...transactionResult,
+            images : imageResult
+        }
+
+        return transaction
+    }catch (err) {
+        throw new Error(err instanceof Error ? err.message : String(err));
+    }
+}

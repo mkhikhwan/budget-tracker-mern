@@ -17,18 +17,8 @@ function ViewTransactionPage(){
 
         const fetch = async ()=>{
             try{
-                // Simulate API Call
-                await new Promise( (resolve) => setTimeout(resolve,5000) );
-
-                setTransaction({
-                    _id: "1",
-                    name: "Dummy Transaction lmoa",
-                    type: "expense",
-                    category: "food",
-                    description: "test description",
-                    date: new Date().toISOString().split('T')[0],
-                    amount: 1000
-                });
+                const res = await TransactionApi.getTransactionDetail(transactionId);
+                setTransaction(res);
             }catch(e: unknown){
                 alert(e instanceof Error ? e.message : "Can't fetch transactioon details");
             }finally{

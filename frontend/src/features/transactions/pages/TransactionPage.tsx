@@ -26,10 +26,12 @@ function TransactionPage(){
         fetch();
     },[]);
 
-    const handleOnClickViewTransaction = ()=>{
+    const handleOnClickViewTransaction = (id?: string)=>{
+        if(!id) return
+        
         navigate("/transactions/view", {
             state: {
-                id: "15abc"
+                id: id
             }
         });
     };
@@ -51,7 +53,7 @@ function TransactionPage(){
                 <div className={styles.expensesContainer}>
                     {
                         transactions.map((expense)=>{
-                            return <div className={styles.expenseRow} key={expense._id} onClick={handleOnClickViewTransaction}>
+                            return <div className={styles.expenseRow} key={expense._id} onClick={()=> handleOnClickViewTransaction(expense._id)}>
                                 <div className={styles.expenseRowLeft}>
                                     <div className={styles.name}>
                                         {expense.name} (<span>{expense.category}</span>)

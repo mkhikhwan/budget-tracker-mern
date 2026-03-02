@@ -4,6 +4,9 @@ export async function apiClient<T>(
     path: string,
     options: RequestInit = {}
 ): Promise<T>{
+    // TODO: Remove artificial delay of 1 second
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     const isFormData = options.body instanceof FormData;
 
     const res = await fetch(`${BASE_URL}${path}`, {
@@ -20,4 +23,3 @@ export async function apiClient<T>(
 
     return res.json();
 }
-

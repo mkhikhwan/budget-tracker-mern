@@ -28,3 +28,9 @@ export async function getAllTransaction(): Promise<Transaction[]>{
         method: "GET"
     });
 }
+
+export async function getTransactionDetail(id: string): Promise<TransactionDetails>{
+    return apiClient(`/api/transaction/${id}`, {
+        method: "GET"
+    });
+}

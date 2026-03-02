@@ -11,5 +11,6 @@ const upload = multer({
 router.post("/add", upload.array("images"), TransactionController.createTransaction);
 
 router.get("/", TransactionController.getAllTransaction);
+router.get("/:id", TransactionController.getTransaction);
 
 export default router;
