@@ -4,11 +4,12 @@ import TransactionForm from "../components/TransactionForm";
 import * as TransactionApi from "../Transactions.api"
 import { useLocation } from "react-router-dom";
 import LoadingPage from "../../../shared/pages/LoadingPage";
+import { type TransactionDetails } from "../Transactions.types";
 
 function ViewTransactionPage(){
     const location = useLocation();
     const transactionId = location.state?.id;
-    const [transaction, setTransaction] = useState<TransactionApi.TransactionDetails>();
+    const [transaction, setTransaction] = useState<TransactionDetails>();
 
     const [isLoading, setLoading] = useState(true);
 
