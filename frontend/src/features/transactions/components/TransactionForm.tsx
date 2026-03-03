@@ -2,8 +2,8 @@ import Button from "../../../shared/components/Button"
 import styles from "./TransactionForm.module.css"
 
 import { useState, useMemo, useEffect } from "react";
-import ImagePicker, { type Image } from "../../../shared/components/form/ImagePicker"
-import { type TransactionDetails } from "../Transactions.api";
+import ImagePicker from "./ImagePicker"
+import { type TransactionDetails, type Image } from "../Transactions.types";
 
 interface Props{
     initialData?: TransactionDetails;
@@ -87,6 +87,17 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
             setCategory(initialData.category);
             setDescription(initialData.description || "");
             setDate(initialData.date);
+
+            // Transform images from db to UI state
+            const initImages = initialData.images?.map((img)=>{
+                const newImg: Image = {
+                    id: img._id,
+                    url: `/uploads/${img.filename}`
+                }
+
+                return newImg
+            }) || [];
+            setImages(initImages);
         }
     },[initialData]);
 

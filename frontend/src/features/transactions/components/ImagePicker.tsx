@@ -1,11 +1,6 @@
 import styles from "./ImagePicker.module.css"
 import { useRef, useEffect } from "react";
-
-export interface Image{
-    id: string,
-    url: string,
-    file?: File
-};
+import { type Image } from "../Transactions.types";
 
 interface Props{
     images: Image[],
@@ -64,7 +59,7 @@ function ImagePicker({ images, setImages, readonly }:Props){
                         <div className={styles.deleteButton} onClick={() => handleDelete(img.id)}>
                             <i className="fa-solid fa-trash-can"></i>
                         </div>
-                        <img src={img.url} className={styles.img} onClick={()=> handleView(img.id)}/>
+                        <img src={"http://localhost:5000" + img.url} className={styles.img} onClick={()=> handleView(img.id)}/>
                     </div>
                 })
             }
