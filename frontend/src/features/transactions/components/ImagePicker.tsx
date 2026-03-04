@@ -69,14 +69,17 @@ function ImagePicker({ images, setImages, readonly }:Props){
     return (
         <div className={styles.container}>
             {
-                images.length > 0 ? images.map((img,index)=>{
+                images.map((img,index)=>{
                     return <div className={styles.imgContainer} key={index}>
-                        <div className={styles.deleteButton} onClick={() => handleDelete(img.id)}>
+                        {!readonly && (<div className={styles.deleteButton} onClick={() => handleDelete(img.id)}>
                             <i className="fa-solid fa-trash-can"></i>
-                        </div>
+                        </div>)}
                         <img src={"http://localhost:5000" + img.url} className={styles.img} onClick={()=> handleView(img.id)}/>
                     </div>
-                }) : <div>No images</div>
+                })
+            }
+            {
+                readonly && images.length === 0 && <div>No Images selected.</div>
             }
             {
                 !readonly && (
