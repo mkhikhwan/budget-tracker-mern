@@ -29,3 +29,11 @@
 .danger:hover {
     background-color: #ff3d3d;
 }
+
+.secondary {
+    background-color: #33333D;
+}
+
+.secondary:hover {
+    background-color: #4b4b56;
+}

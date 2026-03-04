@@ -171,7 +171,7 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
             </div>
 
             {
-                !readonly &&
+                !readonly ?
                 (
                     <div className="form-row">
                         <Button type="primary" 
@@ -180,6 +180,17 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
                         >
                             <i className="fa-solid fa-floppy-disk" style={{ marginRight: '8px' }}></i>
                             Save {title}
+                        </Button>
+                    </div>
+                ) :
+                (
+                    <div className="form-row">
+                        <Button type="secondary" 
+                            style={{fontSize:'1.25rem', fontWeight:'600', padding:'8px'}}
+                            onClick={() => {}}
+                        >
+                            <i className="fa-solid fa-pen-to-square" style={{ marginRight: '8px' }}></i>
+                            Edit {title}
                         </Button>
                     </div>
                 )
