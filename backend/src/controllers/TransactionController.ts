@@ -58,3 +58,24 @@ export const getTransaction = async (req: Request, res:Response) => {
         return res.status(500).json({message: "Failed to get transaction details."})
     }
 }
+
+export const editTransaction = async (req: Request, res: Response) => {
+    try{
+        const images = req.files as Express.Multer.File[];
+
+        const {deletedImagesId} = req.body;
+
+        const normalizedDeletedImagesId: String[] = 
+            Array.isArray(deletedImagesId) ? deletedImagesId : (deletedImagesId ? [deletedImagesId] : [])
+
+        const result = await TransactionService.editTransaction({
+            ...req.body,
+            deletedImagesId : normalizedDeletedImagesId,
+            images
+        });
+
+        return res.status(201).json({message: "Edit successful."});
+    }catch(err: unknown){
+        return res.status(500).json({message: "Failed to edit transaction"})
+    }
+}

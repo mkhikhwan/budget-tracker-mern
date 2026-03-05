@@ -15,6 +15,8 @@ export interface TransactionDetails extends Transaction{
 export interface Image{
     id: string,
     url: string,
+    isFromDb?: boolean,
+    isDeleted?: boolean,
     file?: File
 };
 

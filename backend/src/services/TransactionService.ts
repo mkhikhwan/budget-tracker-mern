@@ -71,3 +71,67 @@ export const getTransaction = async (id: string) => {
         throw new Error(err instanceof Error ? err.message : String(err));
     }
 }
+
+interface EditTransactionDto {
+    id: string;
+    type: string;
+    name: string;
+    amount: number;
+    category: string;
+    description: string;
+    date: string;
+    images?: Express.Multer.File[];
+    deletedImagesId?: string[];
+}
+
+export const editTransaction = async ({id, type, name, amount, category, description, date, images, deletedImagesId}:EditTransactionDto) => {
+    try {
+        await TransactionModel.collection().updateOne(
+            { 
+                _id: new ObjectId(id) 
+            }, 
+            {
+                $set: {
+                    type: type === "expense" ? "expense" : "income",
+                    name: name,
+                    amount: amount,
+                    category: category,
+                    description: description,
+                    date: date,
+                }
+            }
+        )
+
+        // Delete images
+        if(deletedImagesId){
+            const idToDelete = deletedImagesId.map((id:string) => new ObjectId(id));
+
+            await ImageModel.collection().deleteMany({
+                _id: {
+                    $in: idToDelete
+                }
+            });
+        }
+
+        // Add Images
+        if(images && images.length > 0){
+            const imageDocs = images.map<Image>((img)=>{
+                const newImg:Image = {
+                    transactionId: new ObjectId(id),
+                    filename: img.filename,
+                    path: img.path,
+                    mimetype: img.mimetype,
+                    size: img.size,
+                    uploadedAt: new Date().toISOString()
+                }
+
+                return newImg;
+            });
+
+            await ImageModel.collection().insertMany(imageDocs);
+        }
+    } catch (err) {
+        console.log(err);
+        throw new Error(err instanceof Error ? err.message : String(err));
+    }
+};

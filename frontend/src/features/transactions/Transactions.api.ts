@@ -21,3 +21,10 @@ export async function getTransactionDetail(id: string): Promise<TransactionDetai
         method: "GET"
     });
 }
+
+export async function editTransaction(id:string, payload:FormData){
+    return apiClient(`/api/transaction/${id}`, {
+        method: "PUT",
+        body: payload
+    });
+}

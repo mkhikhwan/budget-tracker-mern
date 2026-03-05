@@ -4,6 +4,7 @@ import Button from "../../../shared/components/Button";
 import { useEffect, useState } from "react";
 import * as TransactionAPI from "../Transactions.api"
 import { NavLink, useNavigate } from "react-router-dom";
+import type { Transaction } from "../Transactions.types";
 
 function TransactionPage(){
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ function TransactionPage(){
         return (value / 100).toFixed(2);
     };
 
-    const [transactions, setTransactions] = useState<TransactionAPI.Transaction[]>([]);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
     useEffect(()=>{
         const fetch = async ()=>{
             try{

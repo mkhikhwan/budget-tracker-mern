@@ -4,6 +4,7 @@ import styles from "./TransactionForm.module.css"
 import { useState, useMemo, useEffect } from "react";
 import ImagePicker from "./ImagePicker"
 import { type TransactionDetails, type Image } from "../Transactions.types";
+import { useNavigate } from "react-router-dom";
 
 interface Props{
     initialData?: TransactionDetails;
@@ -12,6 +13,8 @@ interface Props{
 }
 
 function TransactionForm({ initialData, handleSubmit, readonly}: Props){
+    const navigate = useNavigate();
+
     const [type, setType] = useState<"expense" | "income">("expense");
     const [name, setName] = useState<string>("");
     const [amount, setAmount] = useState<number>(0);
@@ -25,6 +28,9 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
         e.preventDefault();
 
         const formData = new FormData();
+        if(initialData){
+            if(initialData._id) formData.append("id", initialData._id);
+        }
         formData.append("type", type);
         formData.append("name", name);
         formData.append("amount", amount.toString());
@@ -34,6 +40,9 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
         images.forEach((image) => {
             if(image.file){
                 formData.append("images", image.file);
+            }
+            if(image.isFromDb && image.isDeleted){
+                formData.append("deletedImagesId", image.id);
             }
         });
 
@@ -79,6 +88,18 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
         return (value/100).toFixed(2);
     }
 
+    const handleOnClickEditTransaction = (e:React.MouseEvent<HTMLButtonElement>)=>{
+        e.preventDefault();
+        
+        if(!initialData?._id) return
+        
+        navigate("/transactions/edit", {
+            state: {
+                id: initialData._id
+            }
+        });
+    };
+
     useEffect(()=>{
         if(initialData){
             setType(initialData.type === 'expense' ? 'expense' : 'income');
@@ -92,7 +113,8 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
             const initImages = initialData.images?.map((img)=>{
                 const newImg: Image = {
                     id: img._id,
-                    url: `/uploads/${img.filename}`
+                    url: `/uploads/${img.filename}`,
+                    isFromDb: true
                 }
 
                 return newImg
@@ -187,7 +209,7 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
                     <div className="form-row">
                         <Button type="secondary" 
                             style={{fontSize:'1.25rem', fontWeight:'600', padding:'8px'}}
-                            onClick={() => {}}
+                            onClick={handleOnClickEditTransaction}
                         >
                             <i className="fa-solid fa-pen-to-square" style={{ marginRight: '8px' }}></i>
                             Edit {title}

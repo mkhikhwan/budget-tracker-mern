@@ -22,9 +22,13 @@ function ImagePicker({ images, setImages, readonly }:Props){
 
     const handleDelete = (id:string)=>{
         console.log("Delete Image:", id);
-        setImages((prev)=>{
-            return prev.filter(img => img.id !== id)
-        });
+        const newArr:Image[] = images
+            .filter(img => !(img.id === id && !img.isFromDb)) //delete out local image
+            .map((img:Image) => { //delete db image
+                return img.id === id ? { ...img, isDeleted: true } : img
+            });
+
+        setImages(newArr);
     };
 
     const handleView = (id:string)=>{
@@ -57,6 +61,7 @@ function ImagePicker({ images, setImages, readonly }:Props){
             const newFile: Image = {
                 id: crypto.randomUUID(),
                 url: URL.createObjectURL(file),
+                isFromDb: false,
                 file: file
             }
 
@@ -69,13 +74,15 @@ function ImagePicker({ images, setImages, readonly }:Props){
     return (
         <div className={styles.container}>
             {
-                images.map((img,index)=>{
-                    return <div className={styles.imgContainer} key={index}>
-                        {!readonly && (<div className={styles.deleteButton} onClick={() => handleDelete(img.id)}>
-                            <i className="fa-solid fa-trash-can"></i>
-                        </div>)}
-                        <img src={"http://localhost:5000" + img.url} className={styles.img} onClick={()=> handleView(img.id)}/>
-                    </div>
+                images.map((img)=>{
+                    return !img.isDeleted && (
+                        <div className={styles.imgContainer} key={img.id}>
+                            {!readonly && (<div className={styles.deleteButton} onClick={() => handleDelete(img.id)}>
+                                <i className="fa-solid fa-trash-can"></i>
+                            </div>)}
+                            <img src={img.isFromDb ? "http://localhost:5000" + img.url : img.url} className={styles.img} onClick={()=> handleView(img.id)}/>
+                        </div>
+                    )
                 })
             }
             {
