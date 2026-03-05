@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as TransactionService from "../services/TransactionService"
 import { ObjectId } from "mongodb";
+import { EditTransactionDto } from "../dtos/Transaction.dto";
 
 export const createTransaction = async (req: Request, res:Response) => {
     try{
@@ -62,17 +63,18 @@ export const getTransaction = async (req: Request, res:Response) => {
 export const editTransaction = async (req: Request, res: Response) => {
     try{
         const images = req.files as Express.Multer.File[];
-
         const {deletedImagesId} = req.body;
 
         const normalizedDeletedImagesId: String[] = 
             Array.isArray(deletedImagesId) ? deletedImagesId : (deletedImagesId ? [deletedImagesId] : [])
 
-        const result = await TransactionService.editTransaction({
+        const dto:EditTransactionDto = {
             ...req.body,
             deletedImagesId : normalizedDeletedImagesId,
             images
-        });
+        }
+
+        const result = await TransactionService.editTransaction(dto);
 
         return res.status(201).json({message: "Edit successful."});
     }catch(err: unknown){

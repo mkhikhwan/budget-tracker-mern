@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
+import { EditTransactionDto } from "../dtos/Transaction.dto";
 
 export const createTransaction = async ({type, name, amount, category, description, date, images}:Transaction)=>{
     try{
@@ -72,33 +73,23 @@ export const getTransaction = async (id: string) => {
     }
 }
 
-interface EditTransactionDto {
-    id: string;
-    type: string;
-    name: string;
-    amount: number;
-    category: string;
-    description: string;
-    date: string;
-    images?: Express.Multer.File[];
-    deletedImagesId?: string[];
-}
-
 export const editTransaction = async ({id, type, name, amount, category, description, date, images, deletedImagesId}:EditTransactionDto) => {
     try {
+        const transaction:Transaction = {
+            type: type === "expense" ? "expense" : "income",
+            name: name,
+            amount: amount,
+            category: category,
+            description: description,
+            date: date,
+        }
+
         await TransactionModel.collection().updateOne(
             { 
                 _id: new ObjectId(id) 
             }, 
             {
-                $set: {
-                    type: type === "expense" ? "expense" : "income",
-                    name: name,
-                    amount: amount,
-                    category: category,
-                    description: description,
-                    date: date,
-                }
+                $set: transaction
             }
         )
 
