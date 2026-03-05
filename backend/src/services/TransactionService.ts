@@ -1,18 +1,19 @@
 import { ObjectId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
-import { EditTransactionDto } from "../dtos/Transaction.dto";
+import { CreateTransactionDto, EditTransactionDto } from "../dtos/Transaction.dto";
 
-export const createTransaction = async ({type, name, amount, category, description, date, images}:Transaction)=>{
+export const createTransaction = async ({type, name, amount, category, description, date, images}:CreateTransactionDto)=>{
     try{
         const transaction: Transaction = {
-            type: type,
+            type: type === "expense" ? "expense" : "income",
             name: name,
             amount: Number(amount),
             category,
             description,
             date
         };
+        
         const result = await TransactionModel.collection().insertOne(transaction);
         const transactionId = result.insertedId;
 
