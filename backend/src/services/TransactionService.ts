@@ -52,7 +52,7 @@ export const getAllTransaction = async () => {
     }
 }
 
-export const getTransaction = async (id: string) => {
+export const getTransactionDetails = async (id: string) => {
     try{
         const transactionResult = await TransactionModel.collection()
             .findOne({ _id: new ObjectId(id) });

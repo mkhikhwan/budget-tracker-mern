@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import * as TransactionService from "../services/TransactionService"
 import { ObjectId } from "mongodb";
-import { CreateTransactionDto, EditTransactionDto } from "../dtos/Transaction.dto";
+import { CreateTransactionDto, EditTransactionDto, GetTransactionDetailsDto } from "../dtos/Transaction.dto";
 
 export const createTransaction = async (req: Request, res:Response) => {
     try{
         const images = req.files as Express.Multer.File[];
-        
+
         const dto: CreateTransactionDto = {
             ...req.body,
             images
@@ -30,7 +30,7 @@ export const getAllTransaction = async (req: Request, res:Response) => {
     }
 }
 
-export const getTransaction = async (req: Request, res:Response) => {
+export const getTransactionDetails = async (req: Request, res:Response) => {
     try{
         const id : string | string[] = req.params.id;
 
@@ -40,12 +40,30 @@ export const getTransaction = async (req: Request, res:Response) => {
             return res.status(400).json({ message: "Invalid id format" });
         }
 
-        const result = await TransactionService.getTransaction(id as string);
-        if(!result){
+        const result = await TransactionService.getTransactionDetails(id);
+
+        if (!result) {
             return res.status(404).json({ message: "Transaction not found" });
         }
 
-        return res.status(200).json(result);
+        const dto: GetTransactionDetailsDto = {
+            _id: result._id.toString(),
+            type: result.type,
+            name: result.name,
+            amount: result.amount,
+            category: result.category,
+            description: result.description,
+            date: result.date,
+            images: result.images.map((img: any) => ({
+                _id: img._id.toString(),
+                transactionId: img.transactionId.toString(),
+                url: `/uploads/${img.filename}`,
+                filename: img.filename,
+                isFromDatabase: true
+            }))
+        };
+
+        return res.status(200).json(dto);
     }catch(err: unknown){
         return res.status(500).json({message: "Failed to get transaction details."})
     }
