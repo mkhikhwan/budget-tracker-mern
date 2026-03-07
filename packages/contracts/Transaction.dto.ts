@@ -1,11 +1,15 @@
-export interface CreateTransactionDto {
+export interface CreateTransactionRequestDto {
     type: string;
     name: string;
     amount: number;
     category: string;
     description: string;
     date: string;
-    images?: Express.Multer.File[];
+    images?: any;
+}
+
+export interface CreateTransactionResponseDto {
+    transactionId: string
 }
 
 export interface GetTransactionDetailsDto{
@@ -33,6 +37,6 @@ export interface EditTransactionDto {
     category: string;
     description: string;
     date: string;
-    images?: Express.Multer.File[];
+    images?: any;
     deletedImagesId?: string[];
 }

@@ -23,5 +23,6 @@ router.post("/add", upload.array("images"), TransactionController.createTransact
 router.get("/", TransactionController.getAllTransaction);
 router.get("/:id", TransactionController.getTransactionDetails);
 router.put("/:id", upload.array("images"), TransactionController.editTransaction);
+router.post("/:id/images", upload.array("images"), TransactionController.addImages);
 
 export default router;

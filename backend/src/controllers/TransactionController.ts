@@ -3,25 +3,42 @@ import * as TransactionService from "../services/TransactionService"
 import { ObjectId } from "mongodb";
 
 import { 
-    GetTransactionDetailsDto, 
-    CreateTransactionDto, 
+    CreateTransactionRequestDto,
+    CreateTransactionResponseDto,
+    GetTransactionDetailsDto,
     EditTransactionDto 
 } from "@budget-now/contract"
 
 export const createTransaction = async (req: Request, res:Response) => {
     try{
-        const images = req.files as Express.Multer.File[];
-
-        const dto: CreateTransactionDto = {
-            ...req.body,
-            images
+        const dto: CreateTransactionRequestDto = {
+            ...req.body
         }
 
-        const result = await TransactionService.createTransaction(dto);
+        const result:CreateTransactionResponseDto = await TransactionService.createTransaction(dto);
 
         return res.status(201).json(result);
     }catch(err: unknown){
         return res.status(500).json({message: "Failed to create transaction"})
+    }
+};
+
+export const addImages = async (req: Request, res:Response) => {
+    try{
+        const images = req.files as Express.Multer.File[];
+        const id : string | string[] = req.params.id;
+
+        if(!id || Array.isArray(id)){
+            return res.status(400).json({ message: "Missing or invalid parameter: id" });
+        }else if(!ObjectId.isValid(id)){
+            return res.status(400).json({ message: "Invalid id format" });
+        }
+
+        const result = await TransactionService.addImagesToTransaction(id, images);
+
+        return res.status(201).json(result);
+    }catch(err: unknown){
+        return res.status(500).json({message: `Failed to add Images to Transaction: ${req.params.id}`})
     }
 };
 

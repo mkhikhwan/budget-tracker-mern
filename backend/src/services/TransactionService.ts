@@ -1,9 +1,13 @@
 import { ObjectId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
-import { CreateTransactionDto, EditTransactionDto } from "../dtos_/Transaction.dto";
+import { 
+    CreateTransactionRequestDto,
+    CreateTransactionResponseDto,
+    EditTransactionDto 
+} from "@budget-now/contract";
 
-export const createTransaction = async ({type, name, amount, category, description, date, images}:CreateTransactionDto)=>{
+export const createTransaction = async ({type, name, amount, category, description, date, images}:CreateTransactionRequestDto)=>{
     try{
         const transaction: Transaction = {
             type: type === "expense" ? "expense" : "income",
@@ -15,30 +19,42 @@ export const createTransaction = async ({type, name, amount, category, descripti
         };
         
         const result = await TransactionModel.collection().insertOne(transaction);
-        const transactionId = result.insertedId;
+        const transactionId = result.insertedId.toString();
 
-        if(images && images.length > 0){
-            const imageDocs = images.map<Image>((img)=>{
-                const newImg:Image = {
-                    transactionId: transactionId,
+        const dtoResponse: CreateTransactionResponseDto = { transactionId: transactionId };
+
+        return dtoResponse
+    } catch (err) {
+        throw new Error(err instanceof Error ? err.message : String(err));
+    }
+};
+
+export const addImagesToTransaction = async (transactionId: string, images: Express.Multer.File[]) => {
+    try {
+        if (images && images.length > 0) {
+            const imageDocs = images.map<Image>((img) => {
+                const newImg: Image = {
+                    transactionId: new ObjectId(transactionId),
                     filename: img.filename,
                     path: img.path,
                     mimetype: img.mimetype,
                     size: img.size,
                     uploadedAt: new Date().toISOString()
-                }
+                };
 
                 return newImg;
             });
 
-            await ImageModel.collection().insertMany(imageDocs);
+            const result = await ImageModel.collection().insertMany(imageDocs);
+            return result;
         }
-
-        return { ...transaction, _id: result.insertedId};
+        
+        return { acknowledged: true, insertedCount: 0 };
     } catch (err) {
+        console.error(err);
         throw new Error(err instanceof Error ? err.message : String(err));
     }
-};
+}
 
 export const getAllTransaction = async () => {
     try{

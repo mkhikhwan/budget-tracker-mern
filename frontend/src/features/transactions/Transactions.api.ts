@@ -1,10 +1,22 @@
 import { apiClient } from "../../shared/api/apiClient";
-import { type Transaction, type TransactionDetails } from "./Transactions.types";
+import { 
+    type Transaction, 
+    type TransactionDetails
+} from "./Transactions.types";
 
-export function addTransaction(payload:FormData){
-    // TODO: Resolve api call here instead of the component
+import {
+    type CreateTransactionResponseDto
+} from "@budget-now/contract";
 
+export function addTransaction(payload:FormData): Promise<CreateTransactionResponseDto> {
     return apiClient("/api/transaction/add", {
+        method: "POST",
+        body: payload
+    });
+}
+
+export function addImagesToTransaction(id: string, payload: FormData) {
+    return apiClient(`/api/transaction/${id}/images`, {
         method: "POST",
         body: payload
     });

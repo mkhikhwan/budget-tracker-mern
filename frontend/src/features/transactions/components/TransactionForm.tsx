@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 interface Props{
     initialData?: TransactionDetails;
-    handleSubmit?: (formData: FormData) => void;
+    handleSubmit?: (formData: FormData, images: Image[]) => void;
     readonly?: boolean;
 }
 
@@ -37,16 +37,8 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
         formData.append("category", category);
         formData.append("description", description);
         formData.append("date", date);
-        images.forEach((image) => {
-            if(image.file){
-                formData.append("images", image.file);
-            }
-            if(image.isFromDb && image.isDeleted){
-                formData.append("deletedImagesId", image.id);
-            }
-        });
 
-        if(handleSubmit) handleSubmit(formData);
+        if(handleSubmit) handleSubmit(formData, images);
     };
 
     const title = type === "expense" ? "Expense" : "Income";
