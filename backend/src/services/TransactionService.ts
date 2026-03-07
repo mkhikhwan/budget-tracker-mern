@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
-import { CreateTransactionDto, EditTransactionDto } from "../dtos/Transaction.dto";
+import { CreateTransactionDto, EditTransactionDto } from "../dtos_/Transaction.dto";
 
 export const createTransaction = async ({type, name, amount, category, description, date, images}:CreateTransactionDto)=>{
     try{

@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 import * as TransactionService from "../services/TransactionService"
 import { ObjectId } from "mongodb";
-import { CreateTransactionDto, EditTransactionDto, GetTransactionDetailsDto } from "../dtos/Transaction.dto";
+
+import { 
+    GetTransactionDetailsDto, 
+    CreateTransactionDto, 
+    EditTransactionDto 
+} from "@budget-now/contract"
 
 export const createTransaction = async (req: Request, res:Response) => {
     try{

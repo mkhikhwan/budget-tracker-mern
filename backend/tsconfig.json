@@ -12,7 +12,11 @@
     "skipLibCheck": true,
 
     "types": ["node"],
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@budget-now/contract": ["../../packages/contracts/index.ts"]
+    }
   },
   "include": ["src"]
 }
