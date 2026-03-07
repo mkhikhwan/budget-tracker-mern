@@ -5,6 +5,7 @@ export interface Transaction{
     category: string
     date: string
     amount: number
+    description: string
 }
 
 export interface TransactionDetails extends Transaction{

@@ -3,12 +3,12 @@ import styles from "./TransactionForm.module.css"
 
 import { useState, useMemo, useEffect } from "react";
 import ImagePicker from "./ImagePicker"
-import { type TransactionDetails, type Image } from "../Transactions.types";
+import { type TransactionDetails, type Image, type Transaction } from "../Transactions.types";
 import { useNavigate } from "react-router-dom";
 
 interface Props{
     initialData?: TransactionDetails;
-    handleSubmit?: (formData: FormData, images: Image[]) => void;
+    handleSubmit?: (transaction: Transaction, images: Image[]) => void;
     readonly?: boolean;
 }
 
@@ -27,18 +27,16 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
     const handleInternalOnSubmit = async (e:React.FormEvent)=>{
         e.preventDefault();
 
-        const formData = new FormData();
-        if(initialData){
-            if(initialData._id) formData.append("id", initialData._id);
-        }
-        formData.append("type", type);
-        formData.append("name", name);
-        formData.append("amount", amount.toString());
-        formData.append("category", category);
-        formData.append("description", description);
-        formData.append("date", date);
+        const transaction: Transaction = {
+            type,
+            name,
+            amount,
+            category,
+            description,
+            date
+        };
 
-        if(handleSubmit) handleSubmit(formData, images);
+        if(handleSubmit) handleSubmit(transaction, images);
     };
 
     const title = type === "expense" ? "Expense" : "Income";

@@ -2,17 +2,20 @@ import PageLayout from "../../../shared/layouts/PageLayout"
 import TransactionForm from "../components/TransactionForm";
 
 import * as TransactionApi from "../Transactions.api"
-import type { Image } from "../Transactions.types";
+import { mapTransactionToCreateDto } from "../Transactions.mapper";
+import type { Image, Transaction } from "../Transactions.types";
 
 function AddTransactionPage(){
-    const handleSubmit = async (formData: FormData, images:Image[])=>{
+    const handleSubmit = async (transaction:Transaction, images:Image[])=>{
         try{
-            const addTransactionRes = await TransactionApi.addTransaction(formData);
+            const addTransactionRes = await TransactionApi.addTransaction(mapTransactionToCreateDto(transaction));
+
             if(!addTransactionRes) throw new Error("Something's wrong during adding Transaction.");
 
             const transactionId = addTransactionRes.transactionId;
             if(!transactionId) throw new Error("Something's wrong during adding Transaction.");
 
+            const formData: FormData = new FormData();
             if(images){
                 images.forEach((image) => {
                     if(image.file){

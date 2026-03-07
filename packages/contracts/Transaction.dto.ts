@@ -5,7 +5,6 @@ export interface CreateTransactionRequestDto {
     category: string;
     description: string;
     date: string;
-    images?: any;
 }
 
 export interface CreateTransactionResponseDto {

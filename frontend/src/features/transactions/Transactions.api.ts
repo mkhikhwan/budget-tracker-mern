@@ -5,13 +5,14 @@ import {
 } from "./Transactions.types";
 
 import {
+    type CreateTransactionRequestDto,
     type CreateTransactionResponseDto
 } from "@budget-now/contract";
 
-export function addTransaction(payload:FormData): Promise<CreateTransactionResponseDto> {
+export function addTransaction(transaction:CreateTransactionRequestDto): Promise<CreateTransactionResponseDto> {
     return apiClient("/api/transaction/add", {
         method: "POST",
-        body: payload
+        body: JSON.stringify(transaction)
     });
 }
 

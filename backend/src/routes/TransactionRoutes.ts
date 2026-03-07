@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, json } from "express";
 import * as TransactionController from "../controllers/TransactionController"
 import multer from "multer";
 import path from 'path'
@@ -18,7 +18,7 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-router.post("/add", upload.array("images"), TransactionController.createTransaction);
+router.post("/add", json() ,TransactionController.createTransaction);
 
 router.get("/", TransactionController.getAllTransaction);
 router.get("/:id", TransactionController.getTransactionDetails);
