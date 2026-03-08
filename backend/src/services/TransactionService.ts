@@ -1,13 +1,13 @@
-import { ObjectId } from "mongodb"
+import { ObjectId, WithId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
 import { 
     CreateTransactionRequestDto,
     CreateTransactionResponseDto,
-    EditTransactionDto 
+    EditTransactionDto,
 } from "@budget-now/contract";
 
-export const createTransaction = async ({type, name, amount, category, description, date, images}:CreateTransactionRequestDto)=>{
+export const createTransaction = async ({type, name, amount, category, description, date}:CreateTransactionRequestDto)=>{
     try{
         const transaction: Transaction = {
             type: type === "expense" ? "expense" : "income",
@@ -56,7 +56,7 @@ export const addImagesToTransaction = async (transactionId: string, images: Expr
     }
 }
 
-export const getAllTransaction = async () => {
+export const getAllTransaction = async ():Promise<WithId<Transaction>[]> => {
     try{
         const result = await TransactionModel.collection()
             .find({}, { projection: { description: 0 }})

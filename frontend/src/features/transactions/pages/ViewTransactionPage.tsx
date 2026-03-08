@@ -5,6 +5,7 @@ import * as TransactionApi from "../Transactions.api"
 import { useLocation } from "react-router-dom";
 import LoadingPage from "../../../shared/pages/LoadingPage";
 import { type TransactionDetails } from "../Transactions.types";
+import { mapGetDetailsResponseToTransactionDetails } from "../Transactions.mapper";
 
 function ViewTransactionPage(){
     const location = useLocation();
@@ -19,7 +20,7 @@ function ViewTransactionPage(){
         const fetch = async ()=>{
             try{
                 const res = await TransactionApi.getTransactionDetail(transactionId);
-                setTransaction(res);
+                setTransaction(mapGetDetailsResponseToTransactionDetails(res));
             }catch(e: unknown){
                 alert(e instanceof Error ? e.message : "Can't fetch transactioon details");
             }finally{

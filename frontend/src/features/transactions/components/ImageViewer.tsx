@@ -37,7 +37,7 @@ function ImageViewer({image, onClose}:Props){
                     >
                         <img
                             className={styles.img}
-                            src={"http://localhost:5000" + image.url}
+                            src={image.url}
                             alt="zoomable"
                             style={{ width: "100%", height: "auto", userSelect: "none" }}
                         />

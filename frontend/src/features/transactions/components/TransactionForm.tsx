@@ -3,12 +3,12 @@ import styles from "./TransactionForm.module.css"
 
 import { useState, useMemo, useEffect } from "react";
 import ImagePicker from "./ImagePicker"
-import { type TransactionDetails, type Image, type Transaction } from "../Transactions.types";
+import { type TransactionDetails, type Image } from "../Transactions.types";
 import { useNavigate } from "react-router-dom";
 
 interface Props{
     initialData?: TransactionDetails;
-    handleSubmit?: (transaction: Transaction, images: Image[]) => void;
+    handleSubmit?: (transaction: TransactionDetails, images: Image[]) => void;
     readonly?: boolean;
 }
 
@@ -27,13 +27,14 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
     const handleInternalOnSubmit = async (e:React.FormEvent)=>{
         e.preventDefault();
 
-        const transaction: Transaction = {
+        const transaction: TransactionDetails = {
             type,
             name,
             amount,
             category,
             description,
-            date
+            date,
+            images
         };
 
         if(handleSubmit) handleSubmit(transaction, images);
@@ -102,8 +103,8 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
             // Transform images from db to UI state
             const initImages = initialData.images?.map((img)=>{
                 const newImg: Image = {
-                    id: img._id,
-                    url: `/uploads/${img.filename}`,
+                    _id: img._id,
+                    url: img.url,
                     isFromDb: true
                 }
 

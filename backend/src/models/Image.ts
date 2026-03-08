@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { getDb } from "../config/db";
 
 export interface Image {
-    _id?: ObjectId;
+    _id: ObjectId;
     transactionId: ObjectId;
     filename: string;
     path: string;

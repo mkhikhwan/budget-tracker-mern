@@ -5,28 +5,18 @@ export interface Transaction{
     category: string
     date: string
     amount: number
-    description: string
 }
 
 export interface TransactionDetails extends Transaction{
     description: string;
-    images?: ImageDatabase[];
+    images?: Image[];
 }
 
-export interface Image{
-    id: string,
-    url: string,
-    isFromDb?: boolean,
-    isDeleted?: boolean,
-    file?: File
-};
-
-export interface ImageDatabase{
-    _id: string;
-    transactionId: string;
-    filename: string;
-    path: string;
-    mimetype: string;
-    size: number;
-    uploadedAt: string;
+export interface Image {
+    _id?: string;
+    transactionId?: string;
+    url: string;
+    isFromDb: boolean;
+    isDeleted?: boolean;
+    file?: File;
 }

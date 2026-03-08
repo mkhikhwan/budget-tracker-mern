@@ -11,7 +11,7 @@ interface Props{
 
 function ImagePicker({ images, setImages, readonly }:Props){
     const [isViewingImage, setIsViewingImage] = useState<Boolean>(false);
-    const [selectedImage, setSelectedImage] = useState<Image>({ id: "", url: "" });
+    const [selectedImage, setSelectedImage] = useState<Image>({ _id: "", url: "", isFromDb: false });
 
     useEffect(()=>{
         // TODO: Api call here
@@ -20,21 +20,25 @@ function ImagePicker({ images, setImages, readonly }:Props){
 
     const fileInput = useRef<HTMLInputElement | null>(null);
 
-    const handleDelete = (id:string)=>{
+    const handleDelete = (id:string | undefined)=>{
+        if(!id) return
+
         console.log("Delete Image:", id);
         const newArr:Image[] = images
-            .filter(img => !(img.id === id && !img.isFromDb)) //delete out local image
+            .filter(img => !(img._id === id && !img.isFromDb)) //delete out local image
             .map((img:Image) => { //delete db image
-                return img.id === id ? { ...img, isDeleted: true } : img
+                return img._id === id ? { ...img, isDeleted: true } : img
             });
 
         setImages(newArr);
     };
 
-    const handleView = (id:string)=>{
+    const handleView = (id:string | undefined)=>{
+        if(!id) return
+
         console.log("View Image:", id);
 
-        const selectedImage = images.find(img => img.id === id);
+        const selectedImage = images.find(img => img._id === id);
         if(selectedImage){
             setSelectedImage(selectedImage);
             setIsViewingImage(true);
@@ -45,7 +49,7 @@ function ImagePicker({ images, setImages, readonly }:Props){
 
     const handleViewImageClose = ()=>{
         setIsViewingImage(false);
-        setSelectedImage({ id: "", url: "" });
+        setSelectedImage({ _id: "", url: "", isFromDb: false });
     }
 
     const handleAdd = ()=>{
@@ -59,7 +63,7 @@ function ImagePicker({ images, setImages, readonly }:Props){
 
         const newFiles:Image[] = Array.from(files).map((file:File)=>{
             const newFile: Image = {
-                id: crypto.randomUUID(),
+                _id: crypto.randomUUID(),
                 url: URL.createObjectURL(file),
                 isFromDb: false,
                 file: file
@@ -76,11 +80,11 @@ function ImagePicker({ images, setImages, readonly }:Props){
             {
                 images.map((img)=>{
                     return !img.isDeleted && (
-                        <div className={styles.imgContainer} key={img.id}>
-                            {!readonly && (<div className={styles.deleteButton} onClick={() => handleDelete(img.id)}>
+                        <div className={styles.imgContainer} key={img._id}>
+                            {!readonly && (<div className={styles.deleteButton} onClick={() => handleDelete(img._id)}>
                                 <i className="fa-solid fa-trash-can"></i>
                             </div>)}
-                            <img src={img.isFromDb ? "http://localhost:5000" + img.url : img.url} className={styles.img} onClick={()=> handleView(img.id)}/>
+                            <img src={img.url} className={styles.img} onClick={()=> handleView(img._id)}/>
                         </div>
                     )
                 })

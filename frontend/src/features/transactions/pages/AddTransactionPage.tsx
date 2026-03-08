@@ -3,10 +3,10 @@ import TransactionForm from "../components/TransactionForm";
 
 import * as TransactionApi from "../Transactions.api"
 import { mapTransactionToCreateDto } from "../Transactions.mapper";
-import type { Image, Transaction } from "../Transactions.types";
+import type { Image, TransactionDetails } from "../Transactions.types";
 
 function AddTransactionPage(){
-    const handleSubmit = async (transaction:Transaction, images:Image[])=>{
+    const handleSubmit = async (transaction:TransactionDetails, images:Image[])=>{
         try{
             const addTransactionRes = await TransactionApi.addTransaction(mapTransactionToCreateDto(transaction));
 

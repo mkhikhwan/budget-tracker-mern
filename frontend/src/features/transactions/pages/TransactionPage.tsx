@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import * as TransactionAPI from "../Transactions.api"
 import { NavLink, useNavigate } from "react-router-dom";
 import type { Transaction } from "../Transactions.types";
+import { mapGetAllResponseToTransactions } from "../Transactions.mapper";
 
 function TransactionPage(){
     const navigate = useNavigate();
@@ -17,8 +18,8 @@ function TransactionPage(){
     useEffect(()=>{
         const fetch = async ()=>{
             try{
-                const data = await TransactionAPI.getAllTransaction();
-                setTransactions(data);
+                const res = await TransactionAPI.getAllTransaction();
+                setTransactions(mapGetAllResponseToTransactions(res));
             }catch(err:unknown){
                 alert(`Failed to add transaction: ${err instanceof Error ? err.message : String(err)}`);
             }

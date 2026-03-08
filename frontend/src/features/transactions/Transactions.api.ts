@@ -1,12 +1,10 @@
 import { apiClient } from "../../shared/api/apiClient";
-import { 
-    type Transaction, 
-    type TransactionDetails
-} from "./Transactions.types";
 
 import {
     type CreateTransactionRequestDto,
-    type CreateTransactionResponseDto
+    type CreateTransactionResponseDto,
+    type GetAllTransactionsResponseDto,
+    type GetTransactionDetailsResponseDto
 } from "@budget-now/contract";
 
 export function addTransaction(transaction:CreateTransactionRequestDto): Promise<CreateTransactionResponseDto> {
@@ -23,13 +21,13 @@ export function addImagesToTransaction(id: string, payload: FormData) {
     });
 }
 
-export async function getAllTransaction(): Promise<Transaction[]>{
+export async function getAllTransaction(): Promise<GetAllTransactionsResponseDto>{
     return apiClient("/api/transaction/", {
         method: "GET"
     });
 }
 
-export async function getTransactionDetail(id: string): Promise<TransactionDetails>{
+export async function getTransactionDetail(id: string): Promise<GetTransactionDetailsResponseDto>{
     return apiClient(`/api/transaction/${id}`, {
         method: "GET"
     });
