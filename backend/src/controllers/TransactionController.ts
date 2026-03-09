@@ -18,11 +18,16 @@ export const createTransaction = async (req: Request, res:Response) => {
         const payload = req.body;
         if(!payload) return res.status(500).json({message: "Failed to create transaction"})
 
-        const dto: CreateTransactionRequestDto = {
-            ...payload
-        }
+        const { type, name, amount, category, description, date }: CreateTransactionRequestDto = payload;
 
-        const result:CreateTransactionResponseDto = await TransactionService.createTransaction(dto);
+        const result: CreateTransactionResponseDto = await TransactionService.createTransaction(
+            type,
+            name,
+            amount,
+            category,
+            description,
+            date
+        );
 
         return res.status(201).json(result);
     }catch(err: unknown){

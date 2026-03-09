@@ -1,14 +1,15 @@
 import { ObjectId, WithId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
-import { 
-    CreateTransactionRequestDto,
-    CreateTransactionResponseDto,
-    EditTransactionRequestDto,
-    TransactionDto,
-} from "@budget-now/contract";
 
-export const createTransaction = async ({type, name, amount, category, description, date}:CreateTransactionRequestDto)=>{
+export const createTransaction = async (
+    type: string,
+    name: string,
+    amount: number,
+    category: string,
+    description: string,
+    date: string
+)=>{
     try{
         const transaction: Transaction = {
             type: type === "expense" ? "expense" : "income",
@@ -22,9 +23,7 @@ export const createTransaction = async ({type, name, amount, category, descripti
         const result = await TransactionModel.collection().insertOne(transaction);
         const transactionId = result.insertedId.toString();
 
-        const dtoResponse: CreateTransactionResponseDto = { transactionId: transactionId };
-
-        return dtoResponse
+        return { transactionId: transactionId };
     } catch (err) {
         throw new Error(err instanceof Error ? err.message : String(err));
     }
@@ -71,6 +70,8 @@ export const deleteImages = async (idToDelete:string[])=>{
                     deletedAt : new Date().toISOString()
                 }
             })
+        
+        return
     } catch (err) {
         console.error(err);
         throw new Error(err instanceof Error ? err.message : String(err));
@@ -129,7 +130,7 @@ export const editTransaction = async (
     try {
         if(!_id) return;
 
-        const setTransactionDetails:TransactionDto = {
+        const setTransactionDetails:Transaction = {
             type: type === "expense" ? "expense" : "income",
             name: name,
             amount: amount,
