@@ -21,9 +21,6 @@ function AddTransactionPage(){
                     if(image.file){
                         formData.append("images", image.file);
                     }
-                    if(image.isFromDb && image.isDeleted){
-                        formData.append("deletedImagesId", image.id);
-                    }
                 });
             }
 

@@ -3,9 +3,12 @@ import { apiClient } from "../../shared/api/apiClient";
 import {
     type CreateTransactionRequestDto,
     type CreateTransactionResponseDto,
+    type EditTransactionRequestDto,
     type GetAllTransactionsResponseDto,
     type GetTransactionDetailsResponseDto
 } from "@budget-now/contract";
+import { mapTransactionDetailsToEditDto } from "./Transactions.mapper";
+import type { TransactionDetails } from "./Transactions.types";
 
 export function addTransaction(transaction:CreateTransactionRequestDto): Promise<CreateTransactionResponseDto> {
     return apiClient("/api/transaction/add", {
@@ -21,6 +24,13 @@ export function addImagesToTransaction(id: string, payload: FormData) {
     });
 }
 
+export function deleteImagesFromTransaction(id: string, payload: { ids: string[] }) {
+    return apiClient(`/api/transaction/${id}/images`, {
+        method: "DELETE",
+        body: JSON.stringify(payload)
+    });
+}
+
 export async function getAllTransaction(): Promise<GetAllTransactionsResponseDto>{
     return apiClient("/api/transaction/", {
         method: "GET"
@@ -33,9 +43,13 @@ export async function getTransactionDetail(id: string): Promise<GetTransactionDe
     });
 }
 
-export async function editTransaction(id:string, payload:FormData){
-    return apiClient(`/api/transaction/${id}`, {
+export async function editTransaction(transaction: TransactionDetails) {
+    console.log(transaction._id);
+
+    const dto = mapTransactionDetailsToEditDto(transaction);
+
+    return apiClient(`/api/transaction/${transaction._id}`, {
         method: "PUT",
-        body: payload
+        body: JSON.stringify(dto)
     });
 }

@@ -1,5 +1,5 @@
 export interface TransactionDto{
-    _id: string;
+    _id?: string;
     type: string;
     name: string;
     amount: number;
@@ -9,7 +9,7 @@ export interface TransactionDto{
 }
 
 export interface ImageDto{
-    _id: string;
+    _id?: string;
     transactionId: string;
     url: string;
 }
@@ -37,14 +37,4 @@ export interface GetTransactionDetailsResponseDto{
     images: ImageDto[];
 }
 
-export interface EditTransactionDto {
-    id: string;
-    type: string;
-    name: string;
-    amount: number;
-    category: string;
-    description: string;
-    date: string;
-    images?: any;
-    deletedImagesId?: string[];
-}
+export interface EditTransactionRequestDto extends TransactionDto{}

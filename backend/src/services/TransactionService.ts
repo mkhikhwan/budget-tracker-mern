@@ -4,7 +4,8 @@ import { Image, ImageModel } from "../models/Image";
 import { 
     CreateTransactionRequestDto,
     CreateTransactionResponseDto,
-    EditTransactionDto,
+    EditTransactionRequestDto,
+    TransactionDto,
 } from "@budget-now/contract";
 
 export const createTransaction = async ({type, name, amount, category, description, date}:CreateTransactionRequestDto)=>{
@@ -32,8 +33,8 @@ export const createTransaction = async ({type, name, amount, category, descripti
 export const addImagesToTransaction = async (transactionId: string, images: Express.Multer.File[]) => {
     try {
         if (images && images.length > 0) {
-            const imageDocs = images.map<Image>((img) => {
-                const newImg: Image = {
+            const imageDocs = images.map((img) => {
+                const newImg: Omit<Image, "_id"> = {
                     transactionId: new ObjectId(transactionId),
                     filename: img.filename,
                     path: img.path,
@@ -50,6 +51,26 @@ export const addImagesToTransaction = async (transactionId: string, images: Expr
         }
         
         return { acknowledged: true, insertedCount: 0 };
+    } catch (err) {
+        console.error(err);
+        throw new Error(err instanceof Error ? err.message : String(err));
+    }
+}
+
+export const deleteImages = async (idToDelete:string[])=>{
+    try{
+        const idArray = Array.isArray(idToDelete) ? idToDelete : [idToDelete];
+        const result = await ImageModel.collection()
+            .updateMany({
+                _id : {
+                    $in : idArray.map((id) => new ObjectId(id))
+                }
+            },{
+                $set : {
+                    isDeleted : true,
+                    deletedAt : new Date().toISOString()
+                }
+            })
     } catch (err) {
         console.error(err);
         throw new Error(err instanceof Error ? err.message : String(err));
@@ -76,7 +97,13 @@ export const getTransactionDetails = async (id: string) => {
         if(!transactionResult) return
 
         const imageResult = await ImageModel.collection()
-            .find({ transactionId: new ObjectId(id)})
+            .find({ 
+                transactionId: new ObjectId(id), 
+                $or: [
+                    { isDeleted: false },
+                    { isDeleted: { $exists: false } }
+                ]
+            })
             .toArray();
 
         const transaction = {
@@ -90,9 +117,19 @@ export const getTransactionDetails = async (id: string) => {
     }
 }
 
-export const editTransaction = async ({id, type, name, amount, category, description, date, images, deletedImagesId}:EditTransactionDto) => {
+export const editTransaction = async (
+    _id: string,
+    type: "income" | "expense",
+    name: string,
+    amount: number,
+    category: string,
+    description: string,
+    date: string
+) => {
     try {
-        const transaction:Transaction = {
+        if(!_id) return;
+
+        const setTransactionDetails:TransactionDto = {
             type: type === "expense" ? "expense" : "income",
             name: name,
             amount: amount,
@@ -101,43 +138,14 @@ export const editTransaction = async ({id, type, name, amount, category, descrip
             date: date,
         }
 
-        await TransactionModel.collection().updateOne(
+        return await TransactionModel.collection().updateOne(
             { 
-                _id: new ObjectId(id) 
+                _id: new ObjectId(_id) 
             }, 
             {
-                $set: transaction
+                $set: setTransactionDetails as any
             }
         )
-
-        // Delete images
-        if(deletedImagesId){
-            const idToDelete = deletedImagesId.map((id:string) => new ObjectId(id));
-
-            await ImageModel.collection().deleteMany({
-                _id: {
-                    $in: idToDelete
-                }
-            });
-        }
-
-        // Add Images
-        if(images && images.length > 0){
-            const imageDocs = images.map<Image>((img)=>{
-                const newImg:Image = {
-                    transactionId: new ObjectId(id),
-                    filename: img.filename,
-                    path: img.path,
-                    mimetype: img.mimetype,
-                    size: img.size,
-                    uploadedAt: new Date().toISOString()
-                }
-
-                return newImg;
-            });
-
-            await ImageModel.collection().insertMany(imageDocs);
-        }
     } catch (err) {
         console.log(err);
         throw new Error(err instanceof Error ? err.message : String(err));

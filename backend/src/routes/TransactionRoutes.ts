@@ -18,11 +18,19 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
+// Create Transaction
 router.post("/add", json() ,TransactionController.createTransaction);
 
+// Get All Transactions
 router.get("/", TransactionController.getAllTransaction);
+
+// Get Transaction Details
 router.get("/:id", TransactionController.getTransactionDetails);
-router.put("/:id", upload.array("images"), TransactionController.editTransaction);
+
+// Update Transaction Details
+router.put("/:id", json(), TransactionController.editTransaction);
+
 router.post("/:id/images", upload.array("images"), TransactionController.addImages);
+router.delete("/:id/images", json(), TransactionController.deleteImages);
 
 export default router;

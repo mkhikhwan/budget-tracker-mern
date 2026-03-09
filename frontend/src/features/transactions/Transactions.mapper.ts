@@ -8,6 +8,7 @@ import type {
     CreateTransactionRequestDto,
     GetAllTransactionsResponseDto,
     GetTransactionDetailsResponseDto,
+    EditTransactionRequestDto,
 } from "@budget-now/contract";
 
 export const mapTransactionToCreateDto = (
@@ -59,3 +60,16 @@ export const mapGetDetailsResponseToTransactionDetails = (
     } as TransactionDetails;
 };
 
+export const mapTransactionDetailsToEditDto = (
+    transactionDetails: TransactionDetails
+): EditTransactionRequestDto => {
+    return {
+        _id: transactionDetails._id,
+        type: transactionDetails.type,
+        name: transactionDetails.name,
+        amount: transactionDetails.amount,
+        category: transactionDetails.category,
+        description: transactionDetails.description,
+        date: transactionDetails.date
+    };
+};
