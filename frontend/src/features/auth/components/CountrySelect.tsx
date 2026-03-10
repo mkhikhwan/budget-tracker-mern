@@ -39,7 +39,12 @@ function CountrySelect({ country, setCountry }:Props){
 
     return (
         <div className="form-row">
-            <select name="country" value={country} onChange={(e)=>setCountry(e.target.value)}>
+            <select 
+                name="country" 
+                value={country} 
+                onChange={(e)=>setCountry(e.target.value)}
+            >
+                <option value="" disabled>Select Country</option>
                 {
                     countryList.map((c)=>{
                         return <option key={c.cca2} value={c.cca2}>

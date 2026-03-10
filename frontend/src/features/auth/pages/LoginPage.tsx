@@ -4,14 +4,42 @@ import styles from "./Auth.module.css"
 import bgAuth from "../../../assets/cash-flying-purple-coral.webp";
 import { useState } from "react";
 
+interface LoginForm {
+    email: string;
+    password: string;
+}
+
 function LoginPage(){
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [formData, setFormData] = useState<LoginForm>({
+        email : "",
+        password : "",
+    });
+
+    const [errorForm, setErrorForm] = useState({
+        email : "",
+        password : "",
+    })
 
     const handleLogin = (e:React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        const isValid = validate(formData);
 
-        console.log(email, password);
+        if(isValid){
+            console.log("Login attempt with:", formData);
+        }
+    }
+
+    const validate = (formData:LoginForm)=>{
+        const errors = {
+            email: "",
+            password: "",
+        };
+
+        if (!formData.email.trim()) errors.email = "Email is required.";
+        if (!formData.password) errors.password = "Password is required.";
+
+        setErrorForm(errors);
+        return Object.values(errors).every((x) => x === "");
     }
 
     return (
@@ -20,10 +48,12 @@ function LoginPage(){
                 <form className="form">
                     <h1 className={styles.header}>Login</h1>
                     <div className="form-row">
-                        <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="E-mail"/>
+                        <input value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} type="email" placeholder="E-mail"/>
+                        {errorForm.email && <p className="form-error-label">*{errorForm.email}</p>}
                     </div>
-                    <div>
-                        <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password"/>
+                    <div className="form-row">
+                        <input value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} type="password" placeholder="Password"/>
+                        {errorForm.password && <p className="form-error-label">*{errorForm.password}</p>}
                     </div>
 
                     <Button type="primary" style={{

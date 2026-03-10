@@ -5,17 +5,67 @@ import bgAuth from "../../../assets/cash-flying-purple-coral.webp";
 import { useState } from "react";
 import CountrySelect from "../components/CountrySelect";
 
+interface RegisterForm{
+    name: string;
+    email: string;
+    country: string;
+    password: string;
+    confirmPassword: string;
+}
+
 function RegisterPage(){
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [country, setCountry] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [formData, setFormData] = useState<RegisterForm>({
+        name : "",
+        email : "",
+        country : "",
+        password : "",
+        confirmPassword : "",
+    });
+
+    const [errorForm, setErrorForm] = useState({
+        name : "",
+        email : "",
+        country : "",
+        password : "",
+        confirmPassword : "",
+    })
 
     const handleRegister = (e:React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        const isValid = validate(formData);
 
-        console.log({ name, email, country, password, confirmPassword });
+        if(isValid){
+            console.log("Form is valid");
+        }else{
+            console.log("Form is invalid");
+        }
+    }
+
+    const validate = (formData:RegisterForm)=>{
+        const errors = {
+            name: "",
+            email: "",
+            country: "",
+            password: "",
+            confirmPassword: "",
+        };
+
+        if (!formData.name.trim()) errors.name = "Name is required.";
+        if (!formData.email.trim()) {
+            errors.email = "Email is required.";
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            errors.email = "Email is invalid.";
+        }
+        if (!formData.country) errors.country = "Please select a country.";
+        if (formData.password.length < 8) {
+            errors.password = "Password must be at least 8 characters.";
+        }
+        if (formData.confirmPassword !== formData.password) {
+            errors.confirmPassword = "Passwords do not match.";
+        }
+
+        setErrorForm(errors);
+        return Object.values(errors).every((x) => x === "");
     }
 
     return (
@@ -24,20 +74,25 @@ function RegisterPage(){
                 <form className="form">
                     <h1 className={styles.header}>Register</h1>
                     <div className="form-row">
-                        <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Full Name"/>
+                        <input value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} type="text" placeholder="Full Name"/>
+                        {errorForm.name && <p className="form-error-label">*s{errorForm.name}</p>}
                     </div>
                     <div className="form-row">
-                        <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="E-mail"/>
+                        <input value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} type="email" placeholder="E-mail"/>
+                        {errorForm.email && <p className="form-error-label">*{errorForm.email}</p>}
                     </div>
 
-                    <CountrySelect country={country} setCountry={setCountry}/>
+                    <CountrySelect country={formData.country} setCountry={(val) => setFormData(prev => ({...prev, country: typeof val === 'function' ? val(prev.country) : val}))}/>
+                    {errorForm.country && <p className="form-error-label">*{errorForm.country}</p>}
 
                     <div className="form-row">
-                        <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password"/>
+                        <input value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} type="password" placeholder="Password"/>
+                        {errorForm.password && <p className="form-error-label">*{errorForm.password}</p>}
                     </div>
 
                     <div className="form-row">
-                        <input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} type="password" placeholder="Confirm Password"/>
+                        <input value={formData.confirmPassword} onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} type="password" placeholder="Confirm Password"/>
+                        {errorForm.confirmPassword && <p className="form-error-label">*{errorForm.confirmPassword}</p>}
                     </div>
 
                     <Button 
