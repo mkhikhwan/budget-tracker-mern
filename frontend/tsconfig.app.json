@@ -24,9 +24,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "baseUrl": ".",
     "paths": {
-      "@budget-now/contract": ["../../packages/contracts/index.ts"]
+      "@budget-now/contract": ["../../packages/contracts/index.ts"],
     }
   },
   "include": ["src"]

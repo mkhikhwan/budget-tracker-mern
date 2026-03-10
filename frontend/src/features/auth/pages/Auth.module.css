@@ -1,0 +1,42 @@
+.container{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.authContainer{
+    width: 400px;
+    background-color: #18181F;
+    border-left: 3px solid #33333D;
+    padding: 16px;
+}
+
+.visualBackground{
+    flex:1;
+    height: 100%;
+    background-color: #121212;
+}
+
+.header{
+    text-align: center;
+    margin-top: 16px;
+    margin-bottom: 32px;
+}
+
+.footer{
+    margin-top: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+@media screen and (max-width: 720px) {
+    .authContainer {
+        width: 100%;
+    }
+
+    .visualBackground{
+        display: none;
+    }
+}

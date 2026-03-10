@@ -7,9 +7,15 @@ import AddTransactionPage from '../features/transactions/pages/AddTransactionPag
 import ViewTransactionPage from '../features/transactions/pages/ViewTransactionPage';
 import EditTransactionPage from '../features/transactions/pages/EditTransactionPage';
 
+import LoginPage from '../features/auth/pages/LoginPage';
+import AuthLayout from '../shared/layouts/AuthLayout';
+
 function App() {
 	return (	
 		<Routes>
+			<Route element={< AuthLayout /> }>
+				<Route path="/login" element={< LoginPage />} />
+			</Route>
 			<Route element={< AppLayout /> }>
 				<Route path="/" element={< DashboardHomePage />} />
 				<Route path="/dashboard" element={< DashboardHomePage />} />
