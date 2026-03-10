@@ -8,12 +8,14 @@ import ViewTransactionPage from '../features/transactions/pages/ViewTransactionP
 import EditTransactionPage from '../features/transactions/pages/EditTransactionPage';
 
 import LoginPage from '../features/auth/pages/LoginPage';
+import RegisterPage from '../features/auth/pages/RegisterPage';
 import AuthLayout from '../shared/layouts/AuthLayout';
 
 function App() {
 	return (	
 		<Routes>
 			<Route element={< AuthLayout /> }>
+				<Route path="/register" element={< RegisterPage />} />
 				<Route path="/login" element={< LoginPage />} />
 			</Route>
 			<Route element={< AppLayout /> }>
