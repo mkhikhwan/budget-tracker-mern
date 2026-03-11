@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 
 import TransactionRoutes from "./routes/TransactionRoutes"
+import UserRoutes from "./routes/UserRoutes"
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.get("/", (req, res) => {
     res.json({ message: "Hello World" });
 });
 
+app.use("/api/auth", UserRoutes);
 app.use("/api/transaction",TransactionRoutes);
 
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
