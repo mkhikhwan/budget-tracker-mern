@@ -5,6 +5,9 @@ export interface User {
     _id?: ObjectId;
     email: string;
     password?: string;
+
+    country: string;
+    name: string;
     
     // OAuth specific fields
     providers: {

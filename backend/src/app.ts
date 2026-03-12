@@ -1,6 +1,8 @@
 import express from 'express';
-import cors from 'cors';
 import path from 'path';
+
+import cors from 'cors';
+import globalErrorHandler from './middleware/globalErrorHandler';
 
 import TransactionRoutes from "./routes/TransactionRoutes"
 import UserRoutes from "./routes/UserRoutes"
@@ -18,5 +20,7 @@ app.use("/api/auth", UserRoutes);
 app.use("/api/transaction",TransactionRoutes);
 
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+app.use(globalErrorHandler);
 
 export default app;

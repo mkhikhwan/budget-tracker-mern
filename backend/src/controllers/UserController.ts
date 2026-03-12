@@ -1,25 +1,31 @@
 import { Request, Response } from "express"
+import * as UserService from "src/services/UserService"
+import { LoginDto, RegisterDto } from "@budget-now/contract";
 
 export const login = async (req: Request, res:Response)=>{
-    try{
-        const request = req.body;
+    const request:LoginDto = req.body;
 
-        // TODO: Create Login Service
+    const result = await UserService.login(request.email, request.password);
+    const token = result.accessToken;
 
-        return res.status(201).json({message: "Login Successful"})
-    }catch(err: unknown){
-        return res.status(500).json({message: "Failed to login"})
-    }
+    res.cookie('token', token, { httpOnly: true, secure: true });
+    return res.status(201).json({ 
+        message: "Login Successful",
+        token: token,
+    });
 };
 
 export const register = async (req: Request, res:Response)=>{
-    try{
-        const request = req.body;
+    const request:RegisterDto = req.body;
 
-        // TODO: Create Register Service
-
-        return res.status(201).json({message: "Registration Successful"})
-    }catch(err: unknown){
-        return res.status(500).json({message: "Failed to register"})
-    }
+    const result = UserService.register(
+        request.name,
+        request.email,
+        request.password,
+        request.confirmPassword,
+        request.country
+    )
+    return res.status(201).json({ 
+        message: "Register Successful"
+    });
 };
