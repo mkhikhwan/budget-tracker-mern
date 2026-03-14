@@ -1,15 +1,17 @@
-import { UserModel } from "src/models/User";
+import { User, UserModel } from "src/models/User";
 import AppError from "src/utils/AppError";
-import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 
 export const login = async (email:string, password:string): Promise<{ accessToken: string }> => {
-    const filter = { email: email };
+    const user = await UserModel.findByEmail(email) as User;
+    if(!user){
+        throw new AppError("Invalid Email or Password", 401);
+    }
 
-    const user = await UserModel.collection().findOne(filter);
-    const isMatch = user?.password ? await argon2.verify(user.password, password) : false;
-
-    if(!user || !isMatch) throw new AppError("Invalid E-mail or Password", 401);
+    const isPasswordMatch = user.password ? await UserModel.verifyPassword(user.password!, password) : false;
+    if(!isPasswordMatch){
+        throw new AppError("Invalid Email or Password", 401);
+    }
 
     const token = jwt.sign(
         { sub: user._id, email: user.email }, 
@@ -23,9 +25,30 @@ export const login = async (email:string, password:string): Promise<{ accessToke
 export const register = async (
     name:string,
     email:string,
-    password:string, 
+    password:string,
     confirmPassword:string,
-    country:string, 
+    country:string,
 )=>{
-    throw new AppError("Cannot Register", 403);
+    if(password !== confirmPassword ){
+        throw new AppError("Confirm Password and Password not matching.", 401);
+    }
+
+    const existingUser = await UserModel.findByEmail(email);
+    if(existingUser){
+        throw new AppError("Email already in use", 401);
+    }
+
+    const newUser = await UserModel.prepareUser({
+        name,
+        email,
+        password,
+        country
+    });
+    if(!newUser){
+        throw new AppError("Invalid data received", 403);
+    }
+
+    const result = await UserModel.create(newUser);
+
+    return result
 };

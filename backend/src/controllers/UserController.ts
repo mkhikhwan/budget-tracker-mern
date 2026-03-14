@@ -18,14 +18,15 @@ export const login = async (req: Request, res:Response)=>{
 export const register = async (req: Request, res:Response)=>{
     const request:RegisterDto = req.body;
 
-    const result = UserService.register(
+    const result = await UserService.register(
         request.name,
         request.email,
         request.password,
         request.confirmPassword,
         request.country
     )
+
     return res.status(201).json({ 
-        message: "Register Successful"
+        message: "Register Successful. Please login."
     });
 };
