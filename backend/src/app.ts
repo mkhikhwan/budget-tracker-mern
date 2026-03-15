@@ -2,7 +2,8 @@ import express from 'express';
 import path from 'path';
 
 import cors from 'cors';
-import globalErrorHandler from './middleware/globalErrorHandler';
+import GlobalErrorHandler from './middleware/GlobalErrorHandler';
+import Auth from './middleware/Auth';
 
 import TransactionRoutes from "./routes/TransactionRoutes"
 import UserRoutes from "./routes/UserRoutes"
@@ -16,11 +17,11 @@ app.get("/", (req, res) => {
     res.json({ message: "Hello World" });
 });
 
-app.use("/api/auth", UserRoutes);
-app.use("/api/transaction",TransactionRoutes);
+app.use("/api/auth", Auth , UserRoutes);
+app.use("/api/transaction", Auth, TransactionRoutes);
 
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-app.use(globalErrorHandler);
+app.use(GlobalErrorHandler);
 
 export default app;

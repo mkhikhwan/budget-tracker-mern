@@ -14,7 +14,7 @@ export const login = async (email:string, password:string): Promise<{ accessToke
     }
 
     const token = jwt.sign(
-        { sub: user._id, email: user.email }, 
+        { id: user._id, email: user.email }, 
         process.env.JWT_SECRET || 'secret', 
         { expiresIn: '1h' }
     );
