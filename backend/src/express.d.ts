@@ -3,6 +3,6 @@ import { JwtPayload } from "jsonwebtoken";
 
 declare module 'express'{
     interface Request {
-        user?: string | JwtPayload
+        user?: JwtPayload | string
     }
 }

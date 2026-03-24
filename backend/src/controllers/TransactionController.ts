@@ -9,9 +9,11 @@ import {
     CreateTransactionResponseDto,
     GetTransactionDetailsResponseDto,
     GetAllTransactionsResponseDto,
-    EditTransactionRequestDto
+    EditTransactionRequestDto,
+    UserTokenPayload
 } from "@budget-now/contract"
 import { Image } from "src/models/Image";
+import AppError from "src/utils/AppError";
 
 export const createTransaction = async (req: Request, res:Response) => {
     try{
@@ -20,7 +22,11 @@ export const createTransaction = async (req: Request, res:Response) => {
 
         const { type, name, amount, category, description, date }: CreateTransactionRequestDto = payload;
 
-        const result: CreateTransactionResponseDto = await TransactionService.createTransaction(
+        const user = req.user as UserTokenPayload
+        const userId = user.id;
+
+        const result = await TransactionService.createTransaction(
+            userId,
             type,
             name,
             amount,
@@ -29,68 +35,66 @@ export const createTransaction = async (req: Request, res:Response) => {
             date
         );
 
-        return res.status(201).json(result);
+        const response:CreateTransactionResponseDto = {
+            transactionId: result.toString()
+        }
+
+        return res.status(201).json(response);
     }catch(err: unknown){
         return res.status(500).json({message: "Failed to create transaction"})
     }
 };
 
 export const addImages = async (req: Request, res:Response) => {
-    try{
-        const images = req.files as Express.Multer.File[];
-        const id : string | string[] = req.params.id;
+    const images = req.files as Express.Multer.File[];
+    const id : string | string[] = req.params.id;
 
-        if (typeof id !== 'string' || !ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid or missing transaction ID" });
-        }
-
-        const result = await TransactionService.addImagesToTransaction(id, images);
-
-        return res.status(201).json(result);
-    }catch(err: unknown){
-        return res.status(500).json({message: `Failed to add Images to Transaction: ${req.params.id}`})
+    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+        throw new AppError("Invalid or missing transaction ID", 400);
     }
+
+    const result = await TransactionService.addImagesToTransaction(id, images);
+
+    return res.status(201).json(result);
 };
 
 export const deleteImages = async (req: Request, res:Response) => {
-    try{
-        const response = { ...req.body };
-        const ids:string[] = response.ids;
+    const response = { ...req.body };
+    const ids: string[] = response.ids;
 
-        const result = await TransactionService.deleteImages(ids);
-
-        return res.status(201).json({ status: "success" });
-
-    }catch(err: unknown){
-        return res.status(500).json({message: `Failed to add Images to Transaction: ${req.params.id}`})
+    if (!ids || !Array.isArray(ids)) {
+        throw new AppError("Invalid or missing image IDs", 400);
     }
+
+    await TransactionService.deleteImages(ids);
+    return res.status(201).json({ status: "success" });
 }
 
 export const getAllTransaction = async (req: Request, res:Response) => {
-    try{
-        const result = await TransactionService.getAllTransaction();
-        const transactionList: TransactionDto[] = result.map((t)=>{
-            const newTransaction:TransactionDto = {
-                _id: t._id.toString(),
-                type: t.type,
-                name: t.name,
-                amount: t.amount,
-                category: t.category,
-                description: t.description,
-                date: t.date,
-            }
+    const user = req.user as UserTokenPayload;
+    const userId = user.id;
 
-            return newTransaction
-        });
-
-        const response:GetAllTransactionsResponseDto = {
-            transactions : transactionList
+    const result = await TransactionService.getAllTransaction(userId);
+    
+    const transactionList: TransactionDto[] = result.map((t)=>{
+        const newTransaction:TransactionDto = {
+            _id: t._id.toString(),
+            type: t.type,
+            name: t.name,
+            amount: t.amount,
+            category: t.category,
+            description: t.description,
+            date: t.date,
         }
 
-        return res.status(200).json(response);
-    }catch(err: unknown){
-        return res.status(500).json({message: "Failed to get all transactions"})
+        return newTransaction
+    });
+
+    const response:GetAllTransactionsResponseDto = {
+        transactions : transactionList
     }
+
+    return res.status(200).json(response);
 }
 
 export const getTransactionDetails = async (req: Request, res:Response) => {

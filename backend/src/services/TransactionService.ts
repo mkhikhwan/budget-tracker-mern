@@ -1,8 +1,10 @@
 import { ObjectId, WithId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
+import AppError from "src/utils/AppError";
 
 export const createTransaction = async (
+    userId: string,
     type: string,
     name: string,
     amount: number,
@@ -10,22 +12,21 @@ export const createTransaction = async (
     description: string,
     date: string
 )=>{
-    try{
-        const transaction: Transaction = {
-            type: type === "expense" ? "expense" : "income",
-            name: name,
-            amount: Number(amount),
+    try {
+        const newTransaction = await TransactionModel.prepareTransaction({
+            userId: new ObjectId(userId),
+            type : type === "expense" ? "expense" : "income",
+            name,
+            amount,
             category,
             description,
             date
-        };
-        
-        const result = await TransactionModel.collection().insertOne(transaction);
-        const transactionId = result.insertedId.toString();
+        });
 
-        return { transactionId: transactionId };
+        const result = await TransactionModel.create(newTransaction);
+        return result.insertedId;
     } catch (err) {
-        throw new Error(err instanceof Error ? err.message : String(err));
+        throw new AppError("Failed to create transaction", 500);
     }
 };
 
@@ -78,15 +79,12 @@ export const deleteImages = async (idToDelete:string[])=>{
     }
 }
 
-export const getAllTransaction = async ():Promise<WithId<Transaction>[]> => {
+export const getAllTransaction = async (userId: string):Promise<WithId<Transaction>[]> => {
     try{
-        const result = await TransactionModel.collection()
-            .find({}, { projection: { description: 0 }})
-            .toArray();
-
-        return result
-    }catch (err) {
-        throw new Error(err instanceof Error ? err.message : String(err));
+        const result = await TransactionModel.getAllTransactionsByUserId(userId);
+        return result;
+    } catch (err) {
+        throw new AppError("Failed to fetch transactions", 500);
     }
 }
 
