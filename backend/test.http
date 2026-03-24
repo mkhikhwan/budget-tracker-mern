@@ -31,3 +31,11 @@ Content-Type: application/json
     "date": "2026-02-09T12:00:00.000Z",
     "images": []
 }
+
+### Get Current User Profile
+GET http://localhost:5000/api/auth/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjUwNTNlMWExYTM5YTFiYzA1ODMzOSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3MzcyMzM0NiwiZXhwIjoxNzczNzI2OTQ2fQ.5KvCY60EQ7On-p4Mk_yUa33xHN4KzJ3Iuh1g3UpGQa0
+
+### Test Endpoint
+GET http://localhost:5000/test

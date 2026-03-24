@@ -1,8 +1,9 @@
 import { User, UserModel } from "src/models/User";
 import AppError from "src/utils/AppError";
 import jwt from "jsonwebtoken";
+import { UserTokenPayload } from "@budget-now/contract";
 
-export const login = async (email:string, password:string): Promise<{ accessToken: string }> => {
+export const login = async (email:string, password:string): Promise<{ user: UserTokenPayload, accessToken: string }> => {
     const user = await UserModel.findByEmail(email) as User;
     if(!user){
         throw new AppError("Invalid Email or Password", 401);
@@ -13,13 +14,21 @@ export const login = async (email:string, password:string): Promise<{ accessToke
         throw new AppError("Invalid Email or Password", 401);
     }
 
+    const payload: UserTokenPayload = {
+        id: user._id!.toString(), 
+        email: user.email
+    }
+
     const token = jwt.sign(
-        { id: user._id, email: user.email }, 
+        payload, 
         process.env.JWT_SECRET || 'secret', 
         { expiresIn: '1h' }
     );
 
-    return { accessToken: token };
+    return { 
+        user: payload,
+        accessToken: token 
+    };
 };
 
 export const register = async (

@@ -1,19 +1,14 @@
 import Button from "../../../shared/components/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css"
 import bgAuth from "../../../assets/cash-flying-purple-coral.webp";
 import { useState } from "react";
 import CountrySelect from "../components/CountrySelect";
-
-interface RegisterForm{
-    name: string;
-    email: string;
-    country: string;
-    password: string;
-    confirmPassword: string;
-}
+import type { RegisterForm } from "../Auth.types";
+import * as AuthApi from "../Auth.api";
 
 function RegisterPage(){
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<RegisterForm>({
         name : "",
         email : "",
@@ -34,12 +29,21 @@ function RegisterPage(){
         e.preventDefault();
         const isValid = validate(formData);
 
-        if(isValid){
-            console.log("Form is valid");
-        }else{
-            console.log("Form is invalid");
+        if (isValid) {
+            const req = async () => {
+                try {
+                    await AuthApi.register(formData);
+                    alert("Registration successful! Proceed to login.");
+                    navigate("/login");
+                } catch (e: unknown) {
+                    alert(e instanceof Error ? e.message : "Registration failed. Please try again later.");
+                }
+            };
+            req();
+        } else {
+            alert("Form is invalid!");
         }
-    }
+    };
 
     const validate = (formData:RegisterForm)=>{
         const errors = {

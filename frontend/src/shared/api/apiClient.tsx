@@ -11,11 +11,19 @@ export async function apiClient<T>(
             ...(isFormData ? {} : { "Content-Type": "application/json" }),
             ...options.headers
         },
+        credentials: "include",
         ...options,
     });
 
     if(!res.ok){
-        throw new Error(`API Error: ${res.status}`);
+        let errorMessage = `Error: ${res.status}`;
+        try {
+            const errorData = await res.json();
+            errorMessage = errorData.message || errorMessage;
+        } catch {
+            throw new Error(`There's something wrong. Please contact for support.`);
+        }
+        throw new Error(errorMessage);
     }
 
     return res.json();

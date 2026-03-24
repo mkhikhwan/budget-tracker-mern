@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import * as UserService from "src/services/UserService"
 import { LoginDto, RegisterDto } from "@budget-now/contract";
+import { request } from "node:http";
 
 export const login = async (req: Request, res:Response)=>{
     const request:LoginDto = req.body;
@@ -11,7 +12,7 @@ export const login = async (req: Request, res:Response)=>{
     res.cookie('token', token, { httpOnly: true, secure: true });
     return res.status(201).json({ 
         message: "Login Successful",
-        token: token,
+        user: result.user,
     });
 };
 
@@ -30,3 +31,13 @@ export const register = async (req: Request, res:Response)=>{
         message: "Register Successful. Please login."
     });
 };
+
+export const verify = async (req: Request, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    return res.status(200).json({
+        user: req.user
+    });
+}

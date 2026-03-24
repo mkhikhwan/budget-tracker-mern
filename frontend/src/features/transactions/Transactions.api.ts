@@ -44,9 +44,7 @@ export async function getTransactionDetail(id: string): Promise<GetTransactionDe
 }
 
 export async function editTransaction(transaction: TransactionDetails) {
-    console.log(transaction._id);
-
-    const dto = mapTransactionDetailsToEditDto(transaction);
+    const dto:EditTransactionRequestDto = mapTransactionDetailsToEditDto(transaction);
 
     return apiClient(`/api/transaction/${transaction._id}`, {
         method: "PUT",

@@ -1,15 +1,15 @@
 import Button from "../../../shared/components/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css"
 import bgAuth from "../../../assets/cash-flying-purple-coral.webp";
 import { useState } from "react";
-
-interface LoginForm {
-    email: string;
-    password: string;
-}
+import type { LoginForm } from "../Auth.types";
+import * as AuthApi from "../Auth.api";
+import { useAuth } from "../providers/AuthProvider";
 
 function LoginPage(){
+    const navigate = useNavigate();
+    const auth = useAuth();
     const [formData, setFormData] = useState<LoginForm>({
         email : "",
         password : "",
@@ -24,8 +24,22 @@ function LoginPage(){
         e.preventDefault();
         const isValid = validate(formData);
 
-        if(isValid){
-            console.log("Login attempt with:", formData);
+        if (isValid) {
+            const req = async () => {
+                try {
+                    const res = await AuthApi.login(formData);
+
+                    const user = res.user;
+                    auth.login(user);
+                
+                    navigate("/dashboard");
+                } catch (e: unknown) {
+                    alert(e instanceof Error ? e.message : "Login failed. Please try again later.");
+                }
+            };
+            req();
+        } else {
+            alert("Form is invalid!");
         }
     }
 
