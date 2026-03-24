@@ -18,3 +18,9 @@ export function register(data: RegisterForm): Promise<{ message: string }> {
         body: JSON.stringify(dto)
     });
 }
+
+export function logout(): Promise<{ message: string }> {
+    return apiClient("/api/auth/logout", {
+        method: "POST"
+    });
+}

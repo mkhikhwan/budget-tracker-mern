@@ -41,3 +41,13 @@ export const verify = async (req: Request, res: Response) => {
         user: req.user
     });
 }
+
+export const logout = async (req: Request, res: Response) => {
+    res.cookie('token', '', {
+        httpOnly: true,
+        expires: new Date(0), // Set expiration to 1970
+        path: '/',            // Must match the path used when set
+    });
+
+    res.status(200).json({ message: 'Logged out successfully' });
+}

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import styles from "./NavBar.module.css";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../features/auth/providers/AuthProvider";
 
 function NavBar(){
     const [isOpen, setIsOpen] = useState(false);
+    const auth = useAuth();
 
     const toggleSidebar = () => {
         setIsOpen(prev => !prev)
@@ -59,7 +61,7 @@ function NavBar(){
                         </ul>
                     </li>
                     <div className={styles.navFooter}>
-                        <button className={styles.logout}>
+                        <button className={styles.logout} onClick={auth.logout}>
                             Logout
                         </button>
                     </div>

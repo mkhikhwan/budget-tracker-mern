@@ -1,5 +1,6 @@
-import { useEffect, useState, createContext, useContext, use } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import { type UserTokenPayload } from "@budget-now/contract";
+import * as UserApi from "../Auth.api"
 
 interface AuthContextType {
     user: UserTokenPayload | null;
@@ -47,8 +48,14 @@ export function AuthProvider({ children }:Props){
         setUser(userData);
     }
 
-    const logout = () => {
-        setUser(null);
+    const logout = async () => {
+        try {
+            await UserApi.logout();
+        } catch (error) {
+            console.error("Logout failed:", error);
+        } finally {
+            setUser(null);
+        }
     }
 
     return (

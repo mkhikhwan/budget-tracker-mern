@@ -14,10 +14,7 @@ const Auth = (req:Request, res:Response, next:NextFunction) => {
 
     try{
         const verified = jwt.verify(token, SECRET);
-        console.log("Verified Token Payload:", verified);
         req.user = verified;
-        
-        console.log("req.user:", req.user);
 
         next();
     }catch(e: unknown){
