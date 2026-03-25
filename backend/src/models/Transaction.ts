@@ -47,9 +47,9 @@ export const TransactionModel = {
             .toArray();
     },
 
-    async editTransactionById(id: string, data: Partial<Transaction>) {
+    async editTransactionById(cred: Pick<Transaction, "_id" | "userId">, data: Partial<Transaction>) {
         return this.collection().updateOne(
-            { _id: new ObjectId(id) },
+            cred,
             { $set: data }
         );
     }

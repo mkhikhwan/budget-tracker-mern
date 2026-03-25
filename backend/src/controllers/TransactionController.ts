@@ -128,6 +128,8 @@ export const getTransactionDetails = async (req: Request, res:Response) => {
 
 export const editTransaction = async (req: Request, res: Response) => {
     const id : string | string[] = req.params.id;
+    const user = req.user as UserTokenPayload;
+    const userId = user.id;
 
     if (typeof id !== 'string' || !ObjectId.isValid(id)) {
         throw new AppError("Invalid or missing transaction ID", 400);
@@ -138,6 +140,7 @@ export const editTransaction = async (req: Request, res: Response) => {
     }
 
     const result = await TransactionService.editTransaction(
+        userId,
         id,
         request.type === "expense" ? "expense" : "income",
         request.name,

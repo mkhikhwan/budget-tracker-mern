@@ -119,6 +119,7 @@ export const getTransactionDetails = async (id: string) => {
 }
 
 export const editTransaction = async (
+    userId: string,
     _id: string,
     type: "income" | "expense",
     name: string,
@@ -128,16 +129,22 @@ export const editTransaction = async (
     date: string
 ) => {
     try {
-        if(!_id) throw new AppError("Transaction ID is required", 400);
+        if(!_id || !userId) throw new AppError("Transaction ID is required", 400);
 
-        const result = await TransactionModel.editTransactionById(_id, {
-            type: type === "expense" ? "expense" : "income",
-            name: name,
-            amount: amount,
-            category: category,
-            description: description,
-            date: date,
-        });
+        const result = await TransactionModel.editTransactionById(
+            {
+                _id: new ObjectId(_id),
+                userId: new ObjectId(userId),
+            }, 
+            {
+                type: type === "expense" ? "expense" : "income",
+                name: name,
+                amount: amount,
+                category: category,
+                description: description,
+                date: date,
+            }
+        );
 
         return result
     } catch (err) {
