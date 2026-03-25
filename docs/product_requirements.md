@@ -57,46 +57,12 @@ PERSONAL FINANCE APP REQUIREMENTS (MERN)
 
 3. TECHNICAL REQUIREMENTS
 
-3.1 Backend (Node + Express)
-- Use MongoDB + Mongoose
-- Create REST API with the following routes:
-
-Auth
-- POST /api/auth/register
-- POST /api/auth/login
-
-Accounts
-- GET /api/accounts
-- POST /api/accounts
-- PUT /api/accounts/:id
-- DELETE /api/accounts/:id
-
-Transactions
-- GET /api/transactions
-- POST /api/transactions
-- PUT /api/transactions/:id
-- DELETE /api/transactions/:id
-
-Budgets
-- GET /api/budgets
-- POST /api/budgets
-- PUT /api/budgets/:id
-- DELETE /api/budgets/:id
-
-3.2 Frontend (React)
-- Use React Router for navigation
-- Use Axios or fetch for API calls
-- Implement protected routes for authenticated users
-
-3.3 Data Validation
-- Use Joi or express-validator
-- Validate all inputs (amount, date, category, etc.)
-
-3.4 Security
-- Hash passwords (bcrypt)
-- Use JWT for authentication
-- Protect routes with middleware
-- Input sanitization
+- Stack: MERN (MongoDB, Express, React, Node)
+- Auth: JWT with bcrypt password hashing
+- API: RESTful architecture with strict adhere to REST principles
+- Validation: Schema-based input validation (Joi/express-validator)
+- Routing: React Router with protected routes
+- Security: Middleware-based authentication and input sanitization
 
 4. EXTRA FEATURES (OPTIONAL)
 - Recurring transactions

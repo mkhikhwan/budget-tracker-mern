@@ -1,72 +1,38 @@
-src/
-  app/
-    App.tsx
-    routes.tsx
-  features/
-    auth/
-      components/
-        LoginForm.tsx
-        SignupForm.tsx
-      authSlice.ts
-      authApi.ts
-      hooks/
-        useAuth.ts
-    dashboard/
-      components/
-        DashboardLayout.tsx
-        SummaryCard.tsx
-        Charts.tsx
-      pages/
-        DashboardHome.tsx
-      dashboardSlice.ts
-    transactions/
-      components/
-        TransactionList.tsx
-        TransactionItem.tsx
-        TransactionForm.tsx
-      pages/
-        TransactionsPage.tsx
-      transactionsSlice.ts
-      transactionsApi.ts
-    budgets/
-      components/
-        BudgetList.tsx
-        BudgetItem.tsx
-        BudgetForm.tsx
-      pages/
-        BudgetsPage.tsx
-      budgetsSlice.ts
-      budgetsApi.ts
-    accounts/
-      components/
-        AccountList.tsx
-        AccountItem.tsx
-        AccountForm.tsx
-      pages/
-        AccountsPage.tsx
-      accountsSlice.ts
-      accountsApi.ts
-  shared/
-    components/
-      Button.tsx
-      Modal.tsx
-      Input.tsx
-      Spinner.tsx
-    hooks/
-      useFetch.ts
-      useDebounce.ts
-    utils/
-      currency.ts
-      date.ts
-    styles/
-      variables.css
-  assets/
-    icons/
-    images/
-  styles/
-    globals.css
-  index.tsx
-
+frontend/
+ ├─ src/
+ │  ├─ assets/              # Static files (images, icons, fonts)
+ │  │  └─ logo.svg
+ │  ├─ components/          # Global, reusable UI components (Atomic design)
+ │  │  ├─ Button.tsx
+ │  │  └─ Input.tsx
+ │  ├─ features/            # Business domains (The "core" of the app)
+ │  │  ├─ auth/
+ │  │  │  ├─ AuthForm.tsx
+ │  │  │  └─ authService.ts
+ │  │  ├─ dashboard/
+ │  │  │  ├─ Dashboard.tsx
+ │  │  │  └─ SummaryCard.tsx
+ │  │  ├─ transactions/
+ │  │  │  ├─ TransactionList.tsx
+ │  │  │  └─ transactionService.ts
+ │  │  └─ budgets/
+ │  │     ├─ BudgetList.tsx
+ │  │     └─ budgetService.ts
+ │  ├─ hooks/               # Global custom React hooks
+ │  │  └─ useLocalStorage.ts
+ │  ├─ store/               # Global state management (Zustand/Redux)
+ │  │  └─ useAuthStore.ts
+ │  ├─ styles/              # Global CSS/SCSS or Theme definitions
+ │  │  └─ globals.css
+ │  ├─ utils/               # Shared helper functions (formatters, validators)
+ │  │  └─ formatCurrency.ts
+ │  ├─ App.tsx              # Main application component & Routing
+ │  ├─ main.tsx             # Entry point (ReactDOM.render)
+ │  └─ index.tsx            # (Optional) legacy entry or type definitions
+ ├─ public/                 # Static assets that don't need bundling
+ ├─ package.json
+ ├─ tsconfig.json
+ └─ .env                    # Frontend environment variables (VITE_API_URL, etc.)
 
 Example feature structure:
 --features/transactions/
