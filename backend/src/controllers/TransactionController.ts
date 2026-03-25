@@ -98,67 +98,54 @@ export const getAllTransaction = async (req: Request, res:Response) => {
 }
 
 export const getTransactionDetails = async (req: Request, res:Response) => {
-    try{
-        const id : string | string[] = req.params.id;
+    const id : string | string[] = req.params.id;
 
-        if (typeof id !== 'string' || !ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid or missing transaction ID" });
-        }
-
-        const result = await TransactionService.getTransactionDetails(id);
-        if (!result) {
-            return res.status(404).json({ message: "Transaction not found" });
-        }
-
-        const images:ImageDto[] = result.images.map((img: Image) => ({
-            _id: img._id?.toString(),
-            transactionId: img.transactionId.toString(),
-            url: `http://localhost:5000/uploads/${img.filename}`,
-        }))
-
-        const response:GetTransactionDetailsResponseDto = {
-            _id: result._id.toString(),
-            type: result.type,
-            name: result.name,
-            amount: result.amount,
-            category: result.category,
-            description: result.description,
-            date: result.date,
-            images: images,
-        } 
-
-        return res.status(200).json(response);
-    }catch(err: unknown){
-        return res.status(500).json({message: "Failed to get transaction details."})
+    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+        throw new AppError("Invalid or missing transaction ID", 400);
     }
+
+    const result = await TransactionService.getTransactionDetails(id);
+
+    const images:ImageDto[] = result.images.map((img: Image) => ({
+        _id: img._id?.toString(),
+        transactionId: img.transactionId.toString(),
+        url: `http://localhost:5000/uploads/${img.filename}`,
+    }));
+
+    const response:GetTransactionDetailsResponseDto = {
+        _id: result._id!.toString(),
+        type: result.type!,
+        name: result.name!,
+        amount: result.amount!,
+        category: result.category!,
+        description: result.description!,
+        date: result.date!,
+        images: images,
+    };
+
+    return res.status(200).json(response);
 }
 
 export const editTransaction = async (req: Request, res: Response) => {
-    try{
-        const id : string | string[] = req.params.id;
+    const id : string | string[] = req.params.id;
 
-        if (typeof id !== 'string' || !ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid or missing transaction ID" });
-        }
-
-        const request:EditTransactionRequestDto = {
-            ...req.body
-        }
-
-        console.log(id);
-
-        const result = await TransactionService.editTransaction(
-            id,
-            request.type === "expense" ? "expense" : "income",
-            request.name,
-            request.amount,
-            request.category,
-            request.description,
-            request.date
-        );
-
-        return res.status(201).json({message: "Edit successful."});
-    }catch(err: unknown){
-        return res.status(500).json({message: "Failed to edit transaction"})
+    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+        throw new AppError("Invalid or missing transaction ID", 400);
     }
+
+    const request:EditTransactionRequestDto = {
+        ...req.body
+    }
+
+    const result = await TransactionService.editTransaction(
+        id,
+        request.type === "expense" ? "expense" : "income",
+        request.name,
+        request.amount,
+        request.category,
+        request.description,
+        request.date
+    );
+
+    return res.status(201).json({message: "Edit successful."});
 }

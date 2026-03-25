@@ -93,7 +93,9 @@ export const getTransactionDetails = async (id: string) => {
         const transactionResult = await TransactionModel.collection()
             .findOne({ _id: new ObjectId(id) });
 
-        if(!transactionResult) return
+        if(!transactionResult === null){
+            throw new AppError("Transaction not found", 404);
+        }
 
         const imageResult = await ImageModel.collection()
             .find({ 
@@ -112,7 +114,7 @@ export const getTransactionDetails = async (id: string) => {
 
         return transaction
     }catch (err) {
-        throw new Error(err instanceof Error ? err.message : String(err));
+        throw new AppError("Failed to get transaction details", 500);
     }
 }
 
@@ -126,27 +128,19 @@ export const editTransaction = async (
     date: string
 ) => {
     try {
-        if(!_id) return;
+        if(!_id) throw new AppError("Transaction ID is required", 400);
 
-        const setTransactionDetails:Transaction = {
+        const result = await TransactionModel.editTransactionById(_id, {
             type: type === "expense" ? "expense" : "income",
             name: name,
             amount: amount,
             category: category,
             description: description,
             date: date,
-        }
+        });
 
-        return await TransactionModel.collection().updateOne(
-            { 
-                _id: new ObjectId(_id) 
-            }, 
-            {
-                $set: setTransactionDetails as any
-            }
-        )
+        return result
     } catch (err) {
-        console.log(err);
-        throw new Error(err instanceof Error ? err.message : String(err));
+        throw new AppError("Failed to edit transaction", 500);
     }
 };

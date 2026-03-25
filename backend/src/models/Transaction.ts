@@ -45,5 +45,12 @@ export const TransactionModel = {
         return this.collection()
             .find({ userId: new ObjectId(userId) }, { projection: { description: 0 }})
             .toArray();
+    },
+
+    async editTransactionById(id: string, data: Partial<Transaction>) {
+        return this.collection().updateOne(
+            { _id: new ObjectId(id) },
+            { $set: data }
+        );
     }
 };
