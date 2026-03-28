@@ -1,5 +1,5 @@
-import { User, UserModel } from "src/models/User";
-import AppError from "src/utils/AppError";
+import { User, UserModel } from "../models/User";
+import AppError from "../utils/AppError";
 import jwt from "jsonwebtoken";
 import { UserTokenPayload } from "@budget-now/contract";
 

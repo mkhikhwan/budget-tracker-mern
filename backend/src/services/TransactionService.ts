@@ -1,7 +1,7 @@
 import { ObjectId, WithId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
-import AppError from "src/utils/AppError";
+import AppError from "../utils/AppError";
 
 export const createTransaction = async (
     userId: string,

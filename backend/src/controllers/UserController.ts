@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
-import * as UserService from "src/services/UserService"
+import * as UserService from "../services/UserService"
 import { LoginDto, RegisterDto } from "@budget-now/contract";
-import { request } from "node:http";
 
 export const login = async (req: Request, res:Response)=>{
     const request:LoginDto = req.body;

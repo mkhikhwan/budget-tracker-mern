@@ -1,6 +1,6 @@
 import { Router, json } from "express";
 import * as UserController from "../controllers/UserController"
-import Auth from "src/middleware/Auth";
+import Auth from "../middleware/Auth";
 
 const router = Router();
 

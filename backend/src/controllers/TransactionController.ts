@@ -12,8 +12,8 @@ import {
     EditTransactionRequestDto,
     UserTokenPayload
 } from "@budget-now/contract"
-import { Image } from "src/models/Image";
-import AppError from "src/utils/AppError";
+import { Image } from "../models/Image";
+import AppError from "../utils/AppError";
 
 export const createTransaction = async (req: Request, res:Response) => {
     try{
