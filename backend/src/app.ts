@@ -3,7 +3,7 @@ import path from 'path';
 
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import globalErrorHandler from './middleware/GlobalErrorHandler';
+import GlobalErrorHandler from './middleware/GlobalErrorHandler';
 import Auth from './middleware/Auth';
 import morgan from 'morgan'
 
@@ -44,6 +44,6 @@ if(process.env.NODE_ENV === "production"){
 }
 
 // Error Handler Middleware
-app.use(globalErrorHandler);
+app.use(GlobalErrorHandler);
 
 export default app;
