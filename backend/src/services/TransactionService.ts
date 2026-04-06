@@ -1,6 +1,7 @@
 import { ObjectId, WithId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
+import { TransactionCategoryModel } from "../models/TransactionCategory";
 import AppError from "../utils/AppError";
 
 export const createTransaction = async (
@@ -149,5 +150,14 @@ export const editTransaction = async (
         return result
     } catch (err) {
         throw new AppError("Failed to edit transaction", 500);
+    }
+};
+
+export const getTransactionCategories = async () => {
+    try {
+        const categories = await TransactionCategoryModel.getAll();
+        return categories;
+    } catch (err) {
+        throw new AppError("Failed to fetch transaction categories", 500);
     }
 };

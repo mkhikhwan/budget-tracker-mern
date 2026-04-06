@@ -1,10 +1,12 @@
 import Button from "../../../shared/components/Button"
 import styles from "./TransactionForm.module.css"
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ImagePicker from "./ImagePicker"
-import { type TransactionDetails, type Image } from "../Transactions.types";
+import { type TransactionDetails, type Image, type TransactionCategoryOptions } from "../Transactions.types";
 import { useNavigate } from "react-router-dom";
+import * as TransactionAPI from "../Transactions.api";
+import { mapCategoryDtoToTransactionCategory } from "../Transactions.mapper";
 
 interface Props{
     initialData?: TransactionDetails;
@@ -23,6 +25,7 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
     const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
     
     const [images, setImages] = useState<Image[]>([]);
+    const [categoryOptions, setCategoryOption] = useState<TransactionCategoryOptions>([]);
 
     const handleInternalOnSubmit = async (e:React.FormEvent)=>{
         e.preventDefault();
@@ -41,20 +44,6 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
     };
 
     const title = type === "expense" ? "Expense" : "Income";
-    const expenseCategory = [
-        { value: 'food', label: 'Food' },
-        { value: 'utilities', label: 'Utilities' },
-        { value: 'others', label: 'Others' }
-    ];
-    const incomeCategory = [
-        { value: 'salary', label: 'Salary' },
-        { value: 'others', label: 'Others' }
-    ];
-
-    const categoryOption = useMemo(()=>{
-        return type === 'expense' ? expenseCategory : incomeCategory; 
-    },[type]);
-
     // Validation
     const handleKeyDownAmount = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if(e.key >= "0" && e.key <= "9"){
@@ -92,6 +81,20 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
     };
 
     useEffect(()=>{
+        const fetchCategoryOptions = async ()=> {
+            try{
+                const res = await TransactionAPI.getTransactionCategories();
+                if (res?.categories) {
+                    setCategoryOption(res.categories.map(mapCategoryDtoToTransactionCategory));
+                }
+            }catch{
+                alert("Fail to fetch category options.");
+            }
+        };
+
+        // Execute the fetch
+        fetchCategoryOptions();
+
         if(initialData){
             setType(initialData.type === 'expense' ? 'expense' : 'income');
             setName(initialData.name);
@@ -154,7 +157,7 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
                 <label className="form-label">{title} Category:</label>
                 <select className="input" onChange={(e)=> setCategory(e.target.value)} value={category} disabled={readonly}>
                     {
-                        categoryOption.map((option)=>{
+                        categoryOptions.filter(i => i.type === type).map((option)=>{
                             return <option value={option.value} key={option.value}>{option.label}</option>
                         })
                     }

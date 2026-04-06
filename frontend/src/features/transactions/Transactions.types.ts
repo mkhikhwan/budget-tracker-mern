@@ -20,3 +20,11 @@ export interface Image {
     isDeleted?: boolean;
     file?: File;
 }
+
+export interface TransactionCategory {
+    type: string;
+    value: string;
+    label: string;
+}
+
+export type TransactionCategoryOptions = TransactionCategory[];

@@ -34,8 +34,13 @@ Content-Type: application/json
 
 ### Get Current User Profile
 GET http://localhost:5000/api/auth/me
+
+
+### Get Expense Categories
+GET http://localhost:5000/api/transaction/categories
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjUwNTNlMWExYTM5YTFiYzA1ODMzOSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3MzcyMzM0NiwiZXhwIjoxNzczNzI2OTQ2fQ.5KvCY60EQ7On-p4Mk_yUa33xHN4KzJ3Iuh1g3UpGQa0
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjUwNTNlMWExYTM5YTFiYzA1ODMzOSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTQwMDQ2MywiZXhwIjoxNzc1NDA0MDYzfQ.2nBOvQNJ3oScBAtqozjlbYe3E7NXXIfUsjWjwEDMj44
+
 
 ### Test Endpoint
 GET http://localhost:5000/test

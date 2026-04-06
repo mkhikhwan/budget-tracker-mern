@@ -5,7 +5,8 @@ import {
     type CreateTransactionResponseDto,
     type EditTransactionRequestDto,
     type GetAllTransactionsResponseDto,
-    type GetTransactionDetailsResponseDto
+    type GetTransactionDetailsResponseDto,
+    type GetTransactionCategoriesResponseDto
 } from "@budget-now/contract";
 import { mapTransactionDetailsToEditDto } from "./Transactions.mapper";
 import type { TransactionDetails } from "./Transactions.types";
@@ -39,6 +40,12 @@ export async function getAllTransaction(): Promise<GetAllTransactionsResponseDto
 
 export async function getTransactionDetail(id: string): Promise<GetTransactionDetailsResponseDto>{
     return apiClient(`/api/transaction/${id}`, {
+        method: "GET"
+    });
+}
+
+export async function getTransactionCategories(): Promise<GetTransactionCategoriesResponseDto> {
+    return apiClient(`/api/transaction/categories`, {
         method: "GET"
     });
 }

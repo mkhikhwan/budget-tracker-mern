@@ -10,7 +10,9 @@ import {
     GetTransactionDetailsResponseDto,
     GetAllTransactionsResponseDto,
     EditTransactionRequestDto,
-    UserTokenPayload
+    UserTokenPayload,
+    GetTransactionCategoriesResponseDto,
+    TransactionCategoryDto
 } from "@budget-now/contract"
 import { Image } from "../models/Image";
 import AppError from "../utils/AppError";
@@ -151,4 +153,17 @@ export const editTransaction = async (req: Request, res: Response) => {
     );
 
     return res.status(201).json({message: "Edit successful."});
+}
+
+export const getTransactionCategories = async (req: Request, res: Response) => {
+    const categories = await TransactionService.getTransactionCategories();
+    const newCategories: TransactionCategoryDto[] = categories.map(tc => ({
+        _id: tc._id!.toString(),
+        type: tc.type,
+        label: tc.label,
+        value: tc.value
+    }));
+
+    const response: GetTransactionCategoriesResponseDto = { categories: newCategories };
+    return res.status(200).json(response);
 }

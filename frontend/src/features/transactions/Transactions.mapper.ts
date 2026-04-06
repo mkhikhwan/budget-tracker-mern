@@ -2,6 +2,7 @@ import type {
     Transaction, 
     TransactionDetails,
     Image,
+    TransactionCategory
 } from "./Transactions.types";
 
 import type { 
@@ -9,13 +10,14 @@ import type {
     GetAllTransactionsResponseDto,
     GetTransactionDetailsResponseDto,
     EditTransactionRequestDto,
+    TransactionCategoryDto,
 } from "@budget-now/contract";
 
 export const mapTransactionToCreateDto = (
     transaction: TransactionDetails
 ): CreateTransactionRequestDto => {
     return {
-        type: transaction.type,
+        type: transaction.type === "expense" ? "expense" : "income",
         name: transaction.name,
         amount: transaction.amount,
         category: transaction.category,
@@ -64,12 +66,20 @@ export const mapTransactionDetailsToEditDto = (
     transactionDetails: TransactionDetails
 ): EditTransactionRequestDto => {
     return {
-        _id: transactionDetails._id,
-        type: transactionDetails.type,
-        name: transactionDetails.name,
-        amount: transactionDetails.amount,
-        category: transactionDetails.category,
-        description: transactionDetails.description,
-        date: transactionDetails.date
+        _id: transactionDetails._id!,
+        type: transactionDetails.type === "expense" ? "expense" : "income",
+        name: transactionDetails.name!,
+        amount: transactionDetails.amount!,
+        category: transactionDetails.category!,
+        description: transactionDetails.description!,
+        date: transactionDetails.date!
     };
 };
+
+export const mapCategoryDtoToTransactionCategory = (
+    dto: TransactionCategoryDto
+): TransactionCategory => ({
+    type: dto.type,
+    value: dto.value,
+    label: dto.label
+});

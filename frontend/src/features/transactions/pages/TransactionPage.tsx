@@ -21,7 +21,7 @@ function TransactionPage(){
                 const res = await TransactionAPI.getAllTransaction();
                 setTransactions(mapGetAllResponseToTransactions(res));
             }catch(err:unknown){
-                alert(`Failed to add transaction: ${err instanceof Error ? err.message : String(err)}`);
+                alert(`Failed to fetch transactions: ${err instanceof Error ? err.message : String(err)}`);
             }
         }
 
@@ -42,7 +42,7 @@ function TransactionPage(){
         <PageLayout header="Transactions">
             <section className={styles.section}>
                 <div className={styles.controlRow}>
-                    <input type="text" className={styles.search} placeholder="Search Expenses"/>
+                    <input type="text" className={styles.search} placeholder="Search Transactions"/>
                     <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
                         <Button type="primary">
                             <div style={{padding:'4px', paddingLeft:'16px', paddingRight:'16px'}}>
@@ -52,21 +52,24 @@ function TransactionPage(){
                         </Button>
                     </div>
                 </div>
-                <div className={styles.expensesContainer}>
+                <div className={styles.transactionsContainer}>
                     {
-                        transactions.map((expense)=>{
-                            return <div className={styles.expenseRow} key={expense._id} onClick={()=> handleOnClickViewTransaction(expense._id)}>
-                                <div className={styles.expenseRowLeft}>
+                        transactions.map((transaction)=>{
+                            return <div className={styles.transactionRow} key={transaction._id} onClick={()=> handleOnClickViewTransaction(transaction._id)}>
+                                <div className={styles.transactionRowLeft}>
                                     <div className={styles.name}>
-                                        {expense.name} (<span>{expense.category}</span>)
+                                        {transaction.name}
+                                    </div>
+                                    <div className={styles.category}>
+                                        <span className={styles.tag}>{transaction.category}</span>
                                     </div>
                                     <div className={styles.date}>
-                                        {expense.date}
+                                        {transaction.date}
                                     </div>
                                 </div>
-                                <div className={styles.expenseRowRight}>
-                                    <div className={styles.amount}>
-                                        {formatAmount(expense.amount)}
+                                <div className={styles.transactionRowRight}>
+                                    <div className={`${styles.amount} ${ transaction.type === "expense" ? styles.expense : styles.income } `}>
+                                        <span>{ transaction.type === "expense" ? "-" : "+" }</span> {formatAmount(transaction.amount)}
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +80,7 @@ function TransactionPage(){
                     <NavLink to="/transactions/add">
                         <Button type="primary" style={{width:'100%', fontSize:'1.1rem', fontWeight:'600', padding:'8px 0px', margin:'8px 0px'}}>
                             <i className="fa-solid fa-plus" style={{ marginRight: '8px' }}></i>
-                            Add Expense
+                            Add Transaction
                         </Button>
                     </NavLink>
                 </div>

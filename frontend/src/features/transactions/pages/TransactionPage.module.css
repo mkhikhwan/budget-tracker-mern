@@ -5,7 +5,7 @@
     height: 100%;
 }
 
-.expensesContainer{
+.transactionsContainer{
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -16,7 +16,7 @@
     scrollbar-color: #555 transparent;
 }
 
-.expenseRow{
+.transactionRow{
     display: flex;
     border: 2px solid #33333D;
     border-radius: 16px;
@@ -27,7 +27,7 @@
 }
 
 
-.expenseRowLeft{
+.transactionRowLeft{
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -36,7 +36,7 @@
     padding: 8px;
 }
 
-.expenseRowRight{
+.transactionRowRight{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,12 +63,36 @@
 
 .name{
     font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.category{
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.tag{
+    background-color: #33333D;
+    color: #FFFFFF;
+    padding: 2px 8px;
+    font-size: 0.85rem;
+    border-radius: 6px;
 }
 
 .date{
+    margin-top: 8px;
     color: #A0A0AB;
 }
 
 .amount{
-    padding: 0 12px
+    padding: 0 12px;
+    font-weight: 600;
+}
+
+.amount.expense{
+    color: #FF4D4D;
+}
+
+.amount.income{
+    color: #00E676;
 }

@@ -24,6 +24,9 @@ router.post("/add", json() ,TransactionController.createTransaction);
 // Get All Transactions
 router.get("/", TransactionController.getAllTransaction);
 
+// Get All Transaction Categories by Type
+router.get("/categories", TransactionController.getTransactionCategories);
+
 // Get Transaction Details
 router.get("/:id", TransactionController.getTransactionDetails);
 

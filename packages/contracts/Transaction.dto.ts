@@ -1,11 +1,12 @@
-export interface TransactionDto{
-    _id?: string;
-    type: string;
-    name: string;
-    amount: number;
-    category: string;
-    description: string;
-    date: string;
+import { type TransactionCategory } from "../../backend/src/models/TransactionCategory";
+import { type Transaction } from "../../backend/src/models/Transaction";
+
+export interface TransactionDto extends Omit<Transaction, "_id" | "userId">{
+    _id: string;
+}
+
+export interface TransactionCategoryDto extends Omit<TransactionCategory, "_id">{
+    _id: string;
 }
 
 export interface ImageDto{
@@ -38,3 +39,7 @@ export interface GetTransactionDetailsResponseDto{
 }
 
 export interface EditTransactionRequestDto extends TransactionDto{}
+
+export interface GetTransactionCategoriesResponseDto{
+    categories: TransactionCategoryDto[];
+}

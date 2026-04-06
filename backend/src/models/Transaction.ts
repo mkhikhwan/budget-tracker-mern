@@ -42,9 +42,42 @@ export const TransactionModel = {
     },
 
     async getAllTransactionsByUserId(userId: string){
-        return this.collection()
-            .find({ userId: new ObjectId(userId) }, { projection: { description: 0 }})
-            .toArray();
+        const pipeline = [
+            // 1. Filter by User ID.
+            {
+                $match: {
+                    userId: new ObjectId(userId)
+                }
+            },
+            // Include the collection "Transaction Categories" into Transaction Collection
+            {
+                $lookup: {
+                    from: "transaction_categories",
+                    localField: "category",
+                    foreignField: "value",
+                    as: "categoryInfo"
+                }
+            },
+            // Unwind the array into a single object
+            {
+                $unwind: {
+                    path: "$categoryInfo",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            // Modify Category to proper Label
+            {
+                $set: {
+                    category: { $ifNull: ["$categoryInfo.label", "$category"] }
+                }
+            },
+            // Remove unnecessary key
+            {
+                $unset: ["categoryInfo", "userId", "description"]
+            }
+        ];
+
+        return this.collection().aggregate(pipeline).toArray();
     },
 
     async editTransactionById(cred: Pick<Transaction, "_id" | "userId">, data: Partial<Transaction>) {
