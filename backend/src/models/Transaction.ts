@@ -9,7 +9,7 @@ export interface Transaction{
     amount: number;
     category: string;
     description: string;
-    date: string
+    date: Date;
     images? : Express.Multer.File[]
 }
 
@@ -29,7 +29,7 @@ export const TransactionModel = {
             amount: data.amount!,
             category: data.category!,
             description: data.description!,
-            date: data.date!
+            date: new Date(data.date!)
         }
     },
 

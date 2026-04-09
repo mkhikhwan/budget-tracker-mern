@@ -15,8 +15,8 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "test@example.com",
-    "password": "password123"
+    "email": "ikhwan@gmail.com",
+    "password": "ikhwan123"
 }
 
 ### Add Transaction
@@ -44,3 +44,22 @@ Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjUwNTNlMWExYTM5Y
 
 ### Test Endpoint
 GET http://localhost:5000/test
+
+
+
+# DASHBOARD TESTING
+### Get Latest Transactions
+GET http://localhost:5000/api/dashboard/latest-transactions
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjY3Mzc0MDFmNzczNDkyNDAyYzgwYyIsImVtYWlsIjoiaWtod2FuQGdtYWlsLmNvbSIsImlhdCI6MTc3NTcwNzczNiwiZXhwIjoxNzc1NzExMzM2fQ.aB9DMUyoGe2ZwEJSFkZ51XR4MEkaiIYxik887pObLbM
+
+### Get Balance Summary
+GET http://localhost:5000/api/dashboard/balance
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjY3Mzc0MDFmNzczNDkyNDAyYzgwYyIsImVtYWlsIjoiaWtod2FuQGdtYWlsLmNvbSIsImlhdCI6MTc3NTcwNzczNiwiZXhwIjoxNzc1NzExMzM2fQ.aB9DMUyoGe2ZwEJSFkZ51XR4MEkaiIYxik887pObLbM
+
+### Get Expense Breakdown
+GET http://localhost:5000/api/dashboard/expense-breakdown
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjY3Mzc0MDFmNzczNDkyNDAyYzgwYyIsImVtYWlsIjoiaWtod2FuQGdtYWlsLmNvbSIsImlhdCI6MTc3NTcwNzczNiwiZXhwIjoxNzc1NzExMzM2fQ.aB9DMUyoGe2ZwEJSFkZ51XR4MEkaiIYxik887pObLbM
+
+### Get Monthly Expenses
+GET http://localhost:5000/api/dashboard/monthly-expenses
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjY3Mzc0MDFmNzczNDkyNDAyYzgwYyIsImVtYWlsIjoiaWtod2FuQGdtYWlsLmNvbSIsImlhdCI6MTc3NTcwNzczNiwiZXhwIjoxNzc1NzExMzM2fQ.aB9DMUyoGe2ZwEJSFkZ51XR4MEkaiIYxik887pObLbM

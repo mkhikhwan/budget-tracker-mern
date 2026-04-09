@@ -9,6 +9,7 @@ import morgan from 'morgan'
 
 import TransactionRoutes from "./routes/TransactionRoutes"
 import UserRoutes from "./routes/UserRoutes"
+import DashboardRoutes from "./routes/DashboardRoutes"
 
 const app = express();
 
@@ -30,6 +31,8 @@ app.use(morgan(format));
 // ROUTES
 app.use("/api/auth", UserRoutes);
 app.use("/api/transaction", Auth, TransactionRoutes);
+app.use("/api/dashboard", Auth, DashboardRoutes);
+
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 if(process.env.NODE_ENV === "production"){
