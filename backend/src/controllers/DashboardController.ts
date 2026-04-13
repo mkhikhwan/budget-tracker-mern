@@ -30,6 +30,7 @@ export const getBalanceSummary = async (req: Request, res: Response) => {
     const result = await DashboardService.getLatestBalance(user.id);
     
     const response: GetLatestBalanceResponseDto = result;
+    
     return res.status(200).json(response);
 };
 

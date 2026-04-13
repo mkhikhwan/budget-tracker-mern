@@ -62,13 +62,13 @@ export const getLatestBalance = async (userId: string) => {
             }
         ];
 
-        const result = await TransactionModel.collection().aggregate(pipeline).toArray();
+        const result = await TransactionModel.collection().aggregate(pipeline).toArray() as any[];
         
-        return result[0] || {
-            totalExpense: 0,
-            totalIncome: 0,
-            balance: 0
-        };
+        return {
+            totalExpense: result[0]?.totalExpense || 0,
+            totalIncome: result[0]?.totalIncome || 0,
+            balance: result[0]?.balance || 0
+        } as { totalExpense: number; totalIncome: number; balance: number };
     } catch (err) {
         throw new AppError("Failed to fetch balance", 500);
     }
@@ -122,13 +122,13 @@ export const getExpensesByMonth = async (userId: string, year: number) => {
                     userId: new ObjectId(userId),
                     type: 'expense',
                     $expr: {
-                        $eq: [{ $year: "$date" }, year]
+                        $eq: [{ $year: { $toDate: "$date" } }, year]
                     }
                 }
             },
             {
                 $group: {
-                    _id: { $month: "$date" },
+                    _id: { $month: { $toDate: "$date" } },
                     total: { $sum: "$amount" }
                 }
             },
@@ -146,15 +146,15 @@ export const getExpensesByMonth = async (userId: string, year: number) => {
         ];
 
         const formattedResult = [];
-        for (let index = 0; index < months.length; index++) {
-            const monthData = result.find(r => r._id === index + 1);
-            const total = monthData ? monthData.total : 0;
-            
-            if (total === 0) break;
-            
-            formattedResult.push({ month: months[index], total });
-        }
-        return formattedResult;
+
+        return months.map((monthName, index) => {
+            const monthNumber = index + 1;
+            const monthData = result.find(r => r._id === monthNumber);
+            return {
+                month: monthName,
+                total: monthData ? monthData.total : 0
+            };
+        });
     } catch (err) {
         throw new AppError(`Failed to fetch monthly expenses: ${err instanceof Error ? err.message : String(err)}`, 500);
     }

@@ -7,43 +7,12 @@ import * as DashboardAPI from "../Dashboard.api";
 import * as DashboardMap from "../Dashboard.mapper";
 import FormatCurrency from "../../../shared/helpers/FormatCurrency";
 
-// Hardcoded dummy data for visualization
-const BALANCE_DATA = {
-    total: 5240.50,
-    monthlyIncome: 3500.00,
-    monthlyExpense: 1200.00,
-};
-
-const PIE_DATA = [
-    { name: 'Food', value: 400, color: '#0078FF' },
-    { name: 'Rent', value: 300, color: '#00C853' },
-    { name: 'Transport', value: 300, color: '#FFAB00' },
-    { name: 'Entertainment', value: 200, color: '#FF5252' },
-];
-
-const GRAPH_DATA = [
-    { name: 'Jan', expense: 400 },
-    { name: 'Feb', expense: 300 },
-    { name: 'Mar', expense: 200 },
-    { name: 'Apr', expense: 278 },
-    { name: 'May', expense: 189 },
-    { name: 'Jun', expense: 239 },
-];
-
-const RECENT_TRANSACTIONS = [
-    { id: 1, name: 'Starbucks', amount: -5.50, category: 'Food', date: '2023-10-25' },
-    { id: 2, name: 'Salary', amount: 3500.00, category: 'Income', date: '2023-10-24' },
-    { id: 3, name: 'Shell Gas', amount: -45.00, category: 'Transport', date: '2023-10-23' },
-    { id: 4, name: 'Netflix', amount: -15.99, category: 'Entertainment', date: '2023-10-22' },
-    { id: 5, name: 'Grocery Store', amount: -120.50, category: 'Food', date: '2023-10-21' },
-];
-
 function DashboardHomePage(){
     // Declare states here
-    const [balance, setBalance] = useState<BalanceData>(BALANCE_DATA);
-    const [pieData, setPieData] = useState<PieCategoryData[]>(PIE_DATA);
-    const [graphData, setGraphData] = useState<MonthlyGraphData[]>(GRAPH_DATA);
-    const [transactions, setTransactions] = useState<Transaction[]>(RECENT_TRANSACTIONS);
+    const [balance, setBalance] = useState<BalanceData>({ total: 0, monthlyIncome: 0, monthlyExpense: 0 });
+    const [pieData, setPieData] = useState<PieCategoryData[]>([]);
+    const [graphData, setGraphData] = useState<MonthlyGraphData[]>([]);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [allowanceLimit] = useState({ spent: 1200, limit: 2000 });
 
     // Balance Summary
