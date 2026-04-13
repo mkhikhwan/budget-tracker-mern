@@ -147,13 +147,13 @@ function DashboardHomePage(){
                      {/* Expenses Spent in the last x days (Pi Chart) */}
                     <div className={styles.card}>
                         <h3 className={styles.cardTitle}>Spending by Category</h3>
-                        <div className={styles.chartWrapper}>
+                        <div className={`${styles.chartWrapper} ${styles.expensesCategory}`}>
                             <ResponsiveContainer width="100%" height={250}>
                                 <PieChart>
                                     <Pie
                                         data={pieData}
-                                        innerRadius={60}
-                                        outerRadius={80}
+                                        innerRadius={40}
+                                        outerRadius={120}
                                         paddingAngle={5}
                                         dataKey="value"
                                     >
@@ -165,7 +165,7 @@ function DashboardHomePage(){
                                         contentStyle={{ backgroundColor: '#1E1E26', border: '1px solid #33333D', borderRadius: '8px' }}
                                         itemStyle={{ color: '#E0E0E0' }}
                                     />
-                                    <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
+                                    {/* <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} /> */}
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>

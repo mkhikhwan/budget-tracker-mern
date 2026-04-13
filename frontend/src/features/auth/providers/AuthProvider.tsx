@@ -22,7 +22,7 @@ export function AuthProvider({ children }:Props){
     useEffect(()=>{
         const fetchUser = async () => {
             try{
-                await new Promise((resolve) => setTimeout(resolve, 2000));
+                await new Promise((resolve) => setTimeout(resolve, 1000));
 
                 const res = await fetch("http://localhost:5000/api/auth/me", {
                     credentials: "include"
