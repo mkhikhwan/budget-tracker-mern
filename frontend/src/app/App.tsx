@@ -12,6 +12,7 @@ import RegisterPage from '../features/auth/pages/RegisterPage';
 import AuthLayout from '../shared/layouts/AuthLayout';
 
 import { useAuth } from '../features/auth/providers/AuthProvider';
+import SearchTransactionPage from '../features/transactions/pages/SearchTransactionPage';
 
 function App() {
 	return (	
@@ -30,6 +31,7 @@ function App() {
 				<Route path="/" element={< DashboardHomePage />} />
 				<Route path="/dashboard" element={< DashboardHomePage />} />
 				<Route path="/transactions" element={< TransactionPage />} />
+				<Route path="/transactions/search" element={< SearchTransactionPage />} />
 				<Route path="/transactions/view" element={< ViewTransactionPage />} />
 				<Route path="/transactions/add" element={< AddTransactionPage />} />
 				<Route path="/transactions/edit" element={< EditTransactionPage />} />

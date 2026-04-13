@@ -6,6 +6,7 @@ import * as TransactionAPI from "../Transactions.api"
 import { NavLink, useNavigate } from "react-router-dom";
 import type { Transaction } from "../Transactions.types";
 import { mapGetAllResponseToTransactions } from "../Transactions.mapper";
+import FilterTransactionInput from "../components/FilterTransactionInput";
 
 function TransactionPage(){
     const navigate = useNavigate();
@@ -41,17 +42,9 @@ function TransactionPage(){
     return (
         <PageLayout header="Transactions">
             <section className={styles.section}>
-                <div className={styles.controlRow}>
-                    <input type="text" className={styles.search} placeholder="Search Transactions"/>
-                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-                        <Button type="primary">
-                            <div style={{padding:'4px', paddingLeft:'16px', paddingRight:'16px'}}>
-                                <i className="fa-solid fa-filter" style={{ marginRight: '8px' }}></i>
-                                Filter
-                            </div>
-                        </Button>
-                    </div>
-                </div>
+                
+                <FilterTransactionInput />
+
                 <div className={styles.transactionsContainer}>
                     {
                         transactions.map((transaction)=>{
