@@ -64,7 +64,7 @@ function TransactionPage(){
                                         <span className={styles.tag}>{transaction.category}</span>
                                     </div>
                                     <div className={styles.date}>
-                                        {transaction.date}
+                                        {transaction.date.split('T')[0].split('-').reverse().join('-')}
                                     </div>
                                 </div>
                                 <div className={styles.transactionRowRight}>

@@ -101,7 +101,7 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
             setAmount(initialData.amount);
             setCategory(initialData.category);
             setDescription(initialData.description || "");
-            setDate(initialData.date);
+            setDate(initialData.date.split('T')[0]);
 
             // Transform images from db to UI state
             const initImages = initialData.images?.map((img)=>{
