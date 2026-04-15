@@ -75,25 +75,26 @@ function DashboardHomePage(){
     return (
         <PageLayout header="DashBoard">
             <div className={styles.container}>
-                {/* Quick Action Add */}
-                <div className={styles.quickActions}>
-                   <button className={`${styles.actionBtn} ${styles.expenseBtn}`}>+ Add Expense</button>
-                   <button className={`${styles.actionBtn} ${styles.incomeBtn}`}>+ Add Income</button>
-                </div>
-
-                {/* Balance Summary */}
-                <div className={styles.summaryGrid}>
-                    <div className={styles.card}>
-                        <span className={styles.label}>Total Balance</span>
+                {/* Summary & Actions Header */}
+                <div className={styles.headerActions}>
+                    <div className={`${styles.card} ${styles.summaryCard} ${styles.balanceCard}`}>
+                        <div className={styles.balanceHeader}>
+                            <span className={styles.label}>Total Balance</span>
+                            <button className={styles.plusBtn}>
+                                <i className="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
                         <h2 className={styles.value}>{FormatCurrency(balance.total)}</h2>
                     </div>
-                    <div className={styles.card}>
-                        <span className={styles.label}>Monthly Income</span>
-                        <h2 className={`${styles.value} ${styles.success}`}>+{FormatCurrency(balance.monthlyIncome)}</h2>
-                    </div>
-                    <div className={styles.card}>
+
+                    <div className={`${styles.card} ${styles.summaryCard}`}>
                         <span className={styles.label}>Monthly Expense</span>
                         <h2 className={`${styles.value} ${styles.error}`}>-{FormatCurrency(balance.monthlyExpense)}</h2>
+                    </div>
+
+                    <div className={`${styles.card} ${styles.summaryCard}`}>
+                        <span className={styles.label}>Monthly Income</span>
+                        <h2 className={`${styles.value} ${styles.success}`}>+{FormatCurrency(balance.monthlyIncome)}</h2>
                     </div>
                 </div>
 
