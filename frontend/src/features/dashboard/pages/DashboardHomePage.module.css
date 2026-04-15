@@ -93,13 +93,6 @@
     }
 }
 
-.cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
 .cardTitle {
     margin: 0 0 1.25rem 0;
     color: #E0E0E0;
@@ -125,36 +118,6 @@
 
 .error {
     color: #FF5252;
-}
-
-.editBtn {
-    background: none;
-    border: 1px solid #33333D;
-    color: #0078FF;
-    padding: 4px 12px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    cursor: pointer;
-}
-
-.progressContainer {
-    height: 8px;
-    background-color: #33333D;
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 0.5rem;
-}
-
-.progressBar {
-    height: 100%;
-    background-color: #0078FF;
-}
-
-.progressInfo {
-    display: flex;
-    justify-content: space-between;
-    color: #A0A0AB;
-    font-size: 0.8rem;
 }
 
 .chartsGrid {

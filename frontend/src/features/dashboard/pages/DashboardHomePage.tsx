@@ -6,6 +6,7 @@ import type { BalanceData, PieCategoryData, MonthlyGraphData, Transaction } from
 import * as DashboardAPI from "../Dashboard.api";
 import * as DashboardMap from "../Dashboard.mapper";
 import FormatCurrency from "../../../shared/helpers/FormatCurrency";
+import AllowanceCard from "../components/AllowanceCard";
 
 function DashboardHomePage(){
     // Declare states here
@@ -13,7 +14,6 @@ function DashboardHomePage(){
     const [pieData, setPieData] = useState<PieCategoryData[]>([]);
     const [graphData, setGraphData] = useState<MonthlyGraphData[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [allowanceLimit] = useState({ spent: 1200, limit: 2000 });
 
     // Balance Summary
     const fetchBalanceSummary = async () =>{
@@ -99,19 +99,7 @@ function DashboardHomePage(){
                 </div>
 
                 {/* Allowance Limit (Edit) */}
-                <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                        <span className={styles.label}>Allowance Limit (Monthly)</span>
-                        <button className={styles.editBtn}>Edit</button>
-                    </div>
-                    <div className={styles.progressContainer}>
-                        <div className={styles.progressBar} style={{ width: `${(allowanceLimit.spent / allowanceLimit.limit) * 100}%` }}></div>
-                    </div>
-                    <div className={styles.progressInfo}>
-                        <span>Spent: {FormatCurrency(allowanceLimit.spent)}</span>
-                        <span>Limit: {FormatCurrency(allowanceLimit.limit)}</span>
-                    </div>
-                </div>
+                <AllowanceCard />
 
                 <div className={styles.chartsGrid}>
                      {/* Expenses Spent in the last x days (Pi Chart) */}

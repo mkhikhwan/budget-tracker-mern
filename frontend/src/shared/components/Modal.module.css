@@ -1,0 +1,114 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(2px);
+}
+
+.content {
+    background-color: #1E1E26; /* Surface/Cards */
+    border: 1px solid #33333D; /* Border/Divider */
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 85vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 120, 255, 0.15); /* Soft Glow */
+    animation: modalAppear 0.2s ease-out;
+}
+
+@keyframes modalAppear {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #33333D;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #18181F; /* Sidebar/Header tone */
+}
+
+.title {
+    margin: 0;
+    color: #E0E0E0; /* Heading/Primary */
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.closeButton {
+    background: transparent;
+    border: none;
+    color: #A0A0AB; /* Body/Secondary */
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: color 0.2s;
+}
+
+.closeButton:hover {
+    color: #FF5252; /* Error red for visual feedback on close */
+}
+
+.body {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.footer {
+    padding: 12px 20px;
+    border-top: 1px solid #33333D;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background-color: #18181F; /* Sidebar/Header tone */
+}
+
+.confirmButton, .denyButton, .closeActionBtn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.confirmButton {
+    background-color: #0078FF; /* Primary Accent */
+    color: #E0E0E0; /* Heading/Primary */
+}
+
+.confirmButton:hover {
+    background-color: #3391FF; /* Hover State */
+}
+
+.denyButton {
+    background-color: transparent;
+    color: #FF5252; /* Error red */
+    border-color: #FF5252;
+}
+
+.denyButton:hover {
+    background-color: rgba(255, 82, 82, 0.1);
+}
+
+.closeActionBtn {
+    background-color: #33333D; /* Border/Divider */
+    color: #A0A0AB; /* Body/Secondary */
+}
+
+.closeActionBtn:hover {
+    background-color: #44444D;
+    color: #E0E0E0;
+}
