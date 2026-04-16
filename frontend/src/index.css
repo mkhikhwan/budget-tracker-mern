@@ -88,3 +88,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 input[type="date"] {
     color-scheme: dark;
 }
+
+/* COLOR CLASSES */
+.text-primary { color: #0078FF; }
+.bg-primary { background-color: #0078FF; color: #FFFFFF; }
+
+.text-success { color: #00C853; }
+.bg-success { background-color: #00C853; color: #000000; }
+
+.text-warning { color: #FFAB00; }
+.bg-warning { background-color: #FFAB00; color: #000000; }
+
+.text-error { color: #FF5252; }
+.bg-error { background-color: #FF5252; color: #FFFFFF; }

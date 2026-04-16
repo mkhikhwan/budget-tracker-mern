@@ -7,8 +7,12 @@ import * as DashboardAPI from "../Dashboard.api";
 import * as DashboardMap from "../Dashboard.mapper";
 import FormatCurrency from "../../../shared/helpers/FormatCurrency";
 import AllowanceCard from "../components/AllowanceCard";
+import { useAuth } from "../../auth/providers/AuthProvider";
 
 function DashboardHomePage(){
+    const { user } = useAuth();
+    const currencySymbol = user?.currency || '$';
+
     // Declare states here
     const [balance, setBalance] = useState<BalanceData>({ total: 0, monthlyIncome: 0, monthlyExpense: 0 });
     const [pieData, setPieData] = useState<PieCategoryData[]>([]);
@@ -84,17 +88,17 @@ function DashboardHomePage(){
                                 <i className="fa-solid fa-plus"></i>
                             </button>
                         </div>
-                        <h2 className={styles.value}>{FormatCurrency(balance.total)}</h2>
+                        <h2 className={styles.value}>{currencySymbol} {FormatCurrency(balance.total)}</h2>
                     </div>
 
                     <div className={`${styles.card} ${styles.summaryCard}`}>
                         <span className={styles.label}>Monthly Expense</span>
-                        <h2 className={`${styles.value} ${styles.error}`}>-{FormatCurrency(balance.monthlyExpense)}</h2>
+                        <h2 className={`${styles.value} ${styles.error}`}>- {currencySymbol} {FormatCurrency(balance.monthlyExpense)}</h2>
                     </div>
 
                     <div className={`${styles.card} ${styles.summaryCard}`}>
                         <span className={styles.label}>Monthly Income</span>
-                        <h2 className={`${styles.value} ${styles.success}`}>+{FormatCurrency(balance.monthlyIncome)}</h2>
+                        <h2 className={`${styles.value} ${styles.success}`}>+ {currencySymbol} {FormatCurrency(balance.monthlyIncome)}</h2>
                     </div>
                 </div>
 
@@ -122,6 +126,7 @@ function DashboardHomePage(){
                                     <Tooltip 
                                         contentStyle={{ backgroundColor: '#1E1E26', border: '1px solid #33333D', borderRadius: '8px' }}
                                         itemStyle={{ color: '#E0E0E0' }}
+                                        formatter={(val) => `${currencySymbol} ${FormatCurrency(val as number)}`}
                                     />
                                     {/* <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} /> */}
                                 </PieChart>
@@ -147,7 +152,7 @@ function DashboardHomePage(){
                                         fontSize={12} 
                                         tickLine={false} 
                                         axisLine={false} 
-                                        tickFormatter={(val) => `$${val}`}
+                                        tickFormatter={(val) => `${currencySymbol} ${FormatCurrency(val)}`}
                                     />
                                     <Tooltip 
                                          cursor={{fill: 'rgba(255,255,255,0.05)'}}
@@ -171,8 +176,8 @@ function DashboardHomePage(){
                                     <span className={styles.txName}>{tx.name}</span>
                                     <span className={styles.txMeta}>{tx.category} • {tx.date}</span>
                                 </div>
-                                <div className={`${styles.txAmount} ${tx.amount > 0 ? styles.success : ''}`}>
-                                    {tx.amount > 0 ? `+${FormatCurrency(tx.amount)}` : `-${FormatCurrency(Math.abs(tx.amount))}`}
+                                <div className={`${styles.txAmount} ${tx.type === 'income' ? 'text-success' : 'text-error'}`}>
+                                    {tx.type === 'income' ? '+' : '-'} {currencySymbol} {FormatCurrency(tx.amount)}
                                 </div>
                             </div>
                         ))}

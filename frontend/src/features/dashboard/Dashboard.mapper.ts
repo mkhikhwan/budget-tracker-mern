@@ -13,13 +13,18 @@ export const mapBalanceToUI = (dto: GetLatestBalanceResponseDto): BalanceData =>
 });
 
 export const mapTransactionsToUI = (dto: GetFiveLatestTransactionsResponseDto): Transaction[] => {
-    return dto.transactions.map((tx) => ({
-        id: tx._id,
-        name: tx.name,
-        amount: tx.type === 'expense' ? -Math.abs(tx.amount) : tx.amount,
-        category: tx.category,
-        date: new Date(tx.date).toLocaleDateString(),
-    }));
+    return dto.transactions.map<Transaction>((tx) => {
+        const txNew: Transaction = {
+            id: tx._id,
+            name: tx.name,
+            type: tx.type,
+            amount: tx.amount,
+            category: tx.category,
+            date: new Date(tx.date).toLocaleDateString(),
+        }
+
+        return txNew
+    });
 };
 
 export const mapExpenseBreakdownToUI = (dto: GetExpenseBreakdownResponseDto): PieCategoryData[] => {

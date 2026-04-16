@@ -17,6 +17,7 @@ export interface MonthlyGraphData {
 
 export interface Transaction {
     id: number | string;
+    type: string;
     name: string;
     amount: number;
     category: string;
