@@ -9,6 +9,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 0.75rem;
     margin-top: 16px;
     overflow-y: auto;
     height: 600px;
@@ -16,30 +17,17 @@
     scrollbar-color: #555 transparent;
 }
 
-.transactionRow{
+.transactionItem {
     display: flex;
-    border: 2px solid #33333D;
-    border-radius: 16px;
-    background-color: #1E1E26;
-    padding: 4px;
-    margin-top: 4px;
-    
-}
-
-
-.transactionRowLeft{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: top;
-    padding: 8px;
-}
-
-.transactionRowRight{
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #33333D;
+    cursor: pointer;
+}
+
+.transactionItem:last-child {
+    border-bottom: none;
 }
 
 .controlRow{
@@ -61,38 +49,29 @@
     border-color: #3391FF;
 }
 
-.name{
-    font-weight: 600;
-    font-size: 1.1rem;
+.txInfo {
+    display: flex;
+    flex-direction: column;
 }
 
-.category{
-    font-weight: 600;
-    font-size: 1.1rem;
+.txName {
+    color: #E0E0E0;
+    font-size: 0.95rem;
 }
 
-.tag{
-    background-color: #33333D;
-    color: #FFFFFF;
-    padding: 2px 8px;
-    font-size: 0.85rem;
-    border-radius: 6px;
-}
-
-.date{
-    margin-top: 8px;
+.txMeta {
     color: #A0A0AB;
+    font-size: 0.75rem;
 }
 
-.amount{
-    padding: 0 12px;
+.txAmount {
     font-weight: 600;
 }
 
-.amount.expense{
-    color: #FF4D4D;
+.success {
+    color: #00C853;
 }
 
-.amount.income{
-    color: #00E676;
+.error {
+    color: #FF5252;
 }

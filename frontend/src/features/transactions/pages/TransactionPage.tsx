@@ -7,15 +7,16 @@ import { NavLink, useNavigate } from "react-router-dom";
 import type { Transaction } from "../Transactions.types";
 import { mapGetAllResponseToTransactions } from "../Transactions.mapper";
 import FilterTransactionInput from "../components/FilterTransactionInput";
+import FormatCurrency from "../../../shared/helpers/FormatCurrency";
+import { useAuth } from "../../auth/providers/AuthProvider";
 
 function TransactionPage(){
     const navigate = useNavigate();
-
-    const formatAmount = (value:number)=>{
-        return (value / 100).toFixed(2);
-    };
+    const { user } = useAuth();
+    const currencySymbol = user?.currency || '$';
 
     const [transactions, setTransactions] = useState<Transaction[]>([]);
+
     useEffect(()=>{
         const fetch = async ()=>{
             try{
@@ -48,22 +49,13 @@ function TransactionPage(){
                 <div className={styles.transactionsContainer}>
                     {
                         transactions.map((transaction)=>{
-                            return <div className={styles.transactionRow} key={transaction._id} onClick={()=> handleOnClickViewTransaction(transaction._id)}>
-                                <div className={styles.transactionRowLeft}>
-                                    <div className={styles.name}>
-                                        {transaction.name}
-                                    </div>
-                                    <div className={styles.category}>
-                                        <span className={styles.tag}>{transaction.category}</span>
-                                    </div>
-                                    <div className={styles.date}>
-                                        {transaction.date.split('T')[0].split('-').reverse().join('-')}
-                                    </div>
+                            return <div className={styles.transactionItem} key={transaction._id} onClick={()=> handleOnClickViewTransaction(transaction._id)}>
+                                <div className={styles.txInfo}>
+                                    <span className={styles.txName}>{transaction.name}</span>
+                                    <span className={styles.txMeta}>{transaction.category} • {transaction.date.split('T')[0].split('-').reverse().join('-')}</span>
                                 </div>
-                                <div className={styles.transactionRowRight}>
-                                    <div className={`${styles.amount} ${ transaction.type === "expense" ? styles.expense : styles.income } `}>
-                                        <span>{ transaction.type === "expense" ? "-" : "+" }</span> {formatAmount(transaction.amount)}
-                                    </div>
+                                <div className={`${styles.txAmount} ${transaction.type === 'income' ? styles.success : styles.error}`}>
+                                    {transaction.type === 'income' ? '+' : '-'} {currencySymbol} {FormatCurrency(transaction.amount)}
                                 </div>
                             </div>
                         })

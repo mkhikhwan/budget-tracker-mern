@@ -6,15 +6,51 @@ import { TransactionCategoryModel } from "../models/TransactionCategory";
 
 export const getFiveLatestTransactions = async (userId: string):Promise<WithId<Transaction>[]> => {
     try{
-        const transactionCollection = TransactionModel.collection();
+        const pipeline = [
+            // 1. Filter by User ID.
+            {
+                $match: {
+                    userId: new ObjectId(userId)
+                }
+            },
+            // Sort by date descending
+            {
+                $sort: { date: -1 as const }
+            },
+            // Limit to 5
+            {
+                $limit: 5
+            },
+            // Include the collection "Transaction Categories" into Transaction Collection
+            {
+                $lookup: {
+                    from: "transaction_categories",
+                    localField: "category",
+                    foreignField: "value",
+                    as: "categoryInfo"
+                }
+            },
+            // Unwind the array into a single object
+            {
+                $unwind: {
+                    path: "$categoryInfo",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            // Modify Category to proper Label
+            {
+                $set: {
+                    category: { $ifNull: ["$categoryInfo.label", "$category"] }
+                }
+            },
+            // Remove unnecessary key
+            {
+                $unset: ["categoryInfo", "userId", "description"]
+            }
+        ];
 
-        const result = await transactionCollection
-            .find({ userId: new ObjectId(userId) })
-            .project({ userId: 0, description: 0 })
-            .sort({ date: -1 })
-            .limit(5)
-            .toArray();
-
+        const result = await TransactionModel.collection().aggregate(pipeline).toArray();
+        
         return result as WithId<Transaction>[];
     } catch (err) {
         throw new AppError("Failed to fetch transactions", 500);

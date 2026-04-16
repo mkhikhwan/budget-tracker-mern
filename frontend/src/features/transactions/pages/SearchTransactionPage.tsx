@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import type { Transaction } from "../Transactions.types";
 import FilterTransactionInput from "../components/FilterTransactionInput";
+import FormatCurrency from "../../../shared/helpers/FormatCurrency";
+import { useAuth } from "../../auth/providers/AuthProvider";
 
 const DUMMY_SEARCH_RESULTS: Transaction[] = [
     {
@@ -43,6 +45,8 @@ const DUMMY_SEARCH_RESULTS: Transaction[] = [
 function SearchTransactionPage() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { user } = useAuth();
+    const currencySymbol = user?.currency || '$';
     
     const filters = location.state || {
         search: "",
@@ -67,10 +71,6 @@ function SearchTransactionPage() {
         console.log("Query String:", queryString);
     }, [queryString]);
 
-    const formatAmount = (value: number) => {
-        return (value / 100).toFixed(2);
-    };
-
     const handleOnClickViewTransaction = (id?: string) => {
         if (!id) return;
         navigate("/transactions/view", {
@@ -86,20 +86,13 @@ function SearchTransactionPage() {
                 </div>
                 <div className={styles.transactionsContainer}>
                     {DUMMY_SEARCH_RESULTS.map((transaction) => (
-                        <div className={styles.transactionRow} key={transaction._id} onClick={() => handleOnClickViewTransaction(transaction._id)}>
-                            <div className={styles.transactionRowLeft}>
-                                <div className={styles.name}>{transaction.name}</div>
-                                <div className={styles.category}>
-                                    <span className={styles.tag}>{transaction.category}</span>
-                                </div>
-                                <div className={styles.date}>
-                                    {transaction.date.split('T')[0].split('-').reverse().join('-')}
-                                </div>
+                        <div className={styles.transactionItem} key={transaction._id} onClick={() => handleOnClickViewTransaction(transaction._id)}>
+                            <div className={styles.txInfo}>
+                                <span className={styles.txName}>{transaction.name}</span>
+                                <span className={styles.txMeta}>{transaction.category} • {transaction.date.split('T')[0].split('-').reverse().join('-')}</span>
                             </div>
-                            <div className={styles.transactionRowRight}>
-                                <div className={`${styles.amount} ${transaction.type === "expense" ? styles.expense : styles.income}`}>
-                                    <span>{transaction.type === "expense" ? "-" : "+"}</span> {formatAmount(transaction.amount)}
-                                </div>
+                            <div className={`${styles.txAmount} ${transaction.type === 'income' ? styles.success : styles.error}`}>
+                                {transaction.type === 'income' ? '+' : '-'} {currencySymbol} {FormatCurrency(transaction.amount)}
                             </div>
                         </div>
                     ))}
