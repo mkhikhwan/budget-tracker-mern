@@ -1,4 +1,3 @@
-import Button from "../../../shared/components/Button"
 import styles from "./TransactionForm.module.css"
 
 import { useState, useEffect } from "react";
@@ -118,44 +117,44 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
     },[initialData]);
 
     return (
-        <form className="form" method="POST" encType="multipart/form-data">
-            {!readonly && <div className="form-row">
+        <form className={styles.form} method="POST" encType="multipart/form-data">
+            {!readonly && <div className={styles.formRow}>
                 <div className={styles.transactionTypeContainer}>
                     <div className={`${styles.buttonBackground } ${type === "expense" ? styles.expense : styles.income}`}>
                         
                     </div>
-                    <div className={`${styles.transactionType} ${styles.expense}`}
+                    <div className={`${styles.transactionType} ${styles.expense} ${type === "expense" ? styles.active : ""}`}
                         onClick={()=>setType("expense")}
                     >
                         Expense
                     </div>
-                    <div className={`${styles.transactionType} ${styles.income}`}
+                    <div className={`${styles.transactionType} ${styles.income} ${type === "income" ? styles.active : ""}`}
                         onClick={()=>setType("income")}
                     >
                         Income
                     </div>
                 </div>
             </div>}
-            <div className="form-row">
-                <label className="form-label">{title} Name:</label>
-                <input className="input" type="text" 
+            <div className={styles.formRow}>
+                <label className={styles.formLabel}>{title} Name:</label>
+                <input className={styles.input} type="text" 
                     onChange={(e)=> setName(e.target.value)} 
                     placeholder={type === "expense" ? "Lunch..." : "Salary..."}
                     value={name}
                     disabled={readonly}
                 />
             </div>
-            <div className="form-row">
-                <label className="form-label">{title} Amount:</label>
-                <input className="input" type="text"
+            <div className={styles.formRow}>
+                <label className={styles.formLabel}>{title} Amount:</label>
+                <input className={styles.input} type="text"
                     onKeyDown={(e)=>handleKeyDownAmount(e)}
                     value={formatCurrency(amount)}
                     disabled={readonly}
                 />
             </div>
-            <div className="form-row">
-                <label className="form-label">{title} Category:</label>
-                <select className="input" onChange={(e)=> setCategory(e.target.value)} value={category} disabled={readonly}>
+            <div className={styles.formRow}>
+                <label className={styles.formLabel}>{title} Category:</label>
+                <select className={styles.input} onChange={(e)=> setCategory(e.target.value)} value={category} disabled={readonly}>
                     {
                         categoryOptions.filter(i => i.type === type).map((option)=>{
                             return <option value={option.value} key={option.value}>{option.label}</option>
@@ -163,51 +162,48 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
                     }
                 </select>
             </div>
-            <div className="form-row">
-                <label className="form-label">Description:</label>
-                <textarea className="input select" placeholder="Optional details..." rows={3}
+            <div className={styles.formRow}>
+                <label className={styles.formLabel}>Description:</label>
+                <textarea className={styles.input} placeholder="Optional details..." rows={3}
                     onChange={(e)=> setDescription(e.target.value)}
                     value={description}
                     disabled={readonly}
                 ></textarea>
             </div>
-            <div className="form-row">
-                <label className="form-label">Date:</label>
+            <div className={styles.formRow}>
+                <label className={styles.formLabel}>Date:</label>
                 <input 
-                    className="input"
+                    className={styles.input}
                     type="date" 
                     onChange={(e)=> setDate(e.target.value)}
                     value={date}
                     disabled={readonly}
                 />
             </div>
-            <div className="form-row">
-                <label className="form-label">Images:</label>
+            <div className={styles.formRow}>
+                <label className={styles.formLabel}>Images:</label>
                 <ImagePicker images={images} setImages={setImages} readonly={readonly}/>
             </div>
 
             {
                 !readonly ?
                 (
-                    <div className="form-row">
-                        <Button type="primary" 
-                            style={{fontSize:'1.25rem', fontWeight:'600', padding:'8px'}}
+                    <div className={styles.formRow}>
+                        <button 
+                            className={`${styles.actionButton} bg-primary`}
                             onClick={handleInternalOnSubmit}
                         >
                             <i className="fa-solid fa-floppy-disk" style={{ marginRight: '8px' }}></i>
                             Save {title}
-                        </Button>
+                        </button>
                     </div>
                 ) :
                 (
-                    <div className="form-row">
-                        <Button type="secondary" 
-                            style={{fontSize:'1.25rem', fontWeight:'600', padding:'8px'}}
-                            onClick={handleOnClickEditTransaction}
-                        >
+                    <div className={styles.formRow}>
+                        <button className={`${styles.actionButton} bg-warning`} onClick={handleOnClickEditTransaction}>
                             <i className="fa-solid fa-pen-to-square" style={{ marginRight: '8px' }}></i>
                             Edit {title}
-                        </Button>
+                        </button>
                     </div>
                 )
             }

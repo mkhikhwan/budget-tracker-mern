@@ -90,7 +90,7 @@ function ImagePicker({ images, setImages, readonly }:Props){
                 })
             }
             {
-                readonly && images.length === 0 && <div>No Images selected.</div>
+                readonly && images.length === 0 && <div className={styles.noImages}>No Images selected.</div>
             }
             {
                 !readonly && (
