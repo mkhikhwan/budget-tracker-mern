@@ -2,33 +2,33 @@ import TransactionForm from "../components/TransactionForm"
 import PageLayout from "../../../shared/layouts/PageLayout";
 import LoadingPage from "../../../shared/pages/LoadingPage";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { type TransactionDetails } from "../Transactions.types";
 import * as TransactionApi from "../Transactions.api";
 import { mapGetDetailsResponseToTransactionDetails } from "../Transactions.mapper";
 import type { Image } from "../Transactions.types";
 
 function EditTransactionPage(){
+    const navigate = useNavigate();
     const location = useLocation();
     const transactionId = location.state?.id;
     const [transaction, setTransaction] = useState<TransactionDetails>();
 
     const [isLoading, setLoading] = useState(true);
 
+    const fetch = async ()=>{
+        try{
+            const res = await TransactionApi.getTransactionDetail(transactionId);
+            setTransaction(mapGetDetailsResponseToTransactionDetails(res));
+        }catch(e: unknown){
+            alert(e instanceof Error ? e.message : "Can't fetch transactioon details");
+        }finally{
+            setLoading(false);
+        }
+    };
+
     useEffect(()=>{
         setLoading(true);
-
-        const fetch = async ()=>{
-            try{
-                const res = await TransactionApi.getTransactionDetail(transactionId);
-                setTransaction(mapGetDetailsResponseToTransactionDetails(res));
-            }catch(e: unknown){
-                alert(e instanceof Error ? e.message : "Can't fetch transactioon details");
-            }finally{
-                setLoading(false);
-            }
-        };
-
         fetch();
     },[]);
 
@@ -61,6 +61,7 @@ function EditTransactionPage(){
             }
 
             alert("Transaction updated successfully.");
+            navigate("/transactions/view", { state: { id: transactionId } });
         }catch(err: unknown){
             alert(`Failed to edit transaction: ${err instanceof Error ? err.message : String(err)}`);
         }

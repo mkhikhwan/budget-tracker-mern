@@ -1,11 +1,13 @@
 import PageLayout from "../../../shared/layouts/PageLayout"
 import TransactionForm from "../components/TransactionForm";
-
+import { useNavigate } from "react-router-dom";
 import * as TransactionApi from "../Transactions.api"
 import { mapTransactionToCreateDto } from "../Transactions.mapper";
 import type { Image, TransactionDetails } from "../Transactions.types";
 
 function AddTransactionPage(){
+    const navigate = useNavigate();
+
     const handleSubmit = async (transaction:TransactionDetails, images:Image[])=>{
         try{
             const addTransactionRes = await TransactionApi.addTransaction(mapTransactionToCreateDto(transaction));
@@ -29,6 +31,7 @@ function AddTransactionPage(){
 
             if(addImagesRes && addImagesRes){
                 alert("Transaction added successfully.");
+                navigate("/transactions");
             }
         }catch(err: unknown){
             alert(`Failed to add transaction: ${err instanceof Error ? err.message : String(err)}`);

@@ -84,7 +84,14 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
             try{
                 const res = await TransactionAPI.getTransactionCategories();
                 if (res?.categories) {
-                    setCategoryOption(res.categories.map(mapCategoryDtoToTransactionCategory));
+                    const options = res.categories.map(mapCategoryDtoToTransactionCategory);
+                    setCategoryOption(options);
+
+                    // Set default value on init
+                    const firstCategory = options.find(i => i.type === type);
+                    if (firstCategory && !initialData) {
+                        setCategory(firstCategory.value);
+                    }
                 }
             }catch{
                 alert("Fail to fetch category options.");
@@ -115,6 +122,13 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
             setImages(initImages);
         }
     },[initialData]);
+
+    useEffect(()=>{
+        const firstCategory = categoryOptions.find(i => i.type === type);
+        if (firstCategory) {
+            setCategory(firstCategory.value);
+        }
+    },[type, categoryOptions]);
 
     return (
         <form className={styles.form} method="POST" encType="multipart/form-data">
