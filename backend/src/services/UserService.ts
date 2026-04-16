@@ -16,7 +16,8 @@ export const login = async (email:string, password:string): Promise<{ user: User
 
     const payload: UserTokenPayload = {
         id: user._id!.toString(), 
-        email: user.email
+        email: user.email,
+        country: user.country
     }
 
     const token = jwt.sign(

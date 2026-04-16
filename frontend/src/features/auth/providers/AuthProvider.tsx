@@ -2,9 +2,13 @@ import { useEffect, useState, createContext, useContext } from "react";
 import { type UserTokenPayload } from "@budget-now/contract";
 import * as UserApi from "../Auth.api"
 
+interface AuthUser extends UserTokenPayload {
+    currency: string;
+}
+
 interface AuthContextType {
-    user: UserTokenPayload | null;
-    login: (userData: UserTokenPayload) => void;
+    user: AuthUser | null;
+    login: (userData: AuthUser) => void;
     logout: () => void;
     loading: boolean;
 }
@@ -15,9 +19,25 @@ interface Props{
     children: React.ReactNode
 }
 
+
+
 export function AuthProvider({ children }:Props){
-    const [user, setUser] = useState<UserTokenPayload | null>(null);
+    const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState(true);
+
+    const getCountryCurrency = async (countryCode: string) => {
+        try {
+            const res = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}?fields=currencies`);
+            if (!res.ok) throw new Error("Failed to fetch currency");
+            const data = await res.json();
+            const currencyCode = Object.keys(data.currencies)[0];
+            return data.currencies[currencyCode];
+        } catch (error) {
+            console.error("Error fetching currency:", error);
+            return null;
+        }
+    };
+
 
     useEffect(()=>{
         const fetchUser = async () => {
@@ -33,7 +53,12 @@ export function AuthProvider({ children }:Props){
                     user : UserTokenPayload 
                 } = await res.json();
 
-                setUser(data.user);
+                const currency = await getCountryCurrency(data.user.country!);
+                
+                setUser({
+                    ...data.user,
+                    currency: currency ? currency.symbol : '$'
+                });
             }catch(e:unknown){
                 setUser(null);
             } finally {
@@ -44,7 +69,7 @@ export function AuthProvider({ children }:Props){
         fetchUser();
     },[]);
 
-    const login = (userData:UserTokenPayload) => {
+    const login = (userData: AuthUser) => {
         setUser(userData);
     }
 

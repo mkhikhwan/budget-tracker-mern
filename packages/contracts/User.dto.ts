@@ -9,4 +9,5 @@ export interface RegisterDto extends Required< Pick<User, "email" | "password" |
 export interface UserTokenPayload{
     id : string,
     email : string,
+    country? : string
 }
