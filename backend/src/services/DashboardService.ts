@@ -59,6 +59,9 @@ export const getFiveLatestTransactions = async (userId: string):Promise<WithId<T
 
 export const getLatestBalance = async (userId: string) => {
     try {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
         const pipeline = [
             {
                 $match: { userId: new ObjectId(userId) }
@@ -83,14 +86,42 @@ export const getLatestBalance = async (userId: string) => {
                                 0
                             ]
                         }
+                    },
+                    sumExpenseLast30Days: {
+                        $sum: {
+                            $cond: [
+                                { 
+                                    $and: [
+                                        { $eq: ['$type', 'expense'] },
+                                        { $gte: [{ $toDate: '$date' }, thirtyDaysAgo] }
+                                    ]
+                                },
+                                '$amount',
+                                0
+                            ]
+                        }
+                    },
+                    sumIncomeLast30Days: {
+                        $sum: {
+                            $cond: [
+                                { 
+                                    $and: [
+                                        { $eq: ['$type', 'income'] }, 
+                                        { $gte: [{ $toDate: '$date' }, thirtyDaysAgo] }
+                                    ] 
+                                },
+                                '$amount', 
+                                0
+                            ]
+                        }
                     }
                 }
             },
             {
                 $project: {
                     _id: 0,
-                    totalExpense: '$sumExpense',
-                    totalIncome: '$sumIncome',
+                    totalExpense: '$sumExpenseLast30Days',
+                    totalIncome: '$sumIncomeLast30Days',
                     balance: {
                         $subtract: ['$sumIncome', '$sumExpense']
                     }
@@ -103,8 +134,10 @@ export const getLatestBalance = async (userId: string) => {
         return {
             totalExpense: result[0]?.totalExpense || 0,
             totalIncome: result[0]?.totalIncome || 0,
-            balance: result[0]?.balance || 0
-        } as { totalExpense: number; totalIncome: number; balance: number };
+            balance: result[0]?.balance || 0,
+            totalExpenseLast30Days: result[0]?.totalExpenseLast30Days || 0,
+            totalIncomeLast30Days: result[0]?.totalIncomeLast30Days || 0
+        };
     } catch (err) {
         throw new AppError("Failed to fetch balance", 500);
     }

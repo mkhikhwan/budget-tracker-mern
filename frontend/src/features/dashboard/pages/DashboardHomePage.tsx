@@ -92,12 +92,12 @@ function DashboardHomePage(){
                     </div>
 
                     <div className={`${styles.card} ${styles.summaryCard}`}>
-                        <span className={styles.label}>Monthly Expense</span>
+                        <span className={styles.label}>Expense (Last 30 Days)</span>
                         <h2 className={`${styles.value} ${styles.error}`}>- {currencySymbol} {FormatCurrency(balance.monthlyExpense)}</h2>
                     </div>
 
                     <div className={`${styles.card} ${styles.summaryCard}`}>
-                        <span className={styles.label}>Monthly Income</span>
+                        <span className={styles.label}>Income (Last 30 Days)</span>
                         <h2 className={`${styles.value} ${styles.success}`}>+ {currencySymbol} {FormatCurrency(balance.monthlyIncome)}</h2>
                     </div>
                 </div>
