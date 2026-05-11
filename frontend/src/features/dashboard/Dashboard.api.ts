@@ -3,7 +3,9 @@ import type {
     GetFiveLatestTransactionsResponseDto, 
     GetLatestBalanceResponseDto, 
     GetExpenseBreakdownResponseDto, 
-    GetExpensesByMonthResponseDto 
+    GetExpensesByMonthResponseDto,
+    GetAllowanceResponseDto,
+    UpdateAllowanceRequestDto
 } from "@budget-now/contract";
 
 const BASE_PATH = "/api/dashboard";
@@ -22,4 +24,15 @@ export const getExpenseBreakdown = (): Promise<GetExpenseBreakdownResponseDto> =
 
 export const getMonthlyExpenses = (): Promise<GetExpensesByMonthResponseDto> => {
     return apiClient<GetExpensesByMonthResponseDto>(`${BASE_PATH}/monthly-expenses`);
+};
+
+export const getAllowance = (): Promise<GetAllowanceResponseDto> => {
+    return apiClient<GetAllowanceResponseDto>(`${BASE_PATH}/allowance`);
+};
+
+export const updateAllowance = (data: UpdateAllowanceRequestDto): Promise<void> => {
+    return apiClient<void>(`${BASE_PATH}/allowance`, {
+        method: "POST",
+        body: JSON.stringify(data),
+    });
 };

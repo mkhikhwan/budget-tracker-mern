@@ -2,9 +2,10 @@ import type {
     GetFiveLatestTransactionsResponseDto, 
     GetLatestBalanceResponseDto, 
     GetExpenseBreakdownResponseDto, 
-    GetExpensesByMonthResponseDto 
+    GetExpensesByMonthResponseDto,
+    GetAllowanceResponseDto
 } from "@budget-now/contract";
-import type { BalanceData, Transaction, PieCategoryData, MonthlyGraphData } from "./Dashboard.types";
+import type { BalanceData, Transaction, PieCategoryData, MonthlyGraphData, Allowance } from "./Dashboard.types";
 
 export const mapBalanceToUI = (dto: GetLatestBalanceResponseDto): BalanceData => ({
     total: dto.balance,
@@ -61,3 +62,11 @@ export const mapMonthlyExpensesToUI = (dto: GetExpensesByMonthResponseDto): Mont
         expense: item.total,
     }));
 };
+
+export const mapAllowanceToUI = (dto: GetAllowanceResponseDto): Allowance => ({
+    spent: dto.allowance.spent,
+    limit: dto.allowance.limit,
+    startDate: typeof dto.allowance.startDate === 'string' ? dto.allowance.startDate : dto.allowance.startDate.toISOString().split('T')[0],
+    restartDays: dto.allowance.restartDays,
+    isOverlimit: dto.allowance.isOverlimit,
+});

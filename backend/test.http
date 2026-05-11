@@ -63,3 +63,18 @@ Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjY3Mzc0MDFmNzczN
 ### Get Monthly Expenses
 GET http://localhost:5000/api/dashboard/monthly-expenses
 Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjY3Mzc0MDFmNzczNDkyNDAyYzgwYyIsImVtYWlsIjoiaWtod2FuQGdtYWlsLmNvbSIsImlhdCI6MTc3NTcwNzczNiwiZXhwIjoxNzc1NzExMzM2fQ.aB9DMUyoGe2ZwEJSFkZ51XR4MEkaiIYxik887pObLbM
+
+### Get Allowance
+GET http://localhost:5000/api/dashboard/allowance
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjY3Mzc0MDFmNzczNDkyNDAyYzgwYyIsImVtYWlsIjoiaWtod2FuQGdtYWlsLmNvbSIsImNvdW50cnkiOiJNWSIsImlhdCI6MTc3NzE5MTIyMiwiZXhwIjoxNzc3MTk0ODIyfQ.tuuGLF2rbuZ10P2QDB_aM8K0GNutt_RjvJ5JgnjVTU8
+
+### Set Allowance
+POST http://localhost:5000/api/dashboard/allowance
+Content-Type: application/json
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjY3Mzc0MDFmNzczNDkyNDAyYzgwYyIsImVtYWlsIjoiaWtod2FuQGdtYWlsLmNvbSIsImNvdW50cnkiOiJNWSIsImlhdCI6MTc3NzE5MTIyMiwiZXhwIjoxNzc3MTk0ODIyfQ.tuuGLF2rbuZ10P2QDB_aM8K0GNutt_RjvJ5JgnjVTU8
+
+{
+    "amountLimit": 9900,
+    "resetDays": 7,
+    "startDate": "2025-04-25T00:00:00.000Z"
+}

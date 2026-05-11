@@ -23,3 +23,11 @@ export interface Transaction {
     category: string;
     date: string;
 }
+
+export interface Allowance {
+    spent: number;
+    limit: number;
+    startDate: string;
+    restartDays: number;
+    isOverlimit: boolean;
+}

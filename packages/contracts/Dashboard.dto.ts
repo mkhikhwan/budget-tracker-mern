@@ -29,3 +29,19 @@ export interface MonthlyExpenseDto {
 export interface GetExpensesByMonthResponseDto {
     expenses: MonthlyExpenseDto[];
 }
+
+export interface AllowanceDto{
+    spent: number;
+    limit: number;
+    startDate: string | Date;
+    restartDays: number;
+    isOverlimit: boolean;
+}
+
+export interface GetAllowanceResponseDto {
+    allowance: AllowanceDto;
+}
+
+export interface UpdateAllowanceRequestDto {
+    allowance: Pick<AllowanceDto, "limit" | "startDate" | "restartDays">;
+}

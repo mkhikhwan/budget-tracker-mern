@@ -5,7 +5,9 @@ import {
     GetFiveLatestTransactionsResponseDto,
     GetLatestBalanceResponseDto,
     GetExpenseBreakdownResponseDto,
-    GetExpensesByMonthResponseDto
+    GetExpensesByMonthResponseDto,
+    GetAllowanceResponseDto,
+    UpdateAllowanceRequestDto
 } from "@budget-now/contract";
 
 export const getLatestTransactions = async (req: Request, res: Response) => {
@@ -59,4 +61,28 @@ export const getMonthlyExpenses = async (req: Request, res: Response) => {
         expenses: result
     };
     return res.status(200).json(response);
+};
+
+export const getAllowance = async (req: Request, res: Response) => {
+    const user = req.user as UserTokenPayload;
+    const result = await DashboardService.getAllowance(user.id);
+
+    const response: GetAllowanceResponseDto = {
+        allowance: result
+    };
+
+    return res.status(200).json(response);
+};
+
+export const updateAllowance = async (req: Request, res: Response) => {
+    const user = req.user as UserTokenPayload;
+
+    const { allowance }: UpdateAllowanceRequestDto = req.body;
+    const { limit, restartDays, startDate } = allowance;
+
+    await DashboardService.updateAllowance(user.id, limit, restartDays, startDate as string);
+
+    return res.status(200).json({
+        message: "Allowance updated successfully"
+    });
 };

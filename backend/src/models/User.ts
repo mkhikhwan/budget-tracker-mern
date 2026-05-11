@@ -1,7 +1,12 @@
 import { ObjectId, WithId } from "mongodb";
 import { getDb } from "../config/db";
 import argon2 from "argon2";
-import { verify } from "node:crypto";
+
+export interface Allowance {
+    amountLimit: number;
+    resetDays: number;
+    startDate: Date;
+}
 
 export interface User {
     _id?: ObjectId;
@@ -10,8 +15,9 @@ export interface User {
 
     country: string;
     name: string;
+
+    allowance: Allowance;
     
-    // OAuth specific fields
     providers?: {
         googleId?: string;
         githubId?: string;
@@ -39,6 +45,11 @@ export const UserModel = {
             password: await argon2.hash(data.password),
             country: data.country!,
             name: data.name!,
+            allowance: data.allowance || {
+                amountLimit: 0,
+                resetDays: 30,
+                startDate: new Date()
+            },
             is_active: true,
             last_login: new Date().toISOString()
         }

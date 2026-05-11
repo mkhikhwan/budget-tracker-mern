@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as DashboardController from "../controllers/DashboardController";
 import Auth from "../middleware/Auth";
+import { json } from "express";
 
 const router = Router();
 
@@ -8,5 +9,8 @@ router.get("/latest-transactions", Auth, DashboardController.getLatestTransactio
 router.get("/balance", Auth, DashboardController.getBalanceSummary);
 router.get("/expense-breakdown", Auth, DashboardController.getExpenseBreakdown);
 router.get("/monthly-expenses", Auth, DashboardController.getMonthlyExpenses);
+
+router.get("/allowance", Auth, DashboardController.getAllowance);
+router.post("/allowance", Auth, json(), DashboardController.updateAllowance);
 
 export default router;

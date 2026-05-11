@@ -3,6 +3,7 @@ import { TransactionModel, Transaction } from "../models/Transaction"
 import AppError from "../utils/AppError";
 import { getDb } from "../config/db";
 import { TransactionCategoryModel } from "../models/TransactionCategory";
+import { UserModel, Allowance } from "../models/User";
 
 export const getFiveLatestTransactions = async (userId: string):Promise<WithId<Transaction>[]> => {
     try{
@@ -226,5 +227,30 @@ export const getExpensesByMonth = async (userId: string, year: number) => {
         });
     } catch (err) {
         throw new AppError(`Failed to fetch monthly expenses: ${err instanceof Error ? err.message : String(err)}`, 500);
+    }
+};
+
+export const getAllowance = async (userId: string) => {
+    try {
+        // Dummy data implementation
+        const dummyAllowance = {
+            spent: 450,
+            limit: 1000,
+            startDate: new Date().toISOString(),
+            restartDays: 30,
+            isOverlimit: true
+        };
+
+        return dummyAllowance;
+    } catch (err) {
+        throw new AppError("Failed to fetch allowance", 500);
+    }
+};
+
+export const updateAllowance = async (userId: string, limit: number, restartDays: number, startDate: string) => {
+    try {
+        return { success: true };
+    } catch (err) {
+        throw new AppError("Failed to update allowance", 500);
     }
 };
