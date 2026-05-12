@@ -230,18 +230,58 @@ export const getExpensesByMonth = async (userId: string, year: number) => {
     }
 };
 
-export const getAllowance = async (userId: string) => {
+export const getAllowance = async (userId: string): Promise<Allowance | null> => {
     try {
-        // Dummy data implementation
-        const dummyAllowance = {
-            spent: 450,
-            limit: 1000,
-            startDate: new Date().toISOString(),
-            restartDays: 30,
-            isOverlimit: true
-        };
+        const user = await UserModel.collection().findOne({ _id: new ObjectId(userId) });
 
-        return dummyAllowance;
+        if (!user || !user.allowance) {
+            return null;
+        }
+
+        // TODO: spent calculation logic
+        const { startDate, restartDays } = user.allowance;
+
+        const start = new Date(startDate.toString());
+        const today = new Date();
+        let currentPeriodStart = start;
+
+        if (today > start && restartDays > 0){
+            const msPerDay = 24 * 60 * 60 * 1000;
+            const diffMs = today.getTime() - start.getTime();
+            const diffDays = Math.floor(diffMs / msPerDay);
+            const periodsPassed = Math.floor(diffDays / restartDays);
+
+            currentPeriodStart = new Date(start.getTime() + (periodsPassed * restartDays * msPerDay) );
+        }
+
+        const pipeline = [
+            {
+                $match: {
+                    userId: new ObjectId(userId),
+                    type: 'expense',
+                    $expr: {
+                        $gte: [{ $toDate: "$date" }, currentPeriodStart]
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$amount" }
+                }
+            }
+        ];
+
+        const expenseResult = await TransactionModel.collection().aggregate(pipeline).toArray();
+        const totalSpent = expenseResult.length > 0 ? expenseResult[0].total : 0;
+
+        return {
+            spent: totalSpent,
+            limit: user.allowance.limit,
+            startDate: user.allowance.startDate,
+            restartDays: user.allowance.restartDays,
+            isOverlimit: totalSpent > user.allowance.limit
+        };
     } catch (err) {
         throw new AppError("Failed to fetch allowance", 500);
     }
@@ -249,8 +289,26 @@ export const getAllowance = async (userId: string) => {
 
 export const updateAllowance = async (userId: string, limit: number, restartDays: number, startDate: string) => {
     try {
-        return { success: true };
+        const allowance: Allowance = {
+            limit,
+            restartDays,
+            startDate: new Date(startDate)
+        };
+
+        const result = await UserModel.collection().updateOne(
+            { _id: new ObjectId(userId) },
+            { 
+                $set: { allowance } 
+            },
+            { upsert: true }
+        );
+
+        if (result.matchedCount === 0) {
+            throw new AppError("User not found", 404);
+        }
+
+        return { success: result.acknowledged };
     } catch (err) {
-        throw new AppError("Failed to update allowance", 500);
+        throw new AppError(err instanceof AppError ? err.message : "Failed to update allowance", err instanceof AppError ? err.statusCode : 500);
     }
 };

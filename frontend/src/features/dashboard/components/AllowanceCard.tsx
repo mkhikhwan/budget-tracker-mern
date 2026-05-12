@@ -7,7 +7,7 @@ import { getAllowance, updateAllowance } from "../Dashboard.api";
 import { mapAllowanceToUI } from "../Dashboard.mapper";
 
 function AllowanceCard() {
-    const [allowanceLimit, setAllowanceLimit] = useState<Allowance>({ 
+    const [allowanceInitValue, setAllowanceLimit] = useState<Allowance>({ 
         spent: 0, 
         limit: 0, 
         startDate: new Date().toISOString().split('T')[0], 
@@ -25,7 +25,7 @@ function AllowanceCard() {
             const mapped = mapAllowanceToUI(data);
             setAllowanceLimit(mapped);
             setTempLimit(mapped.limit);
-            setStartDate(mapped.startDate);
+            setStartDate(mapped.startDate.split('T')[0]);
             setRestartDays(mapped.restartDays);
         } catch (error) {
             console.error("Error fetching allowance:", error);
@@ -52,6 +52,40 @@ function AllowanceCard() {
         }
     };
 
+    const handleKeyDownAmount = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const allowedControlKeys = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab", "Enter"];
+        
+        if (allowedControlKeys.includes(e.key)) {
+            if (e.key === "Backspace") {
+                e.preventDefault();
+                setTempLimit(prev => Math.floor(prev / 10));
+            } else if (e.key === "Delete") {
+                e.preventDefault();
+                setTempLimit(0);
+            }
+            return;
+        }
+
+        if (e.key >= "0" && e.key <= "9") {
+            e.preventDefault();
+            setTempLimit(prev => (prev * 10) + Number(e.key));
+            return;
+        }
+
+        e.preventDefault();
+    };
+
+    const formatCurrencyLocal = (value: number): string => {
+        return (value / 100).toFixed(2);
+    };
+
+    const handleCloseModal = () => {
+        setTempLimit(allowanceInitValue.limit);
+        setStartDate(allowanceInitValue.startDate);
+        setRestartDays(allowanceInitValue.restartDays);
+        setIsModalOpen(false);
+    };
+
     return (
         <div className={styles.card}>
             <div className={styles.cardHeader}>
@@ -61,20 +95,20 @@ function AllowanceCard() {
             <div className={styles.progressContainer}>
                 <div 
                     className={styles.progressBar} 
-                    style={{ width: `${allowanceLimit.limit > 0 ? (allowanceLimit.spent / allowanceLimit.limit) * 100 : 0}%` }}
+                    style={{ width: `${allowanceInitValue.limit > 0 ? (allowanceInitValue.spent / allowanceInitValue.limit) * 100 : 0}%` }}
                 ></div>
             </div>
             <div className={styles.progressInfo}>
-                <span>Spent: {FormatCurrency(allowanceLimit.spent)}</span>
-                <span>Limit: {FormatCurrency(allowanceLimit.limit)}</span>
+                <span>Spent: {FormatCurrency(allowanceInitValue.spent)}</span>
+                <span>Limit: {FormatCurrency(allowanceInitValue.limit)}</span>
             </div>
 
             <Modal 
                 isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
+                onClose={handleCloseModal} 
                 buttons={{
                     onConfirm: { label: "Save", action: handleUpdateAllowance },
-                    onClose: { label: "Cancel", action: () => setIsModalOpen(false) }
+                    onClose: { label: "Cancel", action: handleCloseModal }
                 }}
                 title="Edit Allowance"
             >
@@ -83,9 +117,9 @@ function AllowanceCard() {
                         <label className={styles.label} style={{ display: 'block', marginBottom: '0.5rem' }}>Spending limit:</label>
                         <input
                             className="input" 
-                            type="number" 
-                            value={tempLimit} 
-                            onChange={(e) => setTempLimit(Number(e.target.value))}
+                            type="text" 
+                            value={formatCurrencyLocal(tempLimit)} 
+                            onKeyDown={handleKeyDownAmount}
                         />
                     </div>
                     <div>

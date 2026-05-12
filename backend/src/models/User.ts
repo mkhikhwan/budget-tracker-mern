@@ -3,9 +3,11 @@ import { getDb } from "../config/db";
 import argon2 from "argon2";
 
 export interface Allowance {
-    amountLimit: number;
-    resetDays: number;
-    startDate: Date;
+    spent?: number;
+    limit: number;
+    startDate: string | Date;
+    restartDays: number;
+    isOverlimit?: boolean;
 }
 
 export interface User {
@@ -16,7 +18,7 @@ export interface User {
     country: string;
     name: string;
 
-    allowance: Allowance;
+    allowance?: Allowance;
     
     providers?: {
         googleId?: string;
@@ -45,11 +47,6 @@ export const UserModel = {
             password: await argon2.hash(data.password),
             country: data.country!,
             name: data.name!,
-            allowance: data.allowance || {
-                amountLimit: 0,
-                resetDays: 30,
-                startDate: new Date()
-            },
             is_active: true,
             last_login: new Date().toISOString()
         }

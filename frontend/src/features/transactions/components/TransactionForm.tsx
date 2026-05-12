@@ -45,22 +45,27 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
     const title = type === "expense" ? "Expense" : "Income";
     // Validation
     const handleKeyDownAmount = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        // Allow control keys (Backspace, Tab, Enter, etc.)
+        const allowedControlKeys = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab", "Enter"];
+        if (allowedControlKeys.includes(e.key)) {
+            if (e.key === "Backspace") {
+                e.preventDefault();
+                setAmount(prev => Math.floor(prev / 10));
+            } else if (e.key === "Delete") {
+                e.preventDefault();
+                setAmount(0);
+            }
+            return; // Allow the browser to handle Tab, Enter, etc. normally
+        }
+
         if(e.key >= "0" && e.key <= "9"){
             e.preventDefault();
             setAmount(prev => (prev * 10) + Number(e.key));
             return;
         }
 
-        if(e.key === "Backspace"){
-            e.preventDefault();
-            setAmount(prev => Math.floor(prev/10));
-            return;
-        }
-
-        if(e.key === "Delete"){
-            e.preventDefault();
-            setAmount(0);
-        }
+        // Block all other keys (letters, symbols, etc.)
+        e.preventDefault();
     }
 
     const formatCurrency = (value: number):string => {
