@@ -40,7 +40,22 @@
 
 .progressBar {
     height: 100%;
+}
+
+.low{
     background-color: #0078FF;
+}
+
+.medium{
+    background-color: #FFD700;
+}
+
+.high{
+    background-color: #FF8C00;
+}
+
+.danger{
+    background-color: #FF4D4D;
 }
 
 .progressInfo {

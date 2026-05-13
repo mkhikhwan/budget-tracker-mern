@@ -86,6 +86,24 @@ function AllowanceCard() {
         setIsModalOpen(false);
     };
 
+    const renderProgressBar = () => {
+        const percentage = allowanceInitValue.limit > 0 
+            ? (allowanceInitValue.spent / allowanceInitValue.limit) * 100 
+            : 0;
+        
+        let statusClass = styles.low;
+        if (percentage >= 90) statusClass = styles.danger;
+        else if (percentage >= 75) statusClass = styles.high;
+        else if (percentage >= 50) statusClass = styles.medium;
+
+        return (
+            <div 
+                className={`${styles.progressBar} ${statusClass}`} 
+                style={{ width: `${Math.min(percentage, 100)}%` }}
+            ></div>
+        );
+    };
+
     return (
         <div className={styles.card}>
             <div className={styles.cardHeader}>
@@ -93,10 +111,7 @@ function AllowanceCard() {
                 <button className={styles.editBtn} onClick={() => setIsModalOpen(true)}>Edit</button>
             </div>
             <div className={styles.progressContainer}>
-                <div 
-                    className={styles.progressBar} 
-                    style={{ width: `${allowanceInitValue.limit > 0 ? (allowanceInitValue.spent / allowanceInitValue.limit) * 100 : 0}%` }}
-                ></div>
+                {renderProgressBar()}
             </div>
             <div className={styles.progressInfo}>
                 <span>Spent: {FormatCurrency(allowanceInitValue.spent)}</span>

@@ -238,7 +238,6 @@ export const getAllowance = async (userId: string): Promise<Allowance | null> =>
             return null;
         }
 
-        // TODO: spent calculation logic
         const { startDate, restartDays } = user.allowance;
 
         const start = new Date(startDate.toString());
