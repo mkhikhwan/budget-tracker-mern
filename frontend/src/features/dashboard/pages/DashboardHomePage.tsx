@@ -1,6 +1,7 @@
 import PageLayout from "../../../shared/layouts/PageLayout";
 import styles from "./DashboardHomePage.module.css";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import type { BalanceData, PieCategoryData, MonthlyGraphData, Transaction } from "../Dashboard.types";
 import * as DashboardAPI from "../Dashboard.api";
@@ -10,6 +11,7 @@ import AllowanceCard from "../components/AllowanceCard";
 import { useAuth } from "../../auth/providers/AuthProvider";
 
 function DashboardHomePage(){
+    const navigate = useNavigate();
     const { user } = useAuth();
     const currencySymbol = user?.currency || '$';
 
@@ -60,6 +62,10 @@ function DashboardHomePage(){
         }
     }
 
+    const redirectToAddTransaction = ()=>{
+        navigate("/transactions/add");
+    }
+
     useEffect(() => {
         const initDashboard = async () => {
             try {
@@ -84,7 +90,7 @@ function DashboardHomePage(){
                     <div className={`${styles.card} ${styles.summaryCard} ${styles.balanceCard}`}>
                         <div className={styles.balanceHeader}>
                             <span className={styles.label}>Total Balance</span>
-                            <button className={styles.plusBtn}>
+                            <button className={styles.plusBtn} onClick={redirectToAddTransaction}>
                                 <i className="fa-solid fa-plus"></i>
                             </button>
                         </div>
