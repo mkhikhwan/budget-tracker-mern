@@ -31,13 +31,6 @@ function NavBar(){
 
                 <ul className={styles.navList}>
                     <li className={styles.navItem}>
-                        <NavLink to="/" className={({ isActive }) => {
-                            return `${styles.item} ${isActive ? `${styles.active}` : '' }`
-                        }}>
-                            <i className="fa-solid fa-home"></i> Home
-                        </NavLink>
-                    </li>
-                    <li className={styles.navItem}>
                         <NavLink to="/dashboard" className={({ isActive }) => {
                             return `${styles.item} ${isActive ? `${styles.active}` : '' }`
                         }}>
@@ -60,6 +53,14 @@ function NavBar(){
                             </li>
                         </ul>
                     </li>
+                    <li className={styles.navItem}>
+                        <NavLink to="/settings" className={({ isActive }) => {
+                            return `${styles.item} ${isActive ? `${styles.active}` : '' }`
+                        }}>
+                            <i className="fa-solid fa-gear"></i> Settings
+                        </NavLink>
+                    </li>
+                    
                     <div className={styles.navFooter}>
                         <button className={styles.logout} onClick={auth.logout}>
                             Logout

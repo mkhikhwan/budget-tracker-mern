@@ -6,6 +6,7 @@ import TransactionPage from '../features/transactions/pages/TransactionPage';
 import AddTransactionPage from '../features/transactions/pages/AddTransactionPage';
 import ViewTransactionPage from '../features/transactions/pages/ViewTransactionPage';
 import EditTransactionPage from '../features/transactions/pages/EditTransactionPage';
+import SettingsPage from '../features/settings/pages/SettingsPage.tsx';
 
 import LoginPage from '../features/auth/pages/LoginPage';
 import RegisterPage from '../features/auth/pages/RegisterPage';
@@ -35,6 +36,7 @@ function App() {
 				<Route path="/transactions/view" element={< ViewTransactionPage />} />
 				<Route path="/transactions/add" element={< AddTransactionPage />} />
 				<Route path="/transactions/edit" element={< EditTransactionPage />} />
+				<Route path="/settings" element={< SettingsPage />} />
 			</Route>
 		</Routes>
 	)
