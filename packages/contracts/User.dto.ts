@@ -11,3 +11,15 @@ export interface UserTokenPayload{
     email : string,
     country? : string
 }
+
+export interface SettingsDto{
+    country: string
+}
+
+export interface GetUserSettingsResponseDto {
+    settings : SettingsDto
+}
+
+export interface UpdateUserSettingsRequestDto {
+    settings : SettingsDto
+}

@@ -1,6 +1,12 @@
 import { Request, Response } from "express"
 import * as UserService from "../services/UserService"
-import { LoginDto, RegisterDto } from "@budget-now/contract";
+import { 
+    LoginDto, 
+    RegisterDto, 
+    UserTokenPayload, 
+    GetUserSettingsResponseDto,
+    UpdateUserSettingsRequestDto
+} from "@budget-now/contract";
 
 export const login = async (req: Request, res:Response)=>{
     const request:LoginDto = req.body;
@@ -50,3 +56,29 @@ export const logout = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: 'Logged out successfully' });
 }
+
+export const getSettings = async (req: Request, res: Response) => {
+    const user = req.user as UserTokenPayload;
+    const settings = await UserService.getSettings(user.id);
+    console.log(settings);
+
+    const response: GetUserSettingsResponseDto = {
+        settings: settings
+    }
+    
+    return res.status(200).json(response);
+};
+
+export const updateSettings = async (req: Request, res: Response) => {
+    const user = req.user as UserTokenPayload;
+    const request: UpdateUserSettingsRequestDto = req.body;
+    const newSettings = request.settings;
+
+    console.log(request);
+
+    await UserService.updateSettings(user.id, newSettings);
+
+    return res.status(200).json({
+        message: "Settings updated successfully"
+    });
+};

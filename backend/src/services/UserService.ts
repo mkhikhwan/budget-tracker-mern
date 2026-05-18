@@ -62,3 +62,19 @@ export const register = async (
 
     return result
 };
+
+export const getSettings = async (userId: string) => {
+    const settings = await UserModel.getSettings(userId);
+    if (!settings) {
+        throw new AppError("User not found", 404);
+    }
+    return settings;
+};
+
+export const updateSettings = async (userId: string, settings: { country: string }) => {
+    const result = await UserModel.updateSettings(userId, settings);
+    if (result.matchedCount === 0) {
+        throw new AppError("User not found", 404);
+    }
+    return result;
+};

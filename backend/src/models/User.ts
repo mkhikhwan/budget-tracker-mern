@@ -1,4 +1,4 @@
-import { ObjectId, WithId } from "mongodb";
+import { ObjectId, UpdateResult, WithId } from "mongodb";
 import { getDb } from "../config/db";
 import argon2 from "argon2";
 
@@ -66,5 +66,17 @@ export const UserModel = {
         }catch(e:unknown){
             return false;
         }
+    },
+
+    async updateSettings(userId: string, settings: { country: string }): Promise<UpdateResult<User>> {
+        return this.collection().updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: { country: settings.country } }
+        );
+    },
+
+    async getSettings(userId: string): Promise<{ country: string } | null> {
+        const user = await this.collection().findOne({ _id: new ObjectId(userId) });
+        return user ? { country: user.country } : null;
     }
 };

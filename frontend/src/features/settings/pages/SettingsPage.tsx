@@ -1,16 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import PageLayout from "../../../shared/layouts/PageLayout";
 import CountrySelect from "../../../shared/components/form/CountrySelect";
+import * as SettingsAPI from "../Settings.api"
+import * as SettingsMapper from "../Settings.mapper"
+import { type UserSettings } from "../Settings.types";
 
 function SettingsPage() {
     const [country, setCountry] = useState("");
+    const [loading, setLoading] = useState(true);
 
-    // TODO: GET /settings
+    const fetchSettings = useCallback(async () => {
+        try {
+            const res = await SettingsAPI.getSettings();
+            const data = SettingsMapper.mapSettingsToUI(res);
+            setCountry(data.country);
+        } catch (error) {
+            console.error("Failed to load settings", error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
-    const onConfirm = () => {
-        // TODO: POST /settings
-        console.log("settings changed");
+    useEffect(() => {
+        fetchSettings();
+    }, [fetchSettings]);
+
+    const onConfirm = async () => {
+        try {
+            const payload:UserSettings = {
+                country: country
+            }
+            await SettingsAPI.updateSettings( SettingsMapper.mapSettingsToPayload(payload) );
+            alert("Settings updated successfully");
+        } catch (error) {
+            alert(error instanceof Error ? error.message : "Failed to update settings");
+        }
     };
+
+    if (loading) return <PageLayout header="Settings"><div>Loading...</div></PageLayout>;
 
     return (
         <PageLayout header="Settings">

@@ -8,8 +8,9 @@ import Auth from './middleware/Auth';
 import morgan from 'morgan'
 
 import TransactionRoutes from "./routes/TransactionRoutes"
-import UserRoutes from "./routes/UserRoutes"
+import AuthRoutes from "./routes/AuthRoutes"
 import DashboardRoutes from "./routes/DashboardRoutes"
+import UserRoutes from "./routes/UserRoutes"
 
 const app = express();
 
@@ -29,7 +30,8 @@ const format: string = ':method :url :status :res[content-length] - :response-ti
 app.use(morgan(format));
 
 // ROUTES
-app.use("/api/auth", UserRoutes);
+app.use("/api/auth", AuthRoutes);
+app.use("/api/user", UserRoutes);
 app.use("/api/transaction", Auth, TransactionRoutes);
 app.use("/api/dashboard", Auth, DashboardRoutes);
 
