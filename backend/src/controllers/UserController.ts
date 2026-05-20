@@ -14,7 +14,11 @@ export const login = async (req: Request, res:Response)=>{
     const result = await UserService.login(request.email, request.password);
     const token = result.accessToken;
 
-    res.cookie('token', token, { httpOnly: true, secure: true });
+    res.cookie('token', token, { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production', // Only use secure in production (HTTPS)
+        sameSite: 'lax'
+    });
     return res.status(201).json({ 
         message: "Login Successful",
         user: result.user,

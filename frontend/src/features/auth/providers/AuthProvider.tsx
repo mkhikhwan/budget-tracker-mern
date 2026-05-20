@@ -1,4 +1,4 @@
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, createContext, useContext, useCallback } from "react";
 import { type UserTokenPayload } from "@budget-now/contract";
 import * as UserApi from "../Auth.api"
 
@@ -8,7 +8,7 @@ interface AuthUser extends UserTokenPayload {
 
 interface AuthContextType {
     user: AuthUser | null;
-    login: (userData: AuthUser) => void;
+    login: (userData: UserTokenPayload) => void;
     logout: () => void;
     loading: boolean;
 }
@@ -18,8 +18,6 @@ const AuthContext = createContext<AuthContextType | null>(null);
 interface Props{
     children: React.ReactNode
 }
-
-
 
 export function AuthProvider({ children }:Props){
     const [user, setUser] = useState<AuthUser | null>(null);
@@ -38,42 +36,57 @@ export function AuthProvider({ children }:Props){
         }
     };
 
+    const fetchUser = async () => {
+        try {
+            const data = await UserApi.me();
+            
+            if (data && data.user) {
+                let currencySymbol = "$";
 
-    useEffect(()=>{
-        const fetchUser = async () => {
-            try{
-                await new Promise((resolve) => setTimeout(resolve, 1000));
+                if(data.user.country){
+                    const currency = await getCountryCurrency(data.user.country!);
+                    if(currency){
+                        currencySymbol = currency.symbol || currency.name || "$";
+                    }
+                }
 
-                const res = await fetch("http://localhost:5000/api/auth/me", {
-                    credentials: "include"
-                });
-                if(!res.ok) throw new Error("Cannot authenticate.");
-
-                const data: { 
-                    user : UserTokenPayload 
-                } = await res.json();
-
-                const currency = await getCountryCurrency(data.user.country!);
-                
                 setUser({
-                    ...data.user,
-                    currency: currency ? currency.symbol : '$'
+                    ...(data.user as UserTokenPayload),
+                    currency: currencySymbol
                 });
-            }catch(e:unknown){
+            } else {
                 setUser(null);
-            } finally {
-                setLoading(false);
+            }
+        }catch(e:unknown){
+            setUser(null);
+        }finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUser();
+    }, []);
+
+    const login = useCallback(async (userData: UserTokenPayload) => {
+        let currencySymbol = "$";
+
+        if (userData.country) {
+            const currency = await getCountryCurrency(userData.country);
+            if (currency) {
+                currencySymbol = currency.symbol || currency.name || "$";
             }
         }
 
-        fetchUser();
-    },[]);
+        const authUser: AuthUser = {
+            ...userData,
+            currency: currencySymbol
+        };
 
-    const login = (userData: AuthUser) => {
-        setUser(userData);
-    }
+        setUser(authUser);
+    }, []);
 
-    const logout = async () => {
+    const logout = useCallback(async () => {
         try {
             await UserApi.logout();
         } catch (error) {
@@ -81,7 +94,7 @@ export function AuthProvider({ children }:Props){
         } finally {
             setUser(null);
         }
-    }
+    }, []);
 
     return (
         <AuthContext.Provider value={{ user, login, logout, loading }}>

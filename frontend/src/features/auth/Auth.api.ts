@@ -24,3 +24,11 @@ export function logout(): Promise<{ message: string }> {
         method: "POST"
     });
 }
+
+export async function me(): Promise<{ user: UserTokenPayload }> {
+    const res = await fetch("http://localhost:5000/api/auth/me", {
+        credentials: "include"
+    });
+    if (!res.ok) throw new Error("Cannot authenticate.");
+    return res.json();
+}

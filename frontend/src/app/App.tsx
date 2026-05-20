@@ -18,11 +18,10 @@ import SearchTransactionPage from '../features/transactions/pages/SearchTransact
 function App() {
 	return (	
 		<Routes>
-			<Route element={< AuthLayout /> }>
+			<Route element={<PublicRoute>< AuthLayout /> </PublicRoute>}>
 				<Route path="/register" element={< RegisterPage />} />
 				<Route path="/login" element={< LoginPage />} />
 			</Route>
-
 			
 			<Route element={
 				<ProtectedRoute>
@@ -40,6 +39,21 @@ function App() {
 			</Route>
 		</Routes>
 	)
+}
+
+function PublicRoute({children}: { children: React.ReactNode }){
+	const { user, loading } = useAuth();
+
+	if(loading){
+		return <div style={{ color: 'black' }}>Loading...</div>
+	}
+
+	// If user is already logged in, redirect them to dashboard
+	if(user){
+		return <Navigate to="/dashboard" replace />;
+	}
+
+	return <>{children}</>;
 }
 
 function ProtectedRoute({children}: { children: React.ReactNode }){
