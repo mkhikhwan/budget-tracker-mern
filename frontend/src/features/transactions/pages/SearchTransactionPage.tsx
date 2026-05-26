@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import type { Transaction } from "../Transactions.types";
 import FilterTransactionInput from "../components/FilterTransactionInput";
 import FormatCurrency from "../../../shared/helpers/FormatCurrency";
-import { useAuth } from "../../auth/providers/AuthProvider";
+import { useSettings } from "../../settings/providers/SettingsProvider";
 
 const DUMMY_SEARCH_RESULTS: Transaction[] = [
     {
@@ -45,8 +45,8 @@ const DUMMY_SEARCH_RESULTS: Transaction[] = [
 function SearchTransactionPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user } = useAuth();
-    const currencySymbol = user?.currency || '$';
+    const settings = useSettings();
+    const currencySymbol = settings?.getCurrency() || '$';
     
     const filters = location.state || {
         search: "",

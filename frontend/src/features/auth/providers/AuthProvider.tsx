@@ -2,12 +2,8 @@ import { useEffect, useState, createContext, useContext, useCallback } from "rea
 import { type UserTokenPayload } from "@budget-now/contract";
 import * as UserApi from "../Auth.api"
 
-interface AuthUser extends UserTokenPayload {
-    currency: string;
-}
-
 interface AuthContextType {
-    user: AuthUser | null;
+    user: UserTokenPayload | null;
     login: (userData: UserTokenPayload) => void;
     logout: () => void;
     loading: boolean;
@@ -20,40 +16,15 @@ interface Props{
 }
 
 export function AuthProvider({ children }:Props){
-    const [user, setUser] = useState<AuthUser | null>(null);
+    const [user, setUser] = useState<UserTokenPayload | null>(null);
     const [loading, setLoading] = useState(true);
-
-    const getCountryCurrency = async (countryCode: string) => {
-        try {
-            const res = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}?fields=currencies`);
-            if (!res.ok) throw new Error("Failed to fetch currency");
-            const data = await res.json();
-            const currencyCode = Object.keys(data.currencies)[0];
-            return data.currencies[currencyCode];
-        } catch (error) {
-            console.error("Error fetching currency:", error);
-            return null;
-        }
-    };
 
     const fetchUser = async () => {
         try {
             const data = await UserApi.me();
             
             if (data && data.user) {
-                let currencySymbol = "$";
-
-                if(data.user.country){
-                    const currency = await getCountryCurrency(data.user.country!);
-                    if(currency){
-                        currencySymbol = currency.symbol || currency.name || "$";
-                    }
-                }
-
-                setUser({
-                    ...(data.user as UserTokenPayload),
-                    currency: currencySymbol
-                });
+                setUser(data.user as UserTokenPayload);
             } else {
                 setUser(null);
             }
@@ -69,21 +40,7 @@ export function AuthProvider({ children }:Props){
     }, []);
 
     const login = useCallback(async (userData: UserTokenPayload) => {
-        let currencySymbol = "$";
-
-        if (userData.country) {
-            const currency = await getCountryCurrency(userData.country);
-            if (currency) {
-                currencySymbol = currency.symbol || currency.name || "$";
-            }
-        }
-
-        const authUser: AuthUser = {
-            ...userData,
-            currency: currencySymbol
-        };
-
-        setUser(authUser);
+        setUser(userData);
     }, []);
 
     const logout = useCallback(async () => {

@@ -8,12 +8,12 @@ import type { Transaction } from "../Transactions.types";
 import { mapGetAllResponseToTransactions } from "../Transactions.mapper";
 import FilterTransactionInput from "../components/FilterTransactionInput";
 import FormatCurrency from "../../../shared/helpers/FormatCurrency";
-import { useAuth } from "../../auth/providers/AuthProvider";
+import { useSettings } from "../../settings/providers/SettingsProvider";
 
 function TransactionPage(){
     const navigate = useNavigate();
-    const { user } = useAuth();
-    const currencySymbol = user?.currency || '$';
+    const settings = useSettings();
+    const currencySymbol = settings?.getCurrency() || '$';
 
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 

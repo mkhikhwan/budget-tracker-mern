@@ -6,6 +6,7 @@ import TransactionPage from '../features/transactions/pages/TransactionPage';
 import AddTransactionPage from '../features/transactions/pages/AddTransactionPage';
 import ViewTransactionPage from '../features/transactions/pages/ViewTransactionPage';
 import EditTransactionPage from '../features/transactions/pages/EditTransactionPage';
+import SearchTransactionPage from '../features/transactions/pages/SearchTransactionPage';
 import SettingsPage from '../features/settings/pages/SettingsPage.tsx';
 
 import LoginPage from '../features/auth/pages/LoginPage';
@@ -13,7 +14,6 @@ import RegisterPage from '../features/auth/pages/RegisterPage';
 import AuthLayout from '../shared/layouts/AuthLayout';
 
 import { useAuth } from '../features/auth/providers/AuthProvider';
-import SearchTransactionPage from '../features/transactions/pages/SearchTransactionPage';
 
 function App() {
 	return (	

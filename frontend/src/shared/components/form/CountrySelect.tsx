@@ -15,11 +15,18 @@ interface RESTCountry{
 
 type RESTCountryResponse = RESTCountry[];
 
+let cachedCountryList: RESTCountryResponse | null = null;
+
 function CountrySelect({ country, setCountry }:Props){
     const [countryList, setCountryList ] = useState<RESTCountryResponse>([]);
 
     useEffect(()=>{
         const getData = async ()=>{
+            if (cachedCountryList) {
+                setCountryList(cachedCountryList);
+                return;
+            }
+
             try{
                 const res = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2');
                 if(!res.ok) throw new Error("Can't fetch country list.");
@@ -28,6 +35,7 @@ function CountrySelect({ country, setCountry }:Props){
                 const newList = data.sort((a, b) => 
                     a.name.common.localeCompare(b.name.common)
                 );
+                cachedCountryList = newList;
                 setCountryList(newList);
             }catch(e:unknown){
                 console.log(e instanceof Error ? e.message : "Error fetch country list");

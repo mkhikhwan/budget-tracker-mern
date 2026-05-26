@@ -3,11 +3,14 @@ import './index.css'
 import App from './app/App.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './features/auth/providers/AuthProvider'
+import { SettingsProvider } from './features/settings/providers/SettingsProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
         <AuthProvider>
-            <App />
+            <SettingsProvider>
+                <App />
+            </SettingsProvider>
         </AuthProvider>
     </BrowserRouter>,
 )

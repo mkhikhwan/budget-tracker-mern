@@ -8,12 +8,12 @@ import * as DashboardAPI from "../Dashboard.api";
 import * as DashboardMap from "../Dashboard.mapper";
 import FormatCurrency from "../../../shared/helpers/FormatCurrency";
 import AllowanceCard from "../components/AllowanceCard";
-import { useAuth } from "../../auth/providers/AuthProvider";
+import { useSettings } from "../../settings/providers/SettingsProvider";
 
 function DashboardHomePage(){
     const navigate = useNavigate();
-    const { user } = useAuth();
-    const currencySymbol = user?.currency || '$';
+    const settings = useSettings();
+    const currencySymbol = settings?.getCurrency() || '$';
 
     // Declare states here
     const [balance, setBalance] = useState<BalanceData>({ total: 0, monthlyIncome: 0, monthlyExpense: 0 });
