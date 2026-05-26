@@ -121,7 +121,7 @@ export const getTransactionDetails = async (req: Request, res:Response) => {
         amount: result.amount!,
         category: result.category!,
         description: result.description!,
-        date: result.date!,
+        date: result.date!.toISOString(),
         images: images,
     };
 

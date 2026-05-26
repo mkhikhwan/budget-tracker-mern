@@ -7,7 +7,8 @@ import {
     GetExpenseBreakdownResponseDto,
     GetExpensesByMonthResponseDto,
     GetAllowanceResponseDto,
-    UpdateAllowanceRequestDto
+    UpdateAllowanceRequestDto,
+    AllowanceDto
 } from "@budget-now/contract";
 
 export const getLatestTransactions = async (req: Request, res: Response) => {
@@ -67,9 +68,18 @@ export const getAllowance = async (req: Request, res: Response) => {
     const user = req.user as UserTokenPayload;
     const result = await DashboardService.getAllowance(user.id);
 
-    const response: GetAllowanceResponseDto = {
-        allowance: result
-    };
+    let allowance: AllowanceDto | null = null;
+    if (result) {
+        allowance = {
+            spent: result.spent!,
+            limit: result.limit,
+            startDate: result.startDate,
+            restartDays: result.restartDays,
+            isOverlimit: result.isOverlimit!
+        };
+    }
+
+    const response: GetAllowanceResponseDto = { allowance };
 
     return res.status(200).json(response);
 };

@@ -11,7 +11,7 @@ export const createTransaction = async (
     amount: number,
     category: string,
     description: string,
-    date: string
+    date: Date
 )=>{
     try {
         const newTransaction = await TransactionModel.prepareTransaction({
@@ -83,7 +83,7 @@ export const deleteImages = async (idToDelete:string[])=>{
 export const getAllTransaction = async (userId: string):Promise<WithId<Transaction>[]> => {
     try{
         const result = await TransactionModel.getAllTransactionsByUserId(userId);
-        return result;
+        return result as unknown as WithId<Transaction>[];
     } catch (err) {
         throw new AppError("Failed to fetch transactions", 500);
     }
@@ -127,7 +127,7 @@ export const editTransaction = async (
     amount: number,
     category: string,
     description: string,
-    date: string
+    date: Date
 ) => {
     try {
         if(!_id || !userId) throw new AppError("Transaction ID is required", 400);

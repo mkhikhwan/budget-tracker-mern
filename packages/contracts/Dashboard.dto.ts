@@ -39,7 +39,7 @@ export interface AllowanceDto{
 }
 
 export interface GetAllowanceResponseDto {
-    allowance: AllowanceDto;
+    allowance: AllowanceDto | null;
 }
 
 export interface UpdateAllowanceRequestDto {

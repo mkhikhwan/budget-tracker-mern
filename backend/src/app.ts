@@ -29,7 +29,13 @@ morgan.token('payload', (req:unknown, _res) => {
 const format: string = ':method :url :status :res[content-length] - :response-time ms :payload';
 app.use(morgan(format));
 
+
+
 // ROUTES
+app.get("/hello", (req, res) => {
+    res.status(200).send("OK");
+});
+
 app.use("/api/auth", AuthRoutes);
 app.use("/api/user", UserRoutes);
 app.use("/api/transaction", Auth, TransactionRoutes);
