@@ -19,7 +19,7 @@ export const login = async (req: Request, res:Response)=>{
         secure: process.env.NODE_ENV === 'production', // Only use secure in production (HTTPS)
         sameSite: 'lax'
     });
-    return res.status(201).json({ 
+    return res.status(200).json({ 
         message: "Login Successful",
         user: result.user,
     });
