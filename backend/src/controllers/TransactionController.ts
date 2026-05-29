@@ -121,7 +121,7 @@ export const getTransactionDetails = async (req: Request, res:Response) => {
         amount: result.amount!,
         category: result.category!,
         description: result.description!,
-        date: result.date!.toISOString(),
+        date: new Date(result.date!).toISOString(),
         images: images,
     };
 
@@ -152,7 +152,7 @@ export const editTransaction = async (req: Request, res: Response) => {
         request.date
     );
 
-    return res.status(201).json({message: "Edit successful."});
+    return res.status(200).json({message: "Edit successful."});
 }
 
 export const getTransactionCategories = async (req: Request, res: Response) => {
