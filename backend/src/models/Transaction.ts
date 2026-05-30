@@ -40,7 +40,10 @@ export const TransactionModel = {
     },
 
     async findById(id: string){
-        return this.collection().findOne({ _id : new ObjectId(id) });
+        return this.collection().findOne({ 
+            _id : new ObjectId(id),
+            isDeleted: { $ne: true }
+        });
     },
 
     async getAllTransactionsByUserId(userId: string){
@@ -48,7 +51,8 @@ export const TransactionModel = {
             // 1. Filter by User ID.
             {
                 $match: {
-                    userId: new ObjectId(userId)
+                    userId: new ObjectId(userId),
+                    isDeleted: { $ne: true }
                 }
             },
             // Include the collection "Transaction Categories" into Transaction Collection

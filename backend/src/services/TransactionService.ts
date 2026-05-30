@@ -92,9 +92,9 @@ export const getAllTransaction = async (userId: string):Promise<WithId<Transacti
 export const getTransactionDetails = async (id: string) => {
     try{
         const transactionResult = await TransactionModel.collection()
-            .findOne({ _id: new ObjectId(id) });
+            .findOne({ _id: new ObjectId(id), isDeleted: { $ne: true } });
 
-        if(!transactionResult === null){
+        if(!transactionResult){
             throw new AppError("Transaction not found", 404);
         }
 

@@ -6,7 +6,8 @@ import {
     type EditTransactionRequestDto,
     type GetAllTransactionsResponseDto,
     type GetTransactionDetailsResponseDto,
-    type GetTransactionCategoriesResponseDto
+    type GetTransactionCategoriesResponseDto,
+    type DeleteTransactionRequestDto
 } from "@budget-now/contract";
 import { mapTransactionDetailsToEditDto } from "./Transactions.mapper";
 import type { TransactionDetails } from "./Transactions.types";
@@ -56,5 +57,14 @@ export async function editTransaction(transaction: TransactionDetails) {
     return apiClient(`/api/transaction/${transaction._id}`, {
         method: "PUT",
         body: JSON.stringify(dto)
+    });
+}
+
+export async function deleteTransaction(transactionId: string) {
+    const payload: DeleteTransactionRequestDto = { transactionId };
+
+    return apiClient(`/api/transaction/delete`, {
+        method: "DELETE",
+        body: JSON.stringify(payload)
     });
 }

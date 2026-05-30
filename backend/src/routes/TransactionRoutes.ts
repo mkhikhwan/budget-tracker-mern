@@ -34,7 +34,7 @@ router.get("/:id", TransactionController.getTransactionDetails);
 router.put("/:id", json(), TransactionController.editTransaction);
 
 // Delete Transaction
-router.delete("/:id", TransactionController.deleteTransaction);
+router.delete("/:id", json(),TransactionController.deleteTransaction);
 
 router.post("/:id/images", upload.array("images"), TransactionController.addImages);
 router.delete("/:id/images", json(), TransactionController.deleteImages);

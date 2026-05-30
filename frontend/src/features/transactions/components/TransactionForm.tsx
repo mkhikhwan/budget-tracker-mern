@@ -84,6 +84,21 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
         });
     };
 
+    const handleOnClickDeleteTransaction = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
+        if (!initialData?._id) return;
+        if (!window.confirm(`Are you sure you want to delete this ${type}?`)) return;
+
+        try {
+            await TransactionAPI.deleteTransaction(initialData._id);
+            alert(`${title} deleted successfully.`);
+            navigate("/transactions");
+        } catch (err: unknown) {
+            alert(`Failed to delete transaction: ${err instanceof Error ? err.message : String(err)}`);
+        }
+    };
+
     useEffect(()=>{
         const fetchCategoryOptions = async ()=> {
             try{
@@ -222,6 +237,10 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
                         <button className={`${styles.actionButton} bg-warning`} onClick={handleOnClickEditTransaction}>
                             <i className="fa-solid fa-pen-to-square" style={{ marginRight: '8px' }}></i>
                             Edit {title}
+                        </button>
+                        <button className={`${styles.actionButton} bg-error`} onClick={handleOnClickDeleteTransaction}>
+                            <i className="fa-solid fa-trash-can" style={{ marginRight: '8px' }}></i>
+                            Delete {title}
                         </button>
                     </div>
                 )

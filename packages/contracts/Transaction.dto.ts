@@ -44,4 +44,6 @@ export interface GetTransactionCategoriesResponseDto{
     categories: TransactionCategoryDto[];
 }
 
-export interface DeleteTransactionRequestDto extends TransactionDto{}
+export interface DeleteTransactionRequestDto{
+    transactionId: string
+}

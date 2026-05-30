@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import PageLayout from "../../../shared/layouts/PageLayout";
 import TransactionForm from "../components/TransactionForm";
 import * as TransactionApi from "../Transactions.api"
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoadingPage from "../../../shared/pages/LoadingPage";
 import { type TransactionDetails } from "../Transactions.types";
 import { mapGetDetailsResponseToTransactionDetails } from "../Transactions.mapper";
 
 function ViewTransactionPage(){
     const location = useLocation();
+    const navigate = useNavigate();
     const transactionId = location.state?.id;
     const [transaction, setTransaction] = useState<TransactionDetails>();
 
@@ -23,6 +24,7 @@ function ViewTransactionPage(){
                 setTransaction(mapGetDetailsResponseToTransactionDetails(res));
             }catch(e: unknown){
                 alert(e instanceof Error ? e.message : "Can't fetch transactioon details");
+                navigate("/transactions");
             }finally{
                 setLoading(false);
             }
