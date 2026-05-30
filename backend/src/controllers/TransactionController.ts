@@ -155,6 +155,20 @@ export const editTransaction = async (req: Request, res: Response) => {
     return res.status(200).json({message: "Edit successful."});
 }
 
+export const deleteTransaction = async (req: Request, res: Response) => {
+    const id : string | string[] = req.params.id;
+    const user = req.user as UserTokenPayload;
+    const userId = user.id;
+
+    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+        throw new AppError("Invalid or missing transaction ID", 400);
+    }
+
+    await TransactionService.deleteTransaction(userId, id);
+
+    return res.status(200).json({ message: "Transaction deleted successfully" });
+}
+
 export const getTransactionCategories = async (req: Request, res: Response) => {
     const categories = await TransactionService.getTransactionCategories();
     const newCategories: TransactionCategoryDto[] = categories.map(tc => ({

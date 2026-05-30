@@ -43,3 +43,5 @@ export interface EditTransactionRequestDto extends TransactionDto{}
 export interface GetTransactionCategoriesResponseDto{
     categories: TransactionCategoryDto[];
 }
+
+export interface DeleteTransactionRequestDto extends TransactionDto{}

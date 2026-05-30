@@ -153,6 +153,24 @@ export const editTransaction = async (
     }
 };
 
+export const deleteTransaction = async (userId: string, transactionId: string) => {
+    try {
+        const result = await TransactionModel.deleteTransactionById({
+            _id: new ObjectId(transactionId),
+            userId: new ObjectId(userId),
+        });
+
+        if (result.matchedCount === 0) {
+            throw new AppError("Transaction not found", 404);
+        }
+
+        return result;
+    } catch (err) {
+        if (err instanceof AppError) throw err;
+        throw new AppError("Failed to delete transaction", 500);
+    }
+};
+
 export const getTransactionCategories = async () => {
     try {
         const categories = await TransactionCategoryModel.getAll();

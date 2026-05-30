@@ -11,6 +11,8 @@ export interface Transaction{
     description: string;
     date: Date;
     images? : Express.Multer.File[]
+    isDeleted?: boolean;
+    deletedAt?: string;
 }
 
 const COLLECTION = "transactions"
@@ -84,6 +86,13 @@ export const TransactionModel = {
         return this.collection().updateOne(
             cred,
             { $set: data }
+        );
+    },
+
+    async deleteTransactionById(cred: Pick<Transaction, "_id" | "userId">) {
+        return this.collection().updateOne(
+            cred,
+            { $set: { isDeleted: true, deletedAt: new Date().toISOString() } }
         );
     }
 };

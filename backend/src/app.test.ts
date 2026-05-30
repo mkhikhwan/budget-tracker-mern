@@ -204,23 +204,23 @@ describe("Application Endpoints", () => {
             expect(detailRes.body.amount).toBe(20);
         });
 
-        // it("should delete a transaction", async () => {
-        //     const createRes = await request(app)
-        //         .post("/api/transaction/add")
-        //         .set("Cookie", [authCookie])
-        //         .send({
-        //             type: "expense",
-        //             name: "To Delete",
-        //             amount: 10,
-        //             category: "food",
-        //             date: new Date().toISOString()
-        //         });
+        it("should delete a transaction", async () => {
+            const createRes = await request(app)
+                .post("/api/transaction/add")
+                .set("Cookie", [authCookie])
+                .send({
+                    type: "expense",
+                    name: "To Delete",
+                    amount: 10,
+                    category: "food",
+                    date: new Date().toISOString()
+                });
 
-        //     const transactionId = createRes.body.transactionId;
-        //     const response = await request(app)
-        //         .delete(`/api/transaction/${transactionId}`)
-        //         .set("Cookie", [authCookie]);
-        //     expect(response.status).toBe(200);
-        // });
+            const transactionId = createRes.body.transactionId;
+            const response = await request(app)
+                .delete(`/api/transaction/${transactionId}`)
+                .set("Cookie", [authCookie]);
+            expect(response.status).toBe(200);
+        });
     });
 });
