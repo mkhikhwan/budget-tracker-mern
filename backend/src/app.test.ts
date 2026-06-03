@@ -141,6 +141,44 @@ describe("Application Endpoints", () => {
             expect(response.body.transactions[0]).not.toHaveProperty("description");
         });
 
+        it("should paginate transactions with ?page parameter", async () => {
+            // Create 22 transactions
+            for (let i = 1; i <= 22; i++) {
+                await request(app)
+                    .post("/api/transaction/add")
+                    .set("Cookie", [authCookie])
+                    .send({
+                        type: "expense",
+                        name: `Lunch ${i}`,
+                        amount: 10 + i,
+                        category: "food",
+                        description: `Lunch number ${i}`,
+                        date: new Date(Date.now() - i * 60000).toISOString()
+                    });
+            }
+
+            // Get page 1
+            const resPage1 = await request(app)
+                .get("/api/transaction?page=1")
+                .set("Cookie", [authCookie]);
+            expect(resPage1.status).toBe(200);
+            expect(resPage1.body.transactions.length).toBe(20);
+
+            // Get page 2
+            const resPage2 = await request(app)
+                .get("/api/transaction?page=2")
+                .set("Cookie", [authCookie]);
+            expect(resPage2.status).toBe(200);
+            expect(resPage2.body.transactions.length).toBe(2);
+
+            // Get page 3
+            const resPage3 = await request(app)
+                .get("/api/transaction?page=3")
+                .set("Cookie", [authCookie]);
+            expect(resPage3.status).toBe(200);
+            expect(resPage3.body.transactions.length).toBe(0);
+        });
+
         it("should get transaction details", async () => {
             const createRes = await request(app)
                 .post("/api/transaction/add")

@@ -21,7 +21,7 @@ const upload = multer({
 // Create Transaction
 router.post("/add", json() ,TransactionController.createTransaction);
 
-// Get All Transactions
+// Get All Transactions (supports ?page query parameter)
 router.get("/", TransactionController.getAllTransaction);
 
 // Get All Transaction Categories by Type

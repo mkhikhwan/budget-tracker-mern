@@ -80,9 +80,9 @@ export const deleteImages = async (idToDelete:string[])=>{
     }
 }
 
-export const getAllTransaction = async (userId: string):Promise<WithId<Transaction>[]> => {
+export const getAllTransaction = async (userId: string, page?: number):Promise<WithId<Transaction>[]> => {
     try{
-        const result = await TransactionModel.getAllTransactionsByUserId(userId);
+        const result = await TransactionModel.getAllTransactionsByUserId(userId, page);
         return result as unknown as WithId<Transaction>[];
     } catch (err) {
         throw new AppError("Failed to fetch transactions", 500);

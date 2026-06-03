@@ -46,7 +46,7 @@ export const TransactionModel = {
         });
     },
 
-    async getAllTransactionsByUserId(userId: string){
+    async getAllTransactionsByUserId(userId: string, page: number = 1, limit: number = 20){
         const pipeline = [
             // 1. Filter by User ID.
             {
@@ -54,6 +54,19 @@ export const TransactionModel = {
                     userId: new ObjectId(userId),
                     isDeleted: { $ne: true }
                 }
+            },
+            // 2. Sort by date descending (latest first)
+            {
+                $sort: {
+                    date: -1
+                }
+            },
+            // 3. Pagination
+            {
+                $skip: (page - 1) * limit
+            },
+            {
+                $limit: limit
             },
             // Include the collection "Transaction Categories" into Transaction Collection
             {

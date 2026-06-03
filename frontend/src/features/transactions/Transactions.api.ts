@@ -33,8 +33,9 @@ export function deleteImagesFromTransaction(id: string, payload: { ids: string[]
     });
 }
 
-export async function getAllTransaction(): Promise<GetAllTransactionsResponseDto>{
-    return apiClient("/api/transaction/", {
+export async function getAllTransaction(page?: number): Promise<GetAllTransactionsResponseDto>{
+    const query = page ? `?page=${page}` : "";
+    return apiClient(`/api/transaction/${query}`, {
         method: "GET"
     });
 }

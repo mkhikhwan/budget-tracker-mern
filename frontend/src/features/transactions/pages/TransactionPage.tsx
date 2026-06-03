@@ -1,7 +1,7 @@
 import PageLayout from "../../../shared/layouts/PageLayout";
 import styles from "./TransactionPage.module.css"
 import Button from "../../../shared/components/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as TransactionAPI from "../Transactions.api"
 import { NavLink, useNavigate } from "react-router-dom";
 import type { Transaction } from "../Transactions.types";
@@ -11,24 +11,78 @@ import FormatCurrency from "../../../shared/helpers/FormatCurrency";
 import { useSettings } from "../../settings/providers/SettingsProvider";
 
 function TransactionPage(){
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const navigate = useNavigate();
     const settings = useSettings();
     const currencySymbol = settings?.getCurrency() || '$';
 
+    const [loading, setLoading] = useState<boolean>(false);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const [isEmptyFirstPage, setIsEmptyFirstPage] = useState<boolean>(false);
+    const sentinelRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
     useEffect(()=>{
-        const fetch = async ()=>{
+        if (!hasMore) return;
+
+        const fetchTransactions = async ()=>{
+            setLoading(true);
             try{
-                const res = await TransactionAPI.getAllTransaction();
-                setTransactions(mapGetAllResponseToTransactions(res));
+                const res = await TransactionAPI.getAllTransaction(currentPage);
+                const newTransactions = mapGetAllResponseToTransactions(res);
+                setTransactions(prev => currentPage === 1 ? newTransactions : [...prev, ...newTransactions]);
+                if (newTransactions.length === 0) {
+                    setHasMore(false);
+                    if (currentPage === 1) {
+                        setIsEmptyFirstPage(true);
+                    }
+                }
             }catch(err:unknown){
                 alert(`Failed to fetch transactions: ${err instanceof Error ? err.message : String(err)}`);
+            }finally{
+                setLoading(false);
             }
         }
 
-        fetch();
-    },[]);
+        fetchTransactions();
+    }, [currentPage])
+
+    // track loading state without rebuilding the observer
+    const isLoadingRef = useRef(loading);
+    useEffect(() => {
+        isLoadingRef.current = loading;
+    }, [loading]);
+
+    useEffect(()=>{
+        if(loading || !hasMore) return;
+
+        const callback: IntersectionObserverCallback = (entries) => {
+            const firstEntry = entries[0];
+
+            // only intercept when not loading
+            if (firstEntry.isIntersecting && !isLoadingRef.current) {
+                setCurrentPage(prev => prev + 1);
+            }
+        };
+
+        const options = {
+            root: containerRef.current,
+            rootMargin: "200px",
+            threshold: 0.1 as number | number[]
+        };
+
+        const observer = new IntersectionObserver(callback, options);
+
+        observer.observe(sentinelRef.current!);
+
+        return () => {
+            if(sentinelRef.current){
+                observer.unobserve(sentinelRef.current);
+            }
+        }
+    }, [hasMore]);
 
     const handleOnClickViewTransaction = (id?: string)=>{
         if(!id) return
@@ -46,7 +100,14 @@ function TransactionPage(){
                 
                 <FilterTransactionInput />
 
-                <div className={styles.transactionsContainer}>
+                <div className={styles.transactionsContainer} ref={containerRef}>
+                    {isEmptyFirstPage && (
+                        <div className={styles.emptyState}>
+                            <i className="fa-solid fa-receipt"></i>
+                            <h3>No transactions yet</h3>
+                            <p>Start tracking your finances by adding your first transaction.</p>
+                        </div>
+                    )}
                     {
                         transactions.map((transaction)=>{
                             return <div className={styles.transactionItem} key={transaction._id} onClick={()=> handleOnClickViewTransaction(transaction._id)}>
@@ -60,6 +121,28 @@ function TransactionPage(){
                             </div>
                         })
                     }
+
+                    {loading && transactions.length === 0 && (
+                        <div className={styles.centeredLoading}>
+                            <div className={styles.spinner}>
+                                <div className={styles.spinnerCircle}></div>
+                                <span>Loading transactions...</span>
+                            </div>
+                        </div>
+                    )}
+
+                    <div 
+                        ref={sentinelRef} 
+                        className={`${styles.sentinel} ${loading && transactions.length === 0 ? styles.sentinelLoadingEmpty : ''} ${isEmptyFirstPage ? styles.sentinelFinished : ''}`}
+                    >
+                        {loading && transactions.length > 0 && (
+                            <div className={styles.spinner}>
+                                <div className={styles.spinnerCircle}></div>
+                                <span>Loading more items...</span>
+                            </div>
+                        )}
+                        {!hasMore && !isEmptyFirstPage && <p className={styles.noMoreData}>No more items to load.</p>}
+                    </div>
                 </div>
                 <div>
                     <NavLink to="/transactions/add">

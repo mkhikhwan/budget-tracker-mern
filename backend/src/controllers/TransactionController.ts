@@ -76,8 +76,11 @@ export const deleteImages = async (req: Request, res:Response) => {
 export const getAllTransaction = async (req: Request, res:Response) => {
     const user = req.user as UserTokenPayload;
     const userId = user.id;
+    const pageQuery = req.query.page;
+    const page = typeof pageQuery === "string" ? parseInt(pageQuery, 10) : undefined;
+    const parsedPage = (page && !isNaN(page) && page > 0) ? page : undefined;
 
-    const result = await TransactionService.getAllTransaction(userId);
+    const result = await TransactionService.getAllTransaction(userId, parsedPage);
     
     const transactionList: TransactionDto[] = result.map((t)=>{
         const newTransaction:TransactionDto = {
