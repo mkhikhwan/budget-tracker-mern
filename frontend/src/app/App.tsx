@@ -2,11 +2,10 @@ import './App.css';
 import { Route , Routes, useLocation, Navigate } from 'react-router-dom';
 import AppLayout from '../shared/layouts/AppLayout';
 import DashboardHomePage from '../features/dashboard/pages/DashboardHomePage';
-import TransactionPage from '../features/transactions/pages/TransactionPage';
 import AddTransactionPage from '../features/transactions/pages/AddTransactionPage';
 import ViewTransactionPage from '../features/transactions/pages/ViewTransactionPage';
 import EditTransactionPage from '../features/transactions/pages/EditTransactionPage';
-import SearchTransactionPage from '../features/transactions/pages/SearchTransactionPage';
+import TransactionPage from '../features/transactions/pages/TransactionPage';
 import SettingsPage from '../features/settings/pages/SettingsPage.tsx';
 
 import LoginPage from '../features/auth/pages/LoginPage';
@@ -31,7 +30,6 @@ function App() {
 				<Route path="/" element={< DashboardHomePage />} />
 				<Route path="/dashboard" element={< DashboardHomePage />} />
 				<Route path="/transactions" element={< TransactionPage />} />
-				<Route path="/transactions/search" element={< SearchTransactionPage />} />
 				<Route path="/transactions/view" element={< ViewTransactionPage />} />
 				<Route path="/transactions/add" element={< AddTransactionPage />} />
 				<Route path="/transactions/edit" element={< EditTransactionPage />} />

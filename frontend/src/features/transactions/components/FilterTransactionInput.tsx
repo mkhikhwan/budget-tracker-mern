@@ -36,25 +36,40 @@ function FilterTransactionInput({ initialFilters }: FilterProps) {
     }, [initialFilters]);
 
     const handleApplyFilters = () => {
-        console.log("Triggered!");
+        const params = new URLSearchParams();
+        
+        if (search.trim()) params.set("search", search.trim());
+        if (minAmount) params.set("minAmount", minAmount);
+        if (maxAmount) params.set("maxAmount", maxAmount);
+        if (startDate) params.set("startDate", startDate);
+        if (endDate) params.set("endDate", endDate);
+        if (category) params.set("category", category);
 
-        const filters = {
-            search,
-            minAmount,
-            maxAmount,
-            startDate,
-            endDate,
-            category
-        };
-
-        navigate("/transactions/search", { state: filters, replace: true });
+        navigate({
+            pathname: "/transactions",
+            search: params.toString()
+        }, { replace: true });
+        setIsPanelOpen(false);
     };
+
+    const handleClearFilters = () => {
+        setSearch("");
+        setMinAmount("");
+        setMaxAmount("");
+        setStartDate("");
+        setEndDate("");
+        setCategory("");
+        navigate("/transactions", { replace: true });
+        setIsPanelOpen(false);
+    };
+
+    const hasActiveFilters = search || minAmount || maxAmount || startDate || endDate || category;
 
     return (
         <div className={styles.container}>
             <div className={styles.searchBar}>
                 <input 
-                    type="text" 
+                    type="text"
                     className={styles.search} 
                     placeholder="Search Transactions"
                     value={search}
@@ -128,7 +143,12 @@ function FilterTransactionInput({ initialFilters }: FilterProps) {
                             </select>
                         </div>
                     </div>
-                    <button className={styles.applyButton} onClick={handleApplyFilters}>Go</button>
+                    <div className={styles.filterActions}>
+                        <button className={styles.clearButton} onClick={handleClearFilters}>
+                            Clear
+                        </button>
+                        <button className={styles.applyButton} onClick={handleApplyFilters}>Go</button>
+                    </div>
                 </div>
             )}
         </div>

@@ -95,16 +95,43 @@
     font-size: 0.9rem;
 }
 
+.filterActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.clearButton, .applyButton {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    background-color: transparent;
+}
+
+.clearButton {
+    color: #A0A0AB;
+    border: 1px solid #33333D;
+}
+
+.clearButton:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #44444D;
+    color: #E0E0E0;
+}
+
 .applyButton {
     background-color: #0078FF;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    align-self: flex-end;
     min-width: 100px;
+}
+
+.applyButton:hover {
+    background-color: #3391FF;
 }
 
 @keyframes fadeIn {
