@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, type ReactNode, 
 import { type UserSettings } from "../Settings.types";
 import * as SettingsAPI from "../Settings.api"
 import * as SettingsMapper from "../Settings.mapper"
+import { useAuth } from "../../auth/providers/AuthProvider";
 
 interface RESTCountry {
     currencies: {
@@ -25,16 +26,29 @@ export const useSettings = () => useContext(SettingsContext);
 export function SettingsProvider({ children }: { children: ReactNode }) {
     const [settings, setSettings] = useState<UserSettings>();
     const [currencySymbol, setCurrencySymbol] = useState("$");
+    const { user } = useAuth();
 
     useEffect(() => {
+        if (!user) {
+            setSettings(undefined);
+            return;
+        }
+
         SettingsAPI.getSettings()
             .then(data => {
                 setSettings(SettingsMapper.mapSettingsToUI(data));
+            })
+            .catch(error => {
+                console.error("Error fetching settings:", error);
+                setSettings(undefined);
             });
-    }, []);
+    }, [user]);
 
     useEffect(() => {
-        if (!settings?.country) return;
+        if (!settings?.country) {
+            setCurrencySymbol("$");
+            return;
+        }
 
         const fetchCurrency = async () => {
             try {
@@ -61,3 +75,4 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         </SettingsContext.Provider>
     )
 }
+
