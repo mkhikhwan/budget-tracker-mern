@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./NavBar.module.css";
 import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
@@ -15,9 +15,13 @@ function NavBar(){
     const location = useLocation();
     const isTransactionActive = location.pathname.startsWith("/transactions")
 
+    useEffect(() => {
+        setIsOpen(false);
+    }, [location.pathname]);
+
     return (
         <>
-            <div className={`${styles.darkOverlay} ${isOpen ? styles.toggleOverlay : ''}`}></div>
+            <div className={`${styles.darkOverlay} ${isOpen ? styles.toggleOverlay : ''}`} onClick={() => setIsOpen(false)}></div>
             <nav className={`${styles.navbar} ${isOpen ? styles.open : ''}`}>
                 <div className={styles.logoRow}>
                     <div className={styles.logo}>
