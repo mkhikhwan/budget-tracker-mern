@@ -15,6 +15,16 @@ export interface Transaction{
     deletedAt?: string;
 }
 
+export interface TransactionFilters {
+    search?: string;
+    type?: "expense" | "income";
+    category?: string;
+    startDate?: string;
+    endDate?: string;
+    minAmount?: number;
+    maxAmount?: number;
+}
+
 const COLLECTION = "transactions"
 
 export const TransactionModel = {
@@ -46,14 +56,58 @@ export const TransactionModel = {
         });
     },
 
-    async getAllTransactionsByUserId(userId: string, page: number = 1, limit: number = 20){
+    async getAllTransactionsByUserId(
+        userId: string,
+        page: number = 1,
+        limit: number = 20,
+        filters?: TransactionFilters
+    ) {
+        const matchQuery: any = {
+            userId: new ObjectId(userId),
+            isDeleted: { $ne: true }
+        };
+
+        if (filters) {
+            if (filters.search) {
+                matchQuery.$or = [
+                    { name: { $regex: filters.search, $options: "i" } },
+                    { description: { $regex: filters.search, $options: "i" } }
+                ];
+            }
+
+            if (filters.type) {
+                matchQuery.type = filters.type;
+            }
+
+            if (filters.category) {
+                matchQuery.category = filters.category;
+            }
+
+            if (filters.startDate || filters.endDate) {
+                matchQuery.date = {};
+                if (filters.startDate) {
+                    matchQuery.date.$gte = new Date(filters.startDate);
+                }
+                if (filters.endDate) {
+                    matchQuery.date.$lte = new Date(filters.endDate);
+                }
+            }
+
+            if (filters.minAmount !== undefined || filters.maxAmount !== undefined) {
+                matchQuery.amount = {};
+                if (filters.minAmount !== undefined) {
+                    matchQuery.amount.$gte = filters.minAmount;
+                }
+                if (filters.maxAmount !== undefined) {
+                    matchQuery.amount.$lte = filters.maxAmount;
+                }
+            }
+        }
+
         const pipeline = [
             // 1. Filter by User ID.
             {
-                $match: {
-                    userId: new ObjectId(userId),
-                    isDeleted: { $ne: true }
-                }
+                $match: matchQuery
             },
             // 2. Sort by date descending (latest first)
             {

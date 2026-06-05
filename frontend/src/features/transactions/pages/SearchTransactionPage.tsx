@@ -1,52 +1,42 @@
 import PageLayout from "../../../shared/layouts/PageLayout";
 import styles from "./TransactionPage.module.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import type { Transaction } from "../Transactions.types";
 import FilterTransactionInput from "../components/FilterTransactionInput";
 import FormatCurrency from "../../../shared/helpers/FormatCurrency";
 import { useSettings } from "../../settings/providers/SettingsProvider";
-
-const DUMMY_SEARCH_RESULTS: Transaction[] = [
-    {
-        _id: "1",
-        name: "Apple Store",
-        category: "Technology",
-        date: "2023-11-01T10:00:00Z",
-        type: "expense",
-        amount: 150000,
-    },
-    {
-        _id: "2",
-        name: "Freelance Project",
-        category: "Work",
-        date: "2023-11-02T10:00:00Z",
-        type: "income",
-        amount: 500000,
-    },
-    {
-        _id: "3",
-        name: "Starbucks Coffee",
-        category: "Food",
-        date: "2023-11-03T10:00:00Z",
-        type: "expense",
-        amount: 550,
-    },
-    {
-        _id: "4",
-        name: "Amazon Purchase",
-        category: "Shopping",
-        date: "2023-11-04T10:00:00Z",
-        type: "expense",
-        amount: 4520,
-    }
-];
+import * as TransactionAPI from "../Transactions.api";
+import { mapGetAllResponseToTransactions } from "../Transactions.mapper";
+import Button from "../../../shared/components/Button";
 
 function SearchTransactionPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const settings = useSettings();
     const currencySymbol = settings?.getCurrency() || '$';
+
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const [isEmptyFirstPage, setIsEmptyFirstPage] = useState<boolean>(false);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+    const sentinelRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const isLoadingRef = useRef(loading);
+
+    useEffect(() => {
+        isLoadingRef.current = loading;
+    }, [loading]);
+
+    // Reset search state when location state (filters) change
+    useEffect(() => {
+        setTransactions([]);
+        setCurrentPage(1);
+        setHasMore(true);
+        setIsEmptyFirstPage(false);
+    }, [location.state]);
     
     const filters = location.state || {
         search: "",
@@ -57,19 +47,58 @@ function SearchTransactionPage() {
         category: ""
     };
 
-    const buildQueryString = (params: Record<string, string>) => {
-        const searchParams = new URLSearchParams();
-        Object.entries(params).forEach(([key, value]) => {
-            if (value) searchParams.append(key, value);
-        });
-        return searchParams.toString();
-    };
+    useEffect(() => {
+        if (!hasMore) return;
 
-    const queryString = buildQueryString(filters);
+        const fetchTransactions = async () => {
+            setLoading(true);
+            try {
+                const res = await TransactionAPI.getAllTransaction(currentPage, filters);
+                const newTransactions = mapGetAllResponseToTransactions(res);
+                
+                setTransactions(prev => currentPage === 1 ? newTransactions : [...prev, ...newTransactions]);
+                
+                if (newTransactions.length === 0) {
+                    setHasMore(false);
+                    if (currentPage === 1) {
+                        setIsEmptyFirstPage(true);
+                    }
+                }
+            } catch (err: unknown) {
+                alert(`Failed to fetch transactions: ${err instanceof Error ? err.message : String(err)}`);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTransactions();
+    }, [currentPage, location.state]);
 
     useEffect(() => {
-        console.log("Query String:", queryString);
-    }, [queryString]);
+        if (loading || !hasMore) return;
+
+        const callback: IntersectionObserverCallback = (entries) => {
+            const firstEntry = entries[0];
+            if (firstEntry.isIntersecting && !isLoadingRef.current) {
+                setCurrentPage(prev => prev + 1);
+            }
+        };
+
+        const options = {
+            root: containerRef.current,
+            rootMargin: "200px",
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver(callback, options);
+        if (sentinelRef.current) observer.observe(sentinelRef.current);
+
+        return () => {
+            if (sentinelRef.current) {
+                observer.unobserve(sentinelRef.current);
+            }
+        };
+    }, [hasMore, loading]);
 
     const handleOnClickViewTransaction = (id?: string) => {
         if (!id) return;
@@ -81,11 +110,18 @@ function SearchTransactionPage() {
     return (
         <PageLayout header="Search Transactions">
             <section className={styles.section}>
-                <div className={styles.controlRow}>
-                    <FilterTransactionInput initialFilters={filters}/>
-                </div>
-                <div className={styles.transactionsContainer}>
-                    {DUMMY_SEARCH_RESULTS.map((transaction) => (
+                
+                <FilterTransactionInput initialFilters={filters}/>
+
+                <div className={styles.transactionsContainer} ref={containerRef}>
+                    {isEmptyFirstPage && (
+                        <div className={styles.emptyState}>
+                            <i className="fa-solid fa-magnifying-glass"></i>
+                            <h3>No results found</h3>
+                            <p>Try adjusting your filters to find what you're looking for.</p>
+                        </div>
+                    )}
+                    {transactions.map((transaction) => (
                         <div className={styles.transactionItem} key={transaction._id} onClick={() => handleOnClickViewTransaction(transaction._id)}>
                             <div className={styles.txInfo}>
                                 <span className={styles.txName}>{transaction.name}</span>
@@ -96,6 +132,36 @@ function SearchTransactionPage() {
                             </div>
                         </div>
                     ))}
+
+                    {loading && transactions.length === 0 && (
+                        <div className={styles.centeredLoading}>
+                            <div className={styles.spinner}>
+                                <div className={styles.spinnerCircle}></div>
+                                <span>Searching transactions...</span>
+                            </div>
+                        </div>
+                    )}
+
+                    <div 
+                        ref={sentinelRef} 
+                        className={`${styles.sentinel} ${loading && transactions.length === 0 ? styles.sentinelLoadingEmpty : ''} ${isEmptyFirstPage ? styles.sentinelFinished : ''}`}
+                    >
+                        {loading && transactions.length > 0 && (
+                            <div className={styles.spinner}>
+                                <div className={styles.spinnerCircle}></div>
+                                <span>Loading more results...</span>
+                            </div>
+                        )}
+                        {!hasMore && !isEmptyFirstPage && <p className={styles.noMoreData}>No more results.</p>}
+                    </div>
+                </div>
+                <div>
+                    <NavLink to="/transactions/add">
+                        <Button type="primary" style={{width:'100%', fontSize:'1.1rem', fontWeight:'600', padding:'8px 0px', margin:'8px 0px'}}>
+                            <i className="fa-solid fa-plus" style={{ marginRight: '8px' }}></i>
+                            Add Transaction
+                        </Button>
+                    </NavLink>
                 </div>
             </section>
         </PageLayout>

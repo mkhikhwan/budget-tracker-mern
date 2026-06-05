@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as TransactionService from "../services/TransactionService"
 import { ObjectId } from "mongodb";
+import { TransactionFilters } from "../models/Transaction";
 
 import { 
     TransactionDto,
@@ -80,7 +81,32 @@ export const getAllTransaction = async (req: Request, res:Response) => {
     const page = typeof pageQuery === "string" ? parseInt(pageQuery, 10) : undefined;
     const parsedPage = (page && !isNaN(page) && page > 0) ? page : undefined;
 
-    const result = await TransactionService.getAllTransaction(userId, parsedPage);
+    // Parse filters from query parameters
+    const search = typeof req.query.search === "string" ? req.query.search : undefined;
+    const type = (req.query.type === "expense" || req.query.type === "income") ? req.query.type as "expense" | "income" : undefined;
+    const category = typeof req.query.category === "string" ? req.query.category : undefined;
+    const startDate = typeof req.query.startDate === "string" ? req.query.startDate : undefined;
+    const endDate = typeof req.query.endDate === "string" ? req.query.endDate : undefined;
+
+    const minAmountQuery = req.query.minAmount;
+    const minAmount = typeof minAmountQuery === "string" ? parseFloat(minAmountQuery) : undefined;
+    const parsedMinAmount = (minAmount !== undefined && !isNaN(minAmount)) ? minAmount : undefined;
+
+    const maxAmountQuery = req.query.maxAmount;
+    const maxAmount = typeof maxAmountQuery === "string" ? parseFloat(maxAmountQuery) : undefined;
+    const parsedMaxAmount = (maxAmount !== undefined && !isNaN(maxAmount)) ? maxAmount : undefined;
+
+    const filters: TransactionFilters = {
+        search,
+        type,
+        category,
+        startDate,
+        endDate,
+        minAmount: parsedMinAmount,
+        maxAmount: parsedMaxAmount
+    };
+
+    const result = await TransactionService.getAllTransaction(userId, parsedPage, filters);
     
     const transactionList: TransactionDto[] = result.map((t)=>{
         const newTransaction:TransactionDto = {
@@ -160,7 +186,7 @@ export const editTransaction = async (req: Request, res: Response) => {
 }
 
 export const deleteTransaction = async (req: Request, res: Response) => {
-    const { transactionId }: DeleteTransactionRequestDto = req.body;
+    const transactionId = req.params.id || req.body.transactionId;
 
     const user = req.user as UserTokenPayload;
     const userId = user.id;

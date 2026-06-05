@@ -1,5 +1,5 @@
 import { ObjectId, WithId } from "mongodb"
-import { TransactionModel, Transaction } from "../models/Transaction"
+import { TransactionModel, Transaction, TransactionFilters } from "../models/Transaction"
 import { Image, ImageModel } from "../models/Image";
 import { TransactionCategoryModel } from "../models/TransactionCategory";
 import AppError from "../utils/AppError";
@@ -80,9 +80,13 @@ export const deleteImages = async (idToDelete:string[])=>{
     }
 }
 
-export const getAllTransaction = async (userId: string, page?: number):Promise<WithId<Transaction>[]> => {
-    try{
-        const result = await TransactionModel.getAllTransactionsByUserId(userId, page);
+export const getAllTransaction = async (
+    userId: string,
+    page?: number,
+    filters?: TransactionFilters
+): Promise<WithId<Transaction>[]> => {
+    try {
+        const result = await TransactionModel.getAllTransactionsByUserId(userId, page, 20, filters);
         return result as unknown as WithId<Transaction>[];
     } catch (err) {
         throw new AppError("Failed to fetch transactions", 500);

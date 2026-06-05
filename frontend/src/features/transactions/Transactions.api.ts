@@ -33,9 +33,21 @@ export function deleteImagesFromTransaction(id: string, payload: { ids: string[]
     });
 }
 
-export async function getAllTransaction(page?: number): Promise<GetAllTransactionsResponseDto>{
-    const query = page ? `?page=${page}` : "";
-    return apiClient(`/api/transaction/${query}`, {
+export async function getAllTransaction(page?: number, filters?: Record<string, string | number | undefined>): Promise<GetAllTransactionsResponseDto>{
+    const params = new URLSearchParams();
+
+    if (page) params.append("page", page.toString());
+
+    if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== undefined && value !== "" && value !== null) {
+                params.append(key, value.toString());
+            }
+        });
+    }
+
+    const queryString = params.toString();
+    return apiClient(`/api/transaction/${queryString ? `?${queryString}` : ""}`, {
         method: "GET"
     });
 }

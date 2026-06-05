@@ -179,6 +179,89 @@ describe("Application Endpoints", () => {
             expect(resPage3.body.transactions.length).toBe(0);
         });
 
+        it("should filter transactions by search, type, category, date, and amount", async () => {
+            // Let's create a few test transactions
+            // 1. Lunch (expense, food, 15.50, "Work lunch", 3 days ago)
+            await request(app)
+                .post("/api/transaction/add")
+                .set("Cookie", [authCookie])
+                .send({
+                    type: "expense",
+                    name: "Lunch",
+                    amount: 15.5,
+                    category: "food",
+                    description: "Work lunch",
+                    date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+                });
+
+            // 2. Salary (income, work, 3000.00, "Monthly payout", 2 days ago)
+            await request(app)
+                .post("/api/transaction/add")
+                .set("Cookie", [authCookie])
+                .send({
+                    type: "income",
+                    name: "Salary",
+                    amount: 3000,
+                    category: "work",
+                    description: "Monthly payout",
+                    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                });
+
+            // 3. Books (expense, education, 50.00, "TypeScript book", 1 day ago)
+            await request(app)
+                .post("/api/transaction/add")
+                .set("Cookie", [authCookie])
+                .send({
+                    type: "expense",
+                    name: "Books",
+                    amount: 50,
+                    category: "education",
+                    description: "TypeScript book",
+                    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                });
+
+            // Test search keyword
+            const searchRes = await request(app)
+                .get("/api/transaction?search=TypeScript")
+                .set("Cookie", [authCookie]);
+            expect(searchRes.status).toBe(200);
+            expect(searchRes.body.transactions.length).toBe(1);
+            expect(searchRes.body.transactions[0].name).toBe("Books");
+
+            // Test filter by type
+            const typeRes = await request(app)
+                .get("/api/transaction?type=income")
+                .set("Cookie", [authCookie]);
+            expect(typeRes.status).toBe(200);
+            expect(typeRes.body.transactions.length).toBe(1);
+            expect(typeRes.body.transactions[0].name).toBe("Salary");
+
+            // Test filter by category
+            const categoryRes = await request(app)
+                .get("/api/transaction?category=food")
+                .set("Cookie", [authCookie]);
+            expect(categoryRes.status).toBe(200);
+            expect(categoryRes.body.transactions.length).toBe(1);
+            expect(categoryRes.body.transactions[0].name).toBe("Lunch");
+
+            // Test filter by date range
+            const startDate = new Date(Date.now() - 2.5 * 24 * 60 * 60 * 1000).toISOString();
+            const dateRes = await request(app)
+                .get(`/api/transaction?startDate=${startDate}`)
+                .set("Cookie", [authCookie]);
+            expect(dateRes.status).toBe(200);
+            // Salary (2 days ago) and Books (1 day ago) are within the range. Lunch (3 days ago) is filtered out.
+            expect(dateRes.body.transactions.length).toBe(2);
+
+            // Test filter by amount range
+            const amountRes = await request(app)
+                .get("/api/transaction?minAmount=20&maxAmount=100")
+                .set("Cookie", [authCookie]);
+            expect(amountRes.status).toBe(200);
+            expect(amountRes.body.transactions.length).toBe(1);
+            expect(amountRes.body.transactions[0].name).toBe("Books");
+        });
+
         it("should get transaction details", async () => {
             const createRes = await request(app)
                 .post("/api/transaction/add")
