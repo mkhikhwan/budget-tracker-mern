@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css"
 import bgAuth from "../../../assets/cash-flying-purple-coral.webp";
 import { useState } from "react";
-import CountrySelect from "../components/CountrySelect";
+import CountrySelect from "../../../shared/components/form/CountrySelect";
 import type { RegisterForm } from "../Auth.types";
 import * as AuthApi from "../Auth.api";
 

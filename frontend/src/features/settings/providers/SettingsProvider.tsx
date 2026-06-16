@@ -4,14 +4,7 @@ import * as SettingsAPI from "../Settings.api"
 import * as SettingsMapper from "../Settings.mapper"
 import { useAuth } from "../../auth/providers/AuthProvider";
 
-interface RESTCountry {
-    currencies: {
-        [key: string]: {
-            name: string;
-            symbol: string;
-        };
-    };
-}
+import { getCurrencySymbol } from "../../../shared/services/countryService";
 
 interface SettingsContextType {
     settings: UserSettings | undefined;
@@ -52,11 +45,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
         const fetchCurrency = async () => {
             try {
-                const res = await fetch(`https://restcountries.com/v3.1/alpha/${settings.country}?fields=currencies`);
-                if (!res.ok) throw new Error("Failed to fetch currency");
-                const data: RESTCountry = await res.json();
-                const currencyCode = Object.keys(data.currencies)[0];
-                const symbol = data.currencies[currencyCode].symbol || data.currencies[currencyCode].name;
+                const symbol = await getCurrencySymbol(settings.country);
                 setCurrencySymbol(symbol);
             } catch (error) {
                 console.error("Error fetching currency:", error);

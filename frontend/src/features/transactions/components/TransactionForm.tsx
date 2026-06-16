@@ -99,6 +99,7 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
         }
     };
 
+    //Init form
     useEffect(()=>{
         const fetchCategoryOptions = async ()=> {
             try{
@@ -106,12 +107,6 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
                 if (res?.categories) {
                     const options = res.categories.map(mapCategoryDtoToTransactionCategory);
                     setCategoryOption(options);
-
-                    // Set default value on init
-                    const firstCategory = options.find(i => i.type === type);
-                    if (firstCategory && !initialData) {
-                        setCategory(firstCategory.value);
-                    }
                 }
             }catch{
                 alert("Fail to fetch category options.");
@@ -120,35 +115,40 @@ function TransactionForm({ initialData, handleSubmit, readonly}: Props){
 
         // Execute the fetch
         fetchCategoryOptions();
+    },[]);
 
-        if(initialData){
-            setType(initialData.type === 'expense' ? 'expense' : 'income');
-            setName(initialData.name);
-            setAmount(initialData.amount);
-            setCategory(initialData.category);
-            setDescription(initialData.description || "");
-            setDate(initialData.date.split('T')[0]);
+    // Init if has data
+    useEffect(()=>{
+        if(!initialData) return;
 
-            // Transform images from db to UI state
-            const initImages = initialData.images?.map((img)=>{
-                const newImg: Image = {
-                    _id: img._id,
-                    url: img.url,
-                    isFromDb: true
-                }
+        setType(initialData.type === 'expense' ? 'expense' : 'income');
+        setName(initialData.name);
+        setAmount(initialData.amount);
+        setCategory(initialData.category);
+        setDescription(initialData.description || "");
+        setDate(initialData.date.split('T')[0]);
 
-                return newImg
-            }) || [];
-            setImages(initImages);
-        }
+        // Transform images from db to UI state
+        const initImages = initialData.images?.map((img)=>{
+            const newImg: Image = {
+                _id: img._id,
+                url: img.url,
+                isFromDb: true
+            }
+
+            return newImg
+        }) || [];
+        setImages(initImages);
     },[initialData]);
 
     useEffect(()=>{
+        if(initialData) return;
+
         const firstCategory = categoryOptions.find(i => i.type === type);
         if (firstCategory) {
             setCategory(firstCategory.value);
         }
-    },[type, categoryOptions]);
+    },[type, categoryOptions, initialData]);
 
     return (
         <form className={styles.form} method="POST" encType="multipart/form-data">

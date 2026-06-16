@@ -1,62 +1,39 @@
 import { useEffect, useState } from "react"
+import { getCountries, type Country } from "../../services/countryService"
 
-interface Props{
+interface Props {
     country: string,
     setCountry: React.Dispatch<React.SetStateAction<string>>
 }
 
-interface RESTCountry{
-    // RESTCountry API shape
-    cca2: string,
-    name: {
-        common: string,
-    }
-}
+function CountrySelect({ country, setCountry }: Props) {
+    const [countryList, setCountryList] = useState<Country[]>([]);
 
-type RESTCountryResponse = RESTCountry[];
-
-let cachedCountryList: RESTCountryResponse | null = null;
-
-function CountrySelect({ country, setCountry }:Props){
-    const [countryList, setCountryList ] = useState<RESTCountryResponse>([]);
-
-    useEffect(()=>{
-        const getData = async ()=>{
-            if (cachedCountryList) {
-                setCountryList(cachedCountryList);
-                return;
-            }
-
-            try{
-                const res = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2');
-                if(!res.ok) throw new Error("Can't fetch country list.");
-                const data: RESTCountryResponse = await res.json();
-
-                const newList = data.sort((a, b) => 
-                    a.name.common.localeCompare(b.name.common)
-                );
-                cachedCountryList = newList;
-                setCountryList(newList);
-            }catch(e:unknown){
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const list = await getCountries();
+                setCountryList(list);
+            } catch (e: unknown) {
                 console.log(e instanceof Error ? e.message : "Error fetch country list");
             }
         }
 
         getData();
-    },[]);
+    }, []);
 
     return (
         <div className="form-row">
-            <select 
-                name="country" 
-                value={country} 
-                onChange={(e)=>setCountry(e.target.value)}
+            <select
+                name="country"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
             >
                 <option value="" disabled>Select Country</option>
                 {
-                    countryList.map((c)=>{
-                        return <option key={c.cca2} value={c.cca2}>
-                            {c.name.common}
+                    countryList.map((c) => {
+                        return <option key={c.code} value={c.code}>
+                            {c.name}
                         </option>
                     })
                 }

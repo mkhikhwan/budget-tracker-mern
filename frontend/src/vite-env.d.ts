@@ -3,6 +3,7 @@
 
 interface ImportMetaEnv {
     readonly VITE_API_URL: string;
+    readonly RESTCOUNTRY_API_KEY: string;
 }
 
 interface ImportMeta {
