@@ -21,4 +21,6 @@ Done ✅ (Implemented crucial CRUD features, Auth, and Dashboard)
 
 ## Demo
 
-[Watch the Demo Video](docs/demo.mp4)
+[Watch offline](docs/demo.mp4)
+
+https://github.com/user-attachments/assets/f637dadb-edc6-4cf8-ae3b-5535452199b6
