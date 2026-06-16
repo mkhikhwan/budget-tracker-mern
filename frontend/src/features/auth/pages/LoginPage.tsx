@@ -77,7 +77,7 @@ function LoginPage(){
                         marginTop : '32px'
                     }} onClick={handleLogin} >Login</Button>
 
-                    <div style={{ margin: '16px 0', textAlign: 'center', color: '#666' }}>OR</div>
+                    {/* <div style={{ margin: '16px 0', textAlign: 'center', color: '#666' }}>OR</div>
 
                     <Button type="secondary" style={{
                         padding: '8px',
@@ -93,7 +93,7 @@ function LoginPage(){
                     }}>
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px' }} />
                         Continue with Google
-                    </Button>
+                    </Button> */}
 
                     <div className={styles.footer}>
                         <p>Dont have an account? <Link to="/register">Register</Link></p>
