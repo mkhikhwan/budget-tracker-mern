@@ -1,17 +1,17 @@
 import { ObjectId, WithId } from "mongodb"
 import { TransactionModel, Transaction } from "../models/Transaction"
 import AppError from "../utils/AppError";
-import { getDb } from "../config/db";
 import { TransactionCategoryModel } from "../models/TransactionCategory";
 import { UserModel, Allowance } from "../models/User";
 
-export const getFiveLatestTransactions = async (userId: string):Promise<WithId<Transaction>[]> => {
-    try{
+export const getFiveLatestTransactions = async (userId: string): Promise<WithId<Transaction>[]> => {
+    try {
         const pipeline = [
-            // 1. Filter by User ID.
+            // 1. Filter by User ID and ensure transaction is not soft-deleted.
             {
                 $match: {
-                    userId: new ObjectId(userId)
+                    userId: new ObjectId(userId),
+                    isDeleted: { $ne: true } // Added filter
                 }
             },
             // Sort by date descending
@@ -51,7 +51,7 @@ export const getFiveLatestTransactions = async (userId: string):Promise<WithId<T
         ];
 
         const result = await TransactionModel.collection().aggregate(pipeline).toArray();
-        
+
         return result as WithId<Transaction>[];
     } catch (err) {
         throw new AppError("Failed to fetch transactions", 500);
@@ -65,7 +65,10 @@ export const getLatestBalance = async (userId: string) => {
 
         const pipeline = [
             {
-                $match: { userId: new ObjectId(userId) }
+                $match: { 
+                    userId: new ObjectId(userId),
+                    isDeleted: { $ne: true } // Added filter
+                }
             },
             {
                 $group: {
@@ -91,7 +94,7 @@ export const getLatestBalance = async (userId: string) => {
                     sumExpenseLast30Days: {
                         $sum: {
                             $cond: [
-                                { 
+                                {
                                     $and: [
                                         { $eq: ['$type', 'expense'] },
                                         { $gte: [{ $toDate: '$date' }, thirtyDaysAgo] }
@@ -105,13 +108,13 @@ export const getLatestBalance = async (userId: string) => {
                     sumIncomeLast30Days: {
                         $sum: {
                             $cond: [
-                                { 
+                                {
                                     $and: [
-                                        { $eq: ['$type', 'income'] }, 
+                                        { $eq: ['$type', 'income'] },
                                         { $gte: [{ $toDate: '$date' }, thirtyDaysAgo] }
-                                    ] 
+                                    ]
                                 },
-                                '$amount', 
+                                '$amount',
                                 0
                             ]
                         }
@@ -131,7 +134,7 @@ export const getLatestBalance = async (userId: string) => {
         ];
 
         const result = await TransactionModel.collection().aggregate(pipeline).toArray() as any[];
-        
+
         return {
             totalExpense: result[0]?.totalExpense || 0,
             totalIncome: result[0]?.totalIncome || 0,
@@ -155,12 +158,16 @@ export const getExpenseBreakdownByCategory = async (userId: string) => {
                     from: 'transactions',
                     let: { catValue: '$value' },
                     pipeline: [
-                        { 
-                            $match: { 
-                                $expr: { 
-                                    $and: [{ $eq: ['$category', '$$catValue'] }, { $eq: ['$userId', new ObjectId(userId)] }] 
-                                } 
-                            } 
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$category', '$$catValue'] },
+                                        { $eq: ['$userId', new ObjectId(userId)] },
+                                        { $ne: ['$isDeleted', true] } // Added filter inside the lookup pipeline
+                                    ]
+                                }
+                            }
                         }
                     ],
                     as: 'transactions'
@@ -177,7 +184,7 @@ export const getExpenseBreakdownByCategory = async (userId: string) => {
                 $unset: ['transactions', 'type']
             }
         ];
-        
+
         return TransactionCategoryModel.collection().aggregate(pipeline).toArray();
     } catch (err) {
         throw new AppError("Failed to fetch expense breakdown", 500);
@@ -191,6 +198,7 @@ export const getExpensesByMonth = async (userId: string, year: number) => {
                 $match: {
                     userId: new ObjectId(userId),
                     type: 'expense',
+                    isDeleted: { $ne: true }, // Added filter
                     $expr: {
                         $eq: [{ $year: { $toDate: "$date" } }, year]
                     }
@@ -208,14 +216,12 @@ export const getExpensesByMonth = async (userId: string, year: number) => {
         ];
 
         const result = await TransactionModel.collection().aggregate(pipeline).toArray();
-        
+
         // Map to ensure all 12 months are represented
         const months = [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         ];
-
-        const formattedResult = [];
 
         return months.map((monthName, index) => {
             const monthNumber = index + 1;
@@ -244,13 +250,13 @@ export const getAllowance = async (userId: string): Promise<Allowance | null> =>
         const today = new Date();
         let currentPeriodStart = start;
 
-        if (today > start && restartDays > 0){
+        if (today > start && restartDays > 0) {
             const msPerDay = 24 * 60 * 60 * 1000;
             const diffMs = today.getTime() - start.getTime();
             const diffDays = Math.floor(diffMs / msPerDay);
             const periodsPassed = Math.floor(diffDays / restartDays);
 
-            currentPeriodStart = new Date(start.getTime() + (periodsPassed * restartDays * msPerDay) );
+            currentPeriodStart = new Date(start.getTime() + (periodsPassed * restartDays * msPerDay));
         }
 
         const pipeline = [
@@ -258,6 +264,7 @@ export const getAllowance = async (userId: string): Promise<Allowance | null> =>
                 $match: {
                     userId: new ObjectId(userId),
                     type: 'expense',
+                    isDeleted: { $ne: true }, // Added filter
                     $expr: {
                         $gte: [{ $toDate: "$date" }, currentPeriodStart]
                     }
@@ -296,8 +303,8 @@ export const updateAllowance = async (userId: string, limit: number, restartDays
 
         const result = await UserModel.collection().updateOne(
             { _id: new ObjectId(userId) },
-            { 
-                $set: { allowance } 
+            {
+                $set: { allowance }
             },
             { upsert: true }
         );

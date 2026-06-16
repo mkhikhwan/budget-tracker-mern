@@ -186,7 +186,7 @@ export const editTransaction = async (req: Request, res: Response) => {
 }
 
 export const deleteTransaction = async (req: Request, res: Response) => {
-    const transactionId = req.params.id || req.body.transactionId;
+    const transactionId = req.body.transactionId;
 
     const user = req.user as UserTokenPayload;
     const userId = user.id;
