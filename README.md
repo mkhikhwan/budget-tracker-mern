@@ -15,4 +15,10 @@ Simple personal finance management app built with the MERN stack for learning pu
 
 ## Status
 
-In Progress 🚧
+Done ✅ (Implemented crucial CRUD features, Auth, and Dashboard)
+
+---
+
+## Demo
+
+[Watch the Demo Video](docs/demo.mp4)
